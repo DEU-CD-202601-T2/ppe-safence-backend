@@ -1,0 +1,12 @@
+# 비밀번호 파일 
+.env
+
+# 찌꺼기 폴더
+__pycache__/
+
+# 백업용 파일 
+app_backup.py
+
+# 가상환경 폴더 
+venv/
+.venv/
