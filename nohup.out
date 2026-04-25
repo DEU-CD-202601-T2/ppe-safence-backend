@@ -1,0 +1,406 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 812-480-141
+112.156.191.233 - - [14/Apr/2026 14:15:37] "GET / HTTP/1.1" 200 -
+112.156.191.233 - - [14/Apr/2026 14:15:37] "GET / HTTP/1.1" 200 -
+112.156.191.233 - - [14/Apr/2026 14:15:38] "GET / HTTP/1.1" 200 -
+112.156.191.233 - - [14/Apr/2026 14:15:38] "GET / HTTP/1.1" 200 -
+112.156.191.233 - - [14/Apr/2026 14:15:59] "GET / HTTP/1.1" 200 -
+27.0.238.181 - - [14/Apr/2026 14:18:27] "GET / HTTP/1.1" 200 -
+27.0.238.70 - - [14/Apr/2026 14:18:38] "GET / HTTP/1.1" 200 -
+35.161.131.235 - - [14/Apr/2026 20:40:00] "GET / HTTP/1.1" 200 -
+211.231.103.91 - - [14/Apr/2026 22:53:17] "GET / HTTP/1.1" 200 -
+211.231.103.105 - - [14/Apr/2026 22:53:18] "GET / HTTP/1.1" 200 -
+211.231.103.104 - - [15/Apr/2026 01:55:13] "GET / HTTP/1.1" 200 -
+27.0.238.181 - - [15/Apr/2026 01:55:13] "GET / HTTP/1.1" 200 -
+172.232.253.221 - - [15/Apr/2026 04:52:21] "GET / HTTP/1.0" 200 -
+172.232.253.221 - - [15/Apr/2026 04:52:21] code 400, message Bad request version ('RTSP/1.0')
+172.232.253.221 - - [15/Apr/2026 04:52:21] "OPTIONS / RTSP/1.0" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:26] code 400, message Bad HTTP/0.9 request type ('\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:26] "\x00\x1e\x00\x06\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x07version\x04bind\x00\x00\x10\x00\x03" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:31] code 400, message Bad request version ('0.12\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:31] "\x00\x00\x00¤ÿSMBr\x00\x00\x00\x00\x08\x01@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00@\x06\x00\x00\x01\x00\x00\x81\x00\x02PC NETWORK PROGRAM 1.0\x00\x02MICROSOFT NETWORKS 1.03\x00\x02MICROSOFT NETWORKS 3.0\x00\x02LANMAN1.0\x00\x02LM1.2X002\x00\x02Samba\x00\x02NT LANMAN 1.0\x00\x02NT LM 0.12\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:36] code 400, message Bad request version ('GetClassName\x00\x00\x00\x02\x04\x00\x00\x00\x00\x01\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:36] "\x00\x00\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x0cGetClassName\x00\x00\x00\x02\x04\x00\x00\x00\x00\x01\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:37] "OPTIONS / HTTP/1.0" 200 -
+172.232.253.221 - - [15/Apr/2026 04:52:42] code 400, message Bad request version ('\x00\x01\x97|\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:42] "\x80\x00\x00(rþ\x1d\x13\x00\x00\x00\x00\x00\x00\x00\x02\x00\x01\x86 \x00\x01\x97|\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:47] code 400, message Bad HTTP/0.9 request type ('\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:47] "\x00\x0c\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:47] code 400, message Bad request syntax ('HELP')
+172.232.253.221 - - [15/Apr/2026 04:52:47] "HELP" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:47] code 400, message Bad request syntax ('\x16\x03\x00\x00S\x01\x00\x00O\x03\x00?G×÷º,îê²`~ó\x00ý\x82{¹Õ\x96Èw\x9bæÄÛ<=Ûoï\x10n\x00\x00(\x00\x16\x00\x13\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:47] "\x16\x03\x00\x00S\x01\x00\x00O\x03\x00?G×÷º,îê²`~ó\x00ý\x82{¹Õ\x96Èw\x9bæÄÛ<=Ûoï\x10n\x00\x00(\x00\x16\x00\x13\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:47] code 400, message Bad HTTP/0.9 request type ('\x03\x00\x00*%à\x00\x00\x00\x00\x00Cookie:')
+172.232.253.221 - - [15/Apr/2026 04:52:47] "\x03\x00\x00*%à\x00\x00\x00\x00\x00Cookie: mstshash=nmap" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:48] code 400, message Bad request version ('\x00/\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:48] "\x16\x03\x00\x00i\x01\x00\x00e\x03\x03U\x1c§ärandom1random2random3random4\x00\x00\x0c\x00/\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:48] code 400, message Bad request syntax ('\x00\x00\x00qj\x81n0\x81k¡\x03\x02\x01\x05¢\x03\x02\x01')
+172.232.253.221 - - [15/Apr/2026 04:52:48] "\x00\x00\x00qj\x81n0\x81k¡\x03\x02\x01\x05¢\x03\x02\x01" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:53] code 400, message Bad HTTP/0.9 request type ('l\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:53] "l\x00\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:53] "GET /nice%20ports,/Trinity.txt.bak HTTP/1.0" 404 -
+172.232.253.221 - - [15/Apr/2026 04:52:53] code 400, message Bad request syntax ('\x01default')
+172.232.253.221 - - [15/Apr/2026 04:52:53] "\x01default" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:54] code 400, message Bad request syntax ('0\x84\x00\x00\x00-\x02\x01\x07c\x84\x00\x00\x00$\x04\x00')
+172.232.253.221 - - [15/Apr/2026 04:52:54] "0\x84\x00\x00\x00-\x02\x01\x07c\x84\x00\x00\x00$\x04\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:59] code 400, message Bad HTTP/0.9 request type ('0')
+172.232.253.221 - - [15/Apr/2026 04:52:59] "0\x0c\x02\x01\x01`\x07\x02\x01\x02\x04\x00\x80\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:52:59] code 400, message Bad request version ('SIP/2.0')
+172.232.253.221 - - [15/Apr/2026 04:52:59] "OPTIONS sip:nm SIP/2.0" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:04] code 400, message Bad request syntax ('TNMP\x04\x00\x00\x00TNME\x00\x00\x04\x00')
+172.232.253.221 - - [15/Apr/2026 04:53:04] "TNMP\x04\x00\x00\x00TNME\x00\x00\x04\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:09] code 400, message Bad HTTP/0.9 request type ('\x03\x00\x00')
+172.232.253.221 - - [15/Apr/2026 04:53:09] "\x03\x00\x00\x0b\x06à\x00\x00\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:14] code 400, message Bad request syntax ('DmdT\x00\x00\x00\x17\x00\x00\x00\x01\x00\x00\x00\x00\x11\x11\x00ÿ\x01ÿ\x13')
+172.232.253.221 - - [15/Apr/2026 04:53:14] "DmdT\x00\x00\x00\x17\x00\x00\x00\x01\x00\x00\x00\x00\x11\x11\x00ÿ\x01ÿ\x13" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:19] code 400, message Bad HTTP/0.9 request type (':\x00\x00\x00/\x00\x00\x00\x02\x00\x00@\x02\x0f\x00\x01\x00=\x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00/\x00\x00\x00\x00\x00\x00\x00\x00\x00@')
+172.232.253.221 - - [15/Apr/2026 04:53:19] ":\x00\x00\x00/\x00\x00\x00\x02\x00\x00@\x02\x0f\x00\x01\x00=\x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00/\x00\x00\x00\x00\x00\x00\x00\x00\x00@\x1f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:24] code 400, message Bad request syntax ('JRMI\x00\x02K')
+172.232.253.221 - - [15/Apr/2026 04:53:24] "JRMI\x00\x02K" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:30] code 400, message Bad request version ('\x00{\x000\x000\x000\x000\x00A\x00A\x000\x000\x00-\x000\x00A\x000\x000\x00-\x000\x000\x00a\x000\x00-\x00A\x00A\x000\x00A\x00-\x000\x000\x000\x000\x00A\x000\x00A\x00A\x000\x00A\x00A\x000\x00}\x00\x00\x00àmß_')
+172.232.253.221 - - [15/Apr/2026 04:53:30] "\x01\x00\x00ýÎú\x0b° \x00\x00\x00MMS\x14\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x12\x00\x00\x00\x01\x00\x03\x00ðððð\x0b\x00\x04\x00\x1c\x00\x03\x00N\x00S\x00P\x00l\x00a\x00y\x00e\x00r\x00/\x009\x00.\x000\x00.\x000\x00.\x002\x009\x008\x000\x00;\x00 \x00{\x000\x000\x000\x000\x00A\x00A\x000\x000\x00-\x000\x00A\x000\x000\x00-\x000\x000\x00a\x000\x00-\x00A\x00A\x000\x00A\x00-\x000\x000\x000\x000\x00A\x000\x00A\x00A\x000\x00A\x00A\x000\x00}\x00\x00\x00àmß_" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:35] code 400, message Bad HTTP/0.9 request type ('\x00Z\x00\x00\x01\x00\x00\x00\x016\x01,\x00\x00\x08\x00\x7fÿ\x7f\x08\x00\x00\x00\x01\x00')
+172.232.253.221 - - [15/Apr/2026 04:53:35] "\x00Z\x00\x00\x01\x00\x00\x00\x016\x01,\x00\x00\x08\x00\x7fÿ\x7f\x08\x00\x00\x00\x01\x00 \x00:\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x004æ\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00(CONNECT_DATA=(COMMAND=version))" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:40] code 400, message Bad request version ('\x03\x00(\x00\x04ÿ\x08\x00\x01U\x00\x00\x00MSSQLServer\x00H\x0f\x00\x00')
+172.232.253.221 - - [15/Apr/2026 04:53:40] "\x12\x01\x004\x00\x00\x00\x00\x00\x00\x15\x00\x06\x01\x00\x1b\x00\x01\x02\x00\x1c\x00\x0c\x03\x00(\x00\x04ÿ\x08\x00\x01U\x00\x00\x00MSSQLServer\x00H\x0f\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:45] code 400, message Bad request syntax ('\x00\x03\x00\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x0f\x00')
+172.232.253.221 - - [15/Apr/2026 04:53:45] "\x00\x03\x00\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x0f\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:50] code 400, message Bad request syntax ('GIOP\x01\x00\x01\x00$\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x06\x00\x00\x00abcdef\x00\x00\x04\x00\x00\x00get\x00\x00\x00\x00\x00')
+172.232.253.221 - - [15/Apr/2026 04:53:50] "GIOP\x01\x00\x01\x00$\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x06\x00\x00\x00abcdef\x00\x00\x04\x00\x00\x00get\x00\x00\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:55] code 400, message Bad HTTP/0.9 request type ('AMQP\x00\x00')
+172.232.253.221 - - [15/Apr/2026 04:53:55] "AMQP\x00\x00\x09\x01" 400 -
+172.232.253.221 - - [15/Apr/2026 04:53:55] "GET /devicedesc.xml HTTP/1.1" 404 -
+172.232.253.221 - - [15/Apr/2026 04:53:55] code 400, message Bad request syntax ('CONNECT')
+172.232.253.221 - - [15/Apr/2026 04:53:55] "CONNECT" 400 -
+172.232.253.221 - - [15/Apr/2026 04:54:01] code 400, message Bad HTTP/0.9 request type ('¤\x00\x00\x00\x00\x00\x00\x00')
+172.232.253.221 - - [15/Apr/2026 04:54:01] "¤\x00\x00\x00\x00\x00\x00\x00\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00¤\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:54:06] code 400, message Bad request syntax ('\x01\x00\x00\x00')
+172.232.253.221 - - [15/Apr/2026 04:54:06] "\x01\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:54:11] code 400, message Bad request syntax ('c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00ÁÞ¾Ñ\x00\x00\x00\x00')
+172.232.253.221 - - [15/Apr/2026 04:54:11] "c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00ÁÞ¾Ñ\x00\x00\x00\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:54:11] code 400, message Bad request version ('\x00/\x00')
+172.232.253.221 - - [15/Apr/2026 04:54:11] "\x16\x03\x00\x00i\x01\x00\x00e\x03\x03U\x1c§ärandom1random2random3random4\x00\x00\x0c\x00/\x00" 400 -
+172.232.253.221 - - [15/Apr/2026 04:54:16] "GET / HTTP/1.1" 200 -
+172.232.253.221 - - [15/Apr/2026 04:54:21] code 400, message Bad request version ("§\x00\x9c\x13\x02\x13\x03\x13\x01\x003\x009\x005\x00/À,À0\x00£\x00\x9fÌ©Ì¨ÌªÀ¯À\xadÀ£À\x9fÀ]ÀaÀWÀSÀ+À/\x00¢\x00\x9eÀ®À¬À¢À\x9eÀ\\À`ÀVÀRÀ$À(\x00k\x00jÀsÀw\x00Ä\x00ÃÀ#À'\x00g\x00@ÀrÀv\x00¾\x00½À")
+172.232.253.221 - - [15/Apr/2026 04:54:21] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03~\x15§ÒÝ\x9cî¯á§Vo6\x8f#\x03QI!\x16øë\x06P7\x01ÃhÊû\x8cõ \x0b&\x80×«â[\x1bU~^\x93\x17\x8cóB*\x92\x0d¡åaÝ¾ûU­\x11Íâ\x1e§\x00\x9c\x13\x02\x13\x03\x13\x01\x003\x009\x005\x00/À,À0\x00£\x00\x9fÌ©Ì¨ÌªÀ¯À­À£À\x9fÀ]ÀaÀWÀSÀ+À/\x00¢\x00\x9eÀ®À¬À¢À\x9eÀ\\À`ÀVÀRÀ$À(\x00k\x00jÀsÀw\x00Ä\x00ÃÀ#À'\x00g\x00@ÀrÀv\x00¾\x00½À" 400 -
+172.232.253.221 - - [15/Apr/2026 04:54:22] code 400, message Bad HTTP/0.9 request type ('\x80\x00\x00(#)Ê~\x00\x00\x00\x00\x00\x00\x00\x02\x00\x01\x86')
+172.232.253.221 - - [15/Apr/2026 04:54:22] "\x80\x00\x00(#)Ê~\x00\x00\x00\x00\x00\x00\x00\x02\x00\x01\x86 \x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" 400 -
+42.48.38.237 - - [15/Apr/2026 05:27:21] "GET / HTTP/1.1" 200 -
+123.178.210.162 - - [15/Apr/2026 05:28:08] "GET / HTTP/1.1" 200 -
+121.29.149.217 - - [15/Apr/2026 05:28:08] "GET /favicon.ico HTTP/1.1" 404 -
+3.129.187.38 - - [15/Apr/2026 14:32:39] "GET / HTTP/1.1" 200 -
+3.129.187.38 - - [15/Apr/2026 14:34:46] "GET / HTTP/1.1" 200 -
+3.129.187.38 - - [15/Apr/2026 14:36:20] code 400, message Bad request version ('À\x14À')
+3.129.187.38 - - [15/Apr/2026 14:36:20] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03[p\x1aÑwIH¶.%\x1bvàzGn\x8dÀµ\x83-3\x08î\x13\x0f¾\x1fñðôô\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.129.187.38 - - [15/Apr/2026 14:37:42] code 400, message Bad request syntax ('SSH-2.0-Go')
+3.129.187.38 - - [15/Apr/2026 14:37:42] "SSH-2.0-Go" 400 -
+3.129.187.38 - - [15/Apr/2026 14:39:41] code 400, message Bad request version ('À\x14À')
+3.129.187.38 - - [15/Apr/2026 14:39:41] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03Å\x856#ù\x91\x1eÞS\x97Øj\x8b^\x84\x81_êG\x1bV\x8bdVý}sXÿîÊÖ\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+205.210.31.106 - - [15/Apr/2026 18:15:16] "GET / HTTP/1.1" 200 -
+35.203.210.224 - - [16/Apr/2026 00:04:02] code 400, message Bad request version ('À\x13À')
+35.203.210.224 - - [16/Apr/2026 00:04:02] "\x16\x03\x01\x05Æ\x01\x00\x05Â\x03\x03\x03Ùß+Â'\x14´¤\x82\x87¢U\x8f\x18\x10\x82©VYD\x15S\x92¨µ\x9e¦BÙ8~ d\x9bl\x89­õKð´,v\x1d"\x15Üó.9°r}Ýh@qÏ\x17\x8cë~ÛD\x00\x1aÀ+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+35.203.210.224 - - [16/Apr/2026 00:04:02] code 400, message Bad request version ('À(À$À\x14À')
+35.203.210.224 - - [16/Apr/2026 00:04:02] "\x16\x03\x01\x00Ê\x01\x00\x00Æ\x03\x03Ü\x0c\x9bD[6Ñ¤Àbú¥ò~=M}\x98\x05\x1etG¿F.¥EÞ\x8di"ß\x00\x00hÌ\x14Ì\x13À/À+À0À,À\x11À\x07À'À#À\x13À\x09À(À$À\x14À" 400 -
+153.224.87.74 - - [16/Apr/2026 01:32:44] "GET / HTTP/1.0" 200 -
+211.231.103.107 - - [16/Apr/2026 05:45:32] "GET / HTTP/1.1" 200 -
+27.0.238.181 - - [16/Apr/2026 05:45:32] "GET / HTTP/1.1" 200 -
+106.101.197.32 - - [16/Apr/2026 05:52:56] "GET / HTTP/1.1" 200 -
+106.101.197.32 - - [16/Apr/2026 05:52:57] "GET /favicon.ico HTTP/1.1" 404 -
+135.119.89.140 - - [16/Apr/2026 06:21:38] "GET /v2/ HTTP/1.1" 404 -
+3.21.170.111 - - [16/Apr/2026 12:50:25] "GET / HTTP/1.1" 200 -
+3.21.170.111 - - [16/Apr/2026 12:51:25] "GET / HTTP/1.1" 200 -
+3.21.170.111 - - [16/Apr/2026 12:52:59] code 400, message Bad request version ('À\x14À')
+3.21.170.111 - - [16/Apr/2026 12:52:59] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03¯àG-\x80û¡å\x99MË«0â&#2\x18;a\x0b1WcXØ²\x18\x18"­l\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.21.170.111 - - [16/Apr/2026 12:54:11] code 400, message Bad request syntax ('SSH-2.0-Go')
+3.21.170.111 - - [16/Apr/2026 12:54:11] "SSH-2.0-Go" 400 -
+3.21.170.111 - - [16/Apr/2026 12:55:14] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x15©1øY·/9ÇGÄ\x8f\x94Yy`\x97\x0eÑa}"BöMY]s?)Ü\x94\x00\x00\x1aÀ/À+À\x11À\x07À\x13À')
+3.21.170.111 - - [16/Apr/2026 12:55:14] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x15©1øY·/9ÇGÄ\x8f\x94Yy`\x97\x0eÑa}"BöMY]s?)Ü\x94\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+80.82.70.133 - - [16/Apr/2026 16:17:56] "GET / HTTP/1.0" 200 -
+80.82.77.202 - - [16/Apr/2026 16:21:17] code 400, message Bad request version ('À\x13À')
+80.82.77.202 - - [16/Apr/2026 16:21:17] "\x16\x03\x01\x00î\x01\x00\x00ê\x03\x03P\x04&x\x16vofÉûh¡:ì\x1bzüëc®¹ª.ÿks¹*X/þv \x9eèM×\x9bK\x97\x8e\x93ü\x97¹_ûX\x92\x88C-:4"\x8eÎÁC\x81F§úâ\x0c\x00&À+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+80.82.77.202 - - [16/Apr/2026 16:21:17] "GET /aaa9 HTTP/1.1" 404 -
+80.82.77.202 - - [16/Apr/2026 16:21:18] code 400, message Bad request version ('À\x13À')
+80.82.77.202 - - [16/Apr/2026 16:21:18] "\x16\x03\x01\x00î\x01\x00\x00ê\x03\x03.Á\x09w\x87óf|¼ÖC\x84îHõA÷È«O \x8få#t\x12\x9aÿ\x02Õ8\x9a 5X6\x1bü\x1c@ê\x13§±7ÇBA¥<\x87±ö\x9e°\x99¤Ç\x90ëí±;ªÁ\x00&À+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+80.82.77.202 - - [16/Apr/2026 16:21:18] "GET /aab9 HTTP/1.1" 404 -
+185.93.89.192 - - [16/Apr/2026 19:17:51] "CONNECT proxy.proxiesfood.com:443 HTTP/1.1" 404 -
+185.93.89.192 - - [16/Apr/2026 19:17:52] "CONNECT proxy.proxiesfood.com:443 HTTP/1.1" 404 -
+64.227.38.181 - - [16/Apr/2026 21:37:06] "GET / HTTP/1.1" 200 -
+64.227.38.181 - - [16/Apr/2026 21:37:07] "GET /favicon.ico HTTP/1.1" 404 -
+106.101.203.252 - - [17/Apr/2026 00:57:46] "GET / HTTP/1.1" 200 -
+106.101.203.252 - - [17/Apr/2026 00:57:46] "GET /favicon.ico HTTP/1.1" 404 -
+39.129.8.132 - - [17/Apr/2026 01:12:59] "GET / HTTP/1.1" 200 -
+60.13.6.203 - - [17/Apr/2026 01:14:02] "GET / HTTP/1.1" 200 -
+43.248.109.162 - - [17/Apr/2026 01:14:02] "GET /favicon.ico HTTP/1.1" 404 -
+121.140.204.127 - - [17/Apr/2026 04:18:33] "GET / HTTP/1.0" 200 -
+106.101.194.90 - - [17/Apr/2026 06:17:27] "GET / HTTP/1.1" 200 -
+106.101.194.90 - - [17/Apr/2026 06:17:27] "GET /favicon.ico HTTP/1.1" 404 -
+106.101.194.90 - - [17/Apr/2026 06:17:30] "GET / HTTP/1.1" 200 -
+106.101.194.90 - - [17/Apr/2026 06:17:30] "GET /favicon.ico HTTP/1.1" 404 -
+106.101.200.242 - - [17/Apr/2026 06:18:57] "GET / HTTP/1.1" 200 -
+106.101.200.242 - - [17/Apr/2026 06:18:57] "GET /favicon.ico HTTP/1.1" 404 -
+Traceback (most recent call last):
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 2, in <module>
+    from flask import Flask
+ModuleNotFoundError: No module named 'flask'
+Traceback (most recent call last):
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 2, in <module>
+    from flask import Flask
+ModuleNotFoundError: No module named 'flask'
+Traceback (most recent call last):
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 2, in <module>
+    from flask import Flask
+ModuleNotFoundError: No module named 'flask'
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 588-664-813
+106.101.200.244 - - [17/Apr/2026 06:55:20] "GET / HTTP/1.1" 200 -
+106.101.200.244 - - [17/Apr/2026 06:55:21] "GET /favicon.ico HTTP/1.1" 404 -
+18.218.118.203 - - [17/Apr/2026 11:55:19] "GET / HTTP/1.1" 200 -
+18.218.118.203 - - [17/Apr/2026 11:55:56] "GET / HTTP/1.1" 200 -
+18.218.118.203 - - [17/Apr/2026 11:57:18] code 400, message Bad request version ('À\x14À')
+18.218.118.203 - - [17/Apr/2026 11:57:18] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03¿\x02Áà\x18\x9fq<BÓ4µt;£¸\x91\x053ÏÇùêý\x80UÁà\x0düÙ\x94\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+18.218.118.203 - - [17/Apr/2026 11:58:57] code 400, message Bad request syntax ('SSH-2.0-Go')
+18.218.118.203 - - [17/Apr/2026 11:58:57] "SSH-2.0-Go" 400 -
+18.218.118.203 - - [17/Apr/2026 12:00:01] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x0fÊÙ\x08\x9e\x80¸Â_Î?ÝBJ?ìþ\x83~Ï\x98\x99ü`\x98\x98Ùo£^\x0f\x96\x00\x00\x1aÀ/À+À\x11À\x07À\x13À')
+18.218.118.203 - - [17/Apr/2026 12:00:01] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x0fÊÙ\x08\x9e\x80¸Â_Î?ÝBJ?ìþ\x83~Ï\x98\x99ü`\x98\x98Ùo£^\x0f\x96\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+198.235.24.90 - - [17/Apr/2026 13:06:07] "GET / HTTP/1.1" 200 -
+119.149.244.238 - - [18/Apr/2026 00:26:52] "GET / HTTP/1.1" 200 -
+116.178.129.1 - - [18/Apr/2026 00:51:30] "GET / HTTP/1.1" 200 -
+124.89.89.149 - - [18/Apr/2026 00:52:15] "GET / HTTP/1.1" 200 -
+124.117.192.201 - - [18/Apr/2026 00:52:22] "GET /favicon.ico HTTP/1.1" 404 -
+202.223.47.35 - - [18/Apr/2026 10:39:35] "GET / HTTP/1.0" 200 -
+119.242.49.200 - - [18/Apr/2026 12:08:53] "GET / HTTP/1.0" 200 -
+18.218.118.203 - - [18/Apr/2026 13:47:44] "GET / HTTP/1.1" 200 -
+18.218.118.203 - - [18/Apr/2026 13:49:22] "GET / HTTP/1.1" 200 -
+18.218.118.203 - - [18/Apr/2026 13:50:12] code 400, message Bad HTTP/0.9 request type ("\x16\x03\x01\x00{\x01\x00\x00w\x03\x03(ª¹qA8'Ì\x9dwk®'ðupgÒ9ÁÉû\xadç`Ë÷Én!cî\x00\x00\x1aÀ/À+À\x11À\x07À\x13À")
+18.218.118.203 - - [18/Apr/2026 13:50:12] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03(ª¹qA8'Ì\x9dwk®'ðupgÒ9ÁÉû­ç`Ë÷Én!cî\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+18.218.118.203 - - [18/Apr/2026 13:51:01] code 400, message Bad request syntax ('SSH-2.0-Go')
+18.218.118.203 - - [18/Apr/2026 13:51:01] "SSH-2.0-Go" 400 -
+18.218.118.203 - - [18/Apr/2026 13:52:03] code 400, message Bad request version ('À\x14À')
+18.218.118.203 - - [18/Apr/2026 13:52:03] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03Êi¶kS*\x81\x85\x91\x94VÖ&h2\x06£ú+)ÿü\x85 VÍa¯íÐ\x08\x0d\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+162.216.149.229 - - [18/Apr/2026 20:34:19] code 400, message Bad request version ('À\x13À')
+162.216.149.229 - - [18/Apr/2026 20:34:19] "\x16\x03\x01\x05Æ\x01\x00\x05Â\x03\x03\x04R$©b`d÷Ú'\x04\x9c6Ñúz\x006\x16t8ó+\x9a.Ë¥1/Lq\x8c ^¹Ñ¡Ó<NI·½¹\x06\x18MÌÈ~B\x1d\x88à\x8d\x98k\x13Y\x8d\x05 \x8d\x93È\x00\x1aÀ+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+162.216.149.229 - - [18/Apr/2026 20:34:20] code 400, message Bad request version ('À(À$À\x14À')
+162.216.149.229 - - [18/Apr/2026 20:34:20] "\x16\x03\x01\x00Ê\x01\x00\x00Æ\x03\x03®(\x84éÐhMàï¶ãçé5Â\x06\x80H+î®\x0fO@\\\x09\x97fwÙ\x93Ê\x00\x00hÌ\x14Ì\x13À/À+À0À,À\x11À\x07À'À#À\x13À\x09À(À$À\x14À" 400 -
+185.93.89.190 - - [19/Apr/2026 09:15:30] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+185.93.89.191 - - [19/Apr/2026 09:15:31] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+3.129.187.38 - - [19/Apr/2026 12:26:02] "GET / HTTP/1.1" 200 -
+3.129.187.38 - - [19/Apr/2026 12:28:05] "GET / HTTP/1.1" 200 -
+3.129.187.38 - - [19/Apr/2026 12:30:53] code 400, message Bad request syntax ('SSH-2.0-Go')
+3.129.187.38 - - [19/Apr/2026 12:30:53] "SSH-2.0-Go" 400 -
+3.129.187.38 - - [19/Apr/2026 12:32:13] code 400, message Bad request version ('À\x14À')
+3.129.187.38 - - [19/Apr/2026 12:32:13] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x94W\x98wH¹-¨£K\x9d.\x8dç(D¬\x1e§èu\x07a÷\x92D¾h<²BÎ\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+172.174.225.60 - - [19/Apr/2026 15:25:09] "GET /v2/ HTTP/1.1" 404 -
+168.144.69.18 - - [19/Apr/2026 22:03:54] "GET / HTTP/1.1" 200 -
+168.144.69.18 - - [19/Apr/2026 22:03:54] "GET /favicon.ico HTTP/1.1" 404 -
+35.203.210.197 - - [19/Apr/2026 22:43:55] code 400, message Bad request version ('À\x13À')
+35.203.210.197 - - [19/Apr/2026 22:43:55] "\x16\x03\x01\x05Æ\x01\x00\x05Â\x03\x03^\x0b9F0Ó\x0f"\x17þSÂ@\x88\x0fx\x94\x8d:\x98\x0e\x19\x156\x1b\x9afªv#\x08é ÅÍ,U¨\x86øKe\x11\x89¢·ù!´3&ß\x047ÙiKf²ûkâa²á\x00\x1aÀ+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+35.203.210.197 - - [19/Apr/2026 22:43:55] code 400, message Bad request version ('À(À$À\x14À')
+35.203.210.197 - - [19/Apr/2026 22:43:55] "\x16\x03\x01\x00Ê\x01\x00\x00Æ\x03\x03Wm\x81K\x19ü\x82«Ùú\x81\x85ê\x91Ã\x13\x15\x1d2\x96\x08n\x84´\x17\x95`¶|oÐÃ\x00\x00hÌ\x14Ì\x13À/À+À0À,À\x11À\x07À'À#À\x13À\x09À(À$À\x14À" 400 -
+16.58.56.214 - - [20/Apr/2026 13:45:16] "GET / HTTP/1.1" 200 -
+16.58.56.214 - - [20/Apr/2026 13:46:59] "GET / HTTP/1.1" 200 -
+16.58.56.214 - - [20/Apr/2026 13:47:06] code 400, message Bad request version ('À\x14À')
+16.58.56.214 - - [20/Apr/2026 13:47:06] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03sÃ?ïg?1_*\x94ucL²çJ\x85ç®.z¢×\x96"F\x12½\x1cu(1\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+16.58.56.214 - - [20/Apr/2026 13:48:08] code 400, message Bad request syntax ('SSH-2.0-Go')
+16.58.56.214 - - [20/Apr/2026 13:48:08] "SSH-2.0-Go" 400 -
+16.58.56.214 - - [20/Apr/2026 13:49:35] code 400, message Bad request version ('À\x14À')
+16.58.56.214 - - [20/Apr/2026 13:49:35] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03,-¾\x1e\x81\x0ei\x15\x81Ag£ÊÑM8o'báþI\x8cý÷ 'Ä\x1a³S/\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+144.172.92.113 - - [20/Apr/2026 17:18:17] code 400, message Bad request version (':þ$#\x00\x05\x00\x05\x01\x00\x00\x00\x00\x00')
+144.172.92.113 - - [20/Apr/2026 17:18:17] "\x16\x03\x01\x00ì\x01\x00\x00è\x03\x03\\@n ¨TY$·â\x80\x9a*ô9\x13D\x89ð0\x8a\x19¹\x8b\x87]\x1c%³æN÷ º©\x95ü\x06¬òJo\x94;<\x8aUW\x90l\x02òÕÇ¹\x00EÀ¼\x96À\\?\x81ö\x00\x14\x13\x02\x13\x01\x13\x03À,À+Ì©À0À/Ì¨\x00ÿ\x01\x00\x00\x8b\x00-\x00\x02\x01\x01\x003\x00&\x00$\x00\x1d\x00 ½²3\x8dB\x86\x1eê,íY\x847QÎ\x02\x90ø\x1b®+Í\x1a¹nRÜ\x0b:þ$#\x00\x05\x00\x05\x01\x00\x00\x00\x00\x00" 400 -
+144.172.92.113 - - [20/Apr/2026 17:18:17] "GET /welcome HTTP/1.1" 404 -
+165.227.44.157 - - [21/Apr/2026 00:21:08] "GET / HTTP/1.1" 200 -
+165.227.44.157 - - [21/Apr/2026 00:21:08] "GET /favicon.ico HTTP/1.1" 404 -
+122.96.28.136 - - [21/Apr/2026 05:44:26] code 400, message Bad request version ('À\x13À')
+122.96.28.136 - - [21/Apr/2026 05:44:26] "\x16\x03\x01\x00î\x01\x00\x00ê\x03\x03ÑjØ\x94I¯ülúzZ\x97Æ3(\x95ãæÍ*\x81öíÍ2²}!;kgê \x1féí\x9f3\x8f°\x140\x0ct9r\x9a\x8fK>s\x81Hg\x89ÌlaÆè­Ã\x7f\x12þ\x00&À+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+58.56.96.53 - - [21/Apr/2026 05:44:26] "GET / HTTP/1.1" 200 -
+171.37.190.102 - - [21/Apr/2026 05:44:44] "GET / HTTP/1.0" 200 -
+221.207.35.14 - - [21/Apr/2026 05:44:52] code 400, message Bad request syntax ('~\x00\x02\x00\x00\x02\x00\x00\x00\x00\x15\x00\x032~')
+221.207.35.14 - - [21/Apr/2026 05:44:52] "~\x00\x02\x00\x00\x02\x00\x00\x00\x00\x15\x00\x032~" 400 -
+183.92.114.159 - - [21/Apr/2026 05:45:00] code 400, message Bad request syntax ('â2\x00\x00\x00\x05\x00+\x0e\x01\x00')
+183.92.114.159 - - [21/Apr/2026 05:45:00] "â2\x00\x00\x00\x05\x00+\x0e\x01\x00" 400 -
+220.197.78.235 - - [21/Apr/2026 05:45:38] "GET / HTTP/1.1" 200 -
+144.123.77.82 - - [21/Apr/2026 05:45:38] "GET /favicon.ico HTTP/1.1" 404 -
+16.58.56.214 - - [21/Apr/2026 13:18:37] "GET / HTTP/1.1" 200 -
+16.58.56.214 - - [21/Apr/2026 13:20:37] "GET / HTTP/1.1" 200 -
+16.58.56.214 - - [21/Apr/2026 13:22:11] code 400, message Bad request version ('À\x14À')
+16.58.56.214 - - [21/Apr/2026 13:22:11] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03ª±mb7ß\x9aOå C&S\x00ªLÀÅ¦#²3áp¼\x8aÃE¦\x7fQÑ\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+16.58.56.214 - - [21/Apr/2026 13:23:31] code 400, message Bad request syntax ('SSH-2.0-Go')
+16.58.56.214 - - [21/Apr/2026 13:23:31] "SSH-2.0-Go" 400 -
+16.58.56.214 - - [21/Apr/2026 13:24:39] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03h\x84\x80Ù"B4\x8b1¼å¡¬èæoê\x95$\x81\x96\x9c\x05c!\xadoæ¹¡ù^\x00\x00\x1aÀ/À+À\x11À\x07À\x13À')
+16.58.56.214 - - [21/Apr/2026 13:24:39] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03h\x84\x80Ù"B4\x8b1¼å¡¬èæoê\x95$\x81\x96\x9c\x05c!­oæ¹¡ù^\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+205.210.31.250 - - [21/Apr/2026 17:26:31] "GET / HTTP/1.1" 200 -
+198.235.24.161 - - [21/Apr/2026 18:10:20] "GET / HTTP/1.1" 200 -
+219.148.163.2 - - [21/Apr/2026 19:06:46] "GET / HTTP/1.0" 200 -
+219.148.163.2 - - [21/Apr/2026 19:06:46] "GET /nmaplowercheck1776798786 HTTP/1.1" 404 -
+219.148.163.2 - - [21/Apr/2026 19:06:46] "POST /sdk HTTP/1.1" 404 -
+219.148.163.2 - - [21/Apr/2026 19:06:46] "GET / HTTP/1.0" 200 -
+219.148.163.2 - - [21/Apr/2026 19:06:46] "HEAD / HTTP/1.1" 200 -
+219.148.163.2 - - [21/Apr/2026 19:06:47] "GET /HNAP1 HTTP/1.1" 404 -
+219.148.163.2 - - [21/Apr/2026 19:06:47] "GET /evox/about HTTP/1.1" 404 -
+219.148.163.2 - - [21/Apr/2026 19:06:56] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03\x0eøJ&íó\x94ë\x9fNÊ\x9erÅàb\x18ù\x96I\x9c\x05Àgáfö\x89Âz')
+219.148.163.2 - - [21/Apr/2026 19:06:56] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03\x0eøJ&íó\x94ë\x9fNÊ\x9erÅàb\x18ù\x96I\x9c\x05Àgáfö\x89Âz\x0cu\x00\x00Ú\x00\x05\x00\x04\x00\x02\x00\x01\x00\x16\x003\x009\x00:\x00\x18\x005\x00" 400 -
+219.148.163.2 - - [21/Apr/2026 19:06:57] code 400, message Bad request syntax ("\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03GY\x11R\\/Åâ>ØÅ\x90ªVÖ\x89BÜ!ÿ\x18G'\x15\x80EM\x89\x87&\x13ð\x00\x00Ú\x00\x05\x00\x04\x00\x02\x00\x01\x00\x16\x003\x009\x00:\x00\x18\x005\x00")
+219.148.163.2 - - [21/Apr/2026 19:06:57] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03GY\x11R\\/Åâ>ØÅ\x90ªVÖ\x89BÜ!ÿ\x18G'\x15\x80EM\x89\x87&\x13ð\x00\x00Ú\x00\x05\x00\x04\x00\x02\x00\x01\x00\x16\x003\x009\x00:\x00\x18\x005\x00" 400 -
+219.148.163.2 - - [21/Apr/2026 19:06:57] "GET / HTTP/1.0" 200 -
+219.148.163.2 - - [21/Apr/2026 19:06:57] "GET / HTTP/1.1" 200 -
+204.76.203.226 - - [21/Apr/2026 20:12:54] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+204.76.203.226 - - [21/Apr/2026 20:12:54] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+147.185.132.177 - - [21/Apr/2026 21:25:32] "GET / HTTP/1.0" 200 -
+80.94.92.15 - - [22/Apr/2026 03:09:30] "GET / HTTP/1.1" 200 -
+80.94.92.15 - - [22/Apr/2026 03:09:36] "GET /favicon.ico HTTP/1.1" 404 -
+35.203.211.142 - - [22/Apr/2026 03:10:29] code 400, message Bad request version ('SU')
+35.203.211.142 - - [22/Apr/2026 03:10:29] "\x16\x03\x01\x05Æ\x01\x00\x05Â\x03\x03åÌ¢Ù=\x06\x85\x8cIpµ=¼\x08±©à\x03)ébË|\x88þÏ\x1dX·A\x0c0 \x95êÓc¶Xwf\x83îSI¥#]\x1a9\x8d1y\x96Þ\x03_5\x191\x1d\x0bSU" 400 -
+35.203.211.142 - - [22/Apr/2026 03:10:30] code 400, message Bad request version ('À(À$À\x14À')
+35.203.211.142 - - [22/Apr/2026 03:10:30] "\x16\x03\x01\x00Ê\x01\x00\x00Æ\x03\x03«Á\x01\x8c\x1a\x13õz\x88Aàç\x8a½{\x8aµ#\x13kñºHL\x9f\x85\x98C<ìï"\x00\x00hÌ\x14Ì\x13À/À+À0À,À\x11À\x07À'À#À\x13À\x09À(À$À\x14À" 400 -
+16.58.56.214 - - [22/Apr/2026 09:37:52] "GET / HTTP/1.1" 200 -
+16.58.56.214 - - [22/Apr/2026 09:39:10] "GET / HTTP/1.1" 200 -
+16.58.56.214 - - [22/Apr/2026 09:42:11] code 400, message Bad request syntax ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03')
+16.58.56.214 - - [22/Apr/2026 09:42:11] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03" 400 -
+198.235.24.55 - - [22/Apr/2026 18:58:45] "GET / HTTP/1.1" 200 -
+40.124.185.25 - - [22/Apr/2026 21:55:34] "GET /v2/ HTTP/1.1" 404 -
+18.218.118.203 - - [23/Apr/2026 09:46:32] "GET / HTTP/1.1" 200 -
+18.218.118.203 - - [23/Apr/2026 09:47:45] "GET / HTTP/1.1" 200 -
+18.218.118.203 - - [23/Apr/2026 09:49:03] code 400, message Bad request version ('À\x14À')
+18.218.118.203 - - [23/Apr/2026 09:49:03] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03PçÌù=Ës+_Ca\x12!ò.\x85Ë\x12å½Ê\x07òÇ2ñKø\x109M­\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+18.218.118.203 - - [23/Apr/2026 09:50:06] code 400, message Bad request syntax ('SSH-2.0-Go')
+18.218.118.203 - - [23/Apr/2026 09:50:06] "SSH-2.0-Go" 400 -
+18.218.118.203 - - [23/Apr/2026 09:51:56] code 400, message Bad request syntax ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03ÛöjÃË\x02À')
+18.218.118.203 - - [23/Apr/2026 09:51:56] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03ÛöjÃË\x02À" 400 -
+204.76.203.226 - - [23/Apr/2026 10:44:17] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+204.76.203.226 - - [23/Apr/2026 10:44:18] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+159.89.94.65 - - [23/Apr/2026 15:22:15] "GET / HTTP/1.1" 200 -
+159.89.94.65 - - [23/Apr/2026 15:22:15] "GET /favicon.ico HTTP/1.1" 404 -
+220.169.121.131 - - [23/Apr/2026 15:50:23] "GET / HTTP/1.1" 200 -
+220.169.121.131 - - [23/Apr/2026 15:50:23] "GET /favicon.ico HTTP/1.1" 404 -
+64.227.99.64 - - [23/Apr/2026 16:59:03] "GET / HTTP/1.1" 200 -
+64.227.99.64 - - [23/Apr/2026 16:59:03] "GET /favicon.ico HTTP/1.1" 404 -
+45.156.129.187 - - [23/Apr/2026 17:53:21] "GET /cgi-bin/authLogin.cgi HTTP/1.1" 404 -
+101.71.211.135 - - [23/Apr/2026 21:28:42] "GET / HTTP/1.1" 200 -
+61.133.211.71 - - [23/Apr/2026 21:28:44] "GET / HTTP/1.1" 200 -
+222.94.32.113 - - [23/Apr/2026 21:28:44] "GET /favicon.ico HTTP/1.1" 404 -
+182.213.195.118 - - [23/Apr/2026 23:47:27] "GET / HTTP/1.0" 200 -
+195.184.76.222 - - [24/Apr/2026 06:31:00] code 400, message Bad request version ('À#À¬À®À+À')
+195.184.76.222 - - [24/Apr/2026 06:31:00] "\x16\x03\x03\x01¦\x01\x00\x01¢\x03\x03Ë\x8a0\x18¨2O-\x1b6o#E)óR\x84°ÐÈ\x1f\x0bâ¤\x9c\x7f\x13üìÇ\x06Í Á3*\x0d=Ûp\x83\x900>ÌÍã\x7fD\x05j·¿O&ª\x01Ê\x1eí\x94È¼Ú¿\x00\x8a\x00\x16\x003\x00gÀ\x9eÀ¢\x00\x9e\x009\x00kÀ\x9fÀ£\x00\x9f\x00E\x00¾\x00\x88\x00Ä\x00\x9aÀ\x08À\x09À#À¬À®À+À" 400 -
+195.184.76.218 - - [24/Apr/2026 06:31:04] "GET / HTTP/1.1" 200 -
+3.130.168.2 - - [24/Apr/2026 09:39:12] "GET / HTTP/1.1" 200 -
+3.130.168.2 - - [24/Apr/2026 09:40:39] "GET / HTTP/1.1" 200 -
+3.130.168.2 - - [24/Apr/2026 09:41:07] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x0e_\x83N\x93ö[\x03Ýý¦¼5ÙCsØ\x8a\x0f\x9cÊDK©Å|ü\x89ÊÆ!@\x00\x00\x1aÀ/À+À\x11À\x07À\x13À')
+3.130.168.2 - - [24/Apr/2026 09:41:07] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x0e_\x83N\x93ö[\x03Ýý¦¼5ÙCsØ\x8a\x0f\x9cÊDK©Å|ü\x89ÊÆ!@\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.130.168.2 - - [24/Apr/2026 09:42:17] code 400, message Bad request syntax ('SSH-2.0-Go')
+3.130.168.2 - - [24/Apr/2026 09:42:17] "SSH-2.0-Go" 400 -
+3.129.187.38 - - [24/Apr/2026 11:15:04] "GET / HTTP/1.1" 200 -
+3.129.187.38 - - [24/Apr/2026 11:16:10] "GET / HTTP/1.1" 200 -
+3.129.187.38 - - [24/Apr/2026 11:17:41] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03é2ZZÙôÄü¯R×\xadHýÞ¤\x16\x135')
+3.129.187.38 - - [24/Apr/2026 11:17:41] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03é2ZZÙôÄü¯R×­HýÞ¤\x16\x135\x1es" 400 -
+3.129.187.38 - - [24/Apr/2026 11:18:36] code 400, message Bad request syntax ('SSH-2.0-Go')
+3.129.187.38 - - [24/Apr/2026 11:18:36] "SSH-2.0-Go" 400 -
+3.129.187.38 - - [24/Apr/2026 11:19:42] code 400, message Bad request syntax ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03é\x9d&Î5zÝ8\x8f\x8f')
+3.129.187.38 - - [24/Apr/2026 11:19:42] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03é\x9d&Î5zÝ8\x8f\x8f" 400 -
+162.216.150.210 - - [24/Apr/2026 11:55:39] code 400, message Bad request version ('À\x13À')
+162.216.150.210 - - [24/Apr/2026 11:55:39] "\x16\x03\x01\x05Æ\x01\x00\x05Â\x03\x03MJny\\&\x84ß ÖZÓøì\x1b¡\x97Q\x06ú\x18c\x137\x82aê$Ý\x13W\x9c íG§ùÏ\x83\x8dq\x99yø`Æöhø\x16N|éâ\x9e\x06 \x04î:«ÍÃK&\x00\x1aÀ+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+162.216.150.210 - - [24/Apr/2026 11:55:40] code 400, message Bad HTTP/0.9 request type ("\x16\x03\x01\x00Ê\x01\x00\x00Æ\x03\x03<UY\x105\x87Wræò\x8az\x99\x18xz\x8bc:,(Ü\x94ãc\x94ü%Æ§C*\x00\x00hÌ\x14Ì\x13À/À+À0À,À\x11À\x07À'À#À\x13À")
+162.216.150.210 - - [24/Apr/2026 11:55:40] "\x16\x03\x01\x00Ê\x01\x00\x00Æ\x03\x03<UY\x105\x87Wræò\x8az\x99\x18xz\x8bc:,(Ü\x94ãc\x94ü%Æ§C*\x00\x00hÌ\x14Ì\x13À/À+À0À,À\x11À\x07À'À#À\x13À\x09À(À$À\x14À" 400 -
+205.210.31.233 - - [24/Apr/2026 12:17:32] "GET / HTTP/1.1" 200 -
+8.216.13.249 - - [24/Apr/2026 17:20:39] code 400, message Bad request version ('RTSP/1.0')
+8.216.13.249 - - [24/Apr/2026 17:20:39] "OPTIONS / RTSP/1.0" 400 -
+8.216.13.249 - - [24/Apr/2026 17:21:02] code 400, message Bad request version ('À\x13À')
+8.216.13.249 - - [24/Apr/2026 17:21:02] "\x16\x03\x01\x00î\x01\x00\x00ê\x03\x03I\x06²ù¼\x99iÀYûøºe-\x83Ud]\x0e\x8d·b8´gÆÝ9dZ8f gÁ\x81i³öòË°©\x19NÖ½\x95g|püé<Z¡\x90T·é¥8'O;\x00&À+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+8.216.13.249 - - [24/Apr/2026 17:21:12] "GET / HTTP/1.1" 200 -
+8.216.13.249 - - [24/Apr/2026 17:21:13] "GET / HTTP/1.1" 200 -
+123.160.223.72 - - [24/Apr/2026 17:22:56] "GET / HTTP/1.1" 200 -
+123.160.223.75 - - [24/Apr/2026 17:22:57] "GET /favicon.ico HTTP/1.1" 404 -
+147.185.132.12 - - [24/Apr/2026 18:10:05] "GET / HTTP/1.1" 200 -
+198.235.24.89 - - [24/Apr/2026 19:33:53] "GET / HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 588-664-813
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 588-664-813
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 354-346-518
+61.33.136.111 - - [24/Apr/2026 20:33:27] "GET /api/violations HTTP/1.1" 200 -
+61.33.136.111 - - [24/Apr/2026 20:33:27] "GET /favicon.ico HTTP/1.1" 404 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 354-346-518
+61.33.136.111 - - [24/Apr/2026 20:40:46] "GET /api/violations HTTP/1.1" 200 -
+61.33.136.111 - - [24/Apr/2026 20:40:47] "GET /api/violations HTTP/1.1" 200 -
+61.33.136.111 - - [24/Apr/2026 20:42:16] "GET /api/violations HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 76
+    socketio.emit('new_violation',data)
+TabError: inconsistent use of tabs and spaces in indentation
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 76
+    socketio.emit('new_violation',data)
+TabError: inconsistent use of tabs and spaces in indentation
+Traceback (most recent call last):
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 88, in <module>
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 664, in run
+    raise RuntimeError('The Werkzeug web server is not '
+RuntimeError: The Werkzeug web server is not designed to run in production. Pass allow_unsafe_werkzeug=True to the run() method to disable this error.
+Traceback (most recent call last):
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 106, in <module>
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 664, in run
+    raise RuntimeError('The Werkzeug web server is not '
+RuntimeError: The Werkzeug web server is not designed to run in production. Pass allow_unsafe_werkzeug=True to the run() method to disable this error.
+Traceback (most recent call last):
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 106, in <module>
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 664, in run
+    raise RuntimeError('The Werkzeug web server is not '
+RuntimeError: The Werkzeug web server is not designed to run in production. Pass allow_unsafe_werkzeug=True to the run() method to disable this error.
+Traceback (most recent call last):
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 105, in <module>
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 664, in run
+    raise RuntimeError('The Werkzeug web server is not '
+RuntimeError: The Werkzeug web server is not designed to run in production. Pass allow_unsafe_werkzeug=True to the run() method to disable this error.
+Traceback (most recent call last):
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 106, in <module>
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 664, in run
+    raise RuntimeError('The Werkzeug web server is not '
+RuntimeError: The Werkzeug web server is not designed to run in production. Pass allow_unsafe_werkzeug=True to the run() method to disable this error.
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 129-618-574
+112.156.191.233 - - [25/Apr/2026 08:18:26] "GET /api/stats HTTP/1.1" 401 -
