@@ -72,6 +72,8 @@ def token_required(f):
         if not token:
             return jsonify({'message': '권한이 없습니다'}), 401
         try:
+            if token.startswith('Bearer '):
+                token = token.split(" ")[1]
             jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
         except:
             return jsonify({'message': '유효하지 않습니다'}), 401
@@ -163,38 +165,43 @@ def stream_urls():
 
 @app.route('/api/stats', methods=['GET'])
 @token_required
-def get_stats(current_user):
-    """
-    실시간 통계 데이터 조회 API
-    ---
-    tags:
-      - Statistics
-    responses:
-      200:
-        description: 성공적으로 통계 데이터를 반환했습니다.
-        schema:
-          properties:
-            status:
-              type: string
-              example: success
-            data:
-              type: object
-              example: {"today": 0, "total": 1}
-    """
+def get_stats():
     try:
-        total_count = Violation.query.count()
-        today = date.today()
-        today_count = Violation.query.filter(db.func.date(Violation.detected_at) == today).count()
+        
+        from datetime import date
+        today_date = date.today()
+
+        
+        try:
+            total_count = Violation.query.count()
+        except:
+            total_count = 0
+
+        
+        try:
+            
+            today_count = Violation.query.filter(
+                db.func.date(Violation.detected_at) == today_date
+            ).count()
+        except:
+            today_count = 0
+
+        
         return jsonify({
             "status": "success",
             "data": {
                 "total": total_count,
                 "today": today_count,
-                "update_time": today.strftime('%Y-%m-%d')
+                "update_time": today_date.strftime('%Y-%m-%d')
             }
         }), 200
+
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        
+        return jsonify({
+            "status": "error", 
+            "message": f"DB 처리 중 에러 발생: {str(e)}"
+        }), 500
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
