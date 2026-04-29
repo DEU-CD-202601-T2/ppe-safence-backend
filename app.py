@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flasgger import Swagger
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
@@ -7,9 +8,10 @@ import jwt
 from functools import wraps
 
 app = Flask(__name__)
+swagger = Swagger(app)
 app.config['SECRET_KEY'] = 'capston'
 app.config['JSON_AS_ASCII'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/capstone_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@localhost/capstone_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -86,7 +88,24 @@ def receive_violation():
 
 @app.route('/api/stats', methods=['GET'])
 @token_required
-def get_stats():
+def get_stats(current_user):
+    """
+    실시간 통계 데이터 조회 API
+    ---
+    tags:
+      - Statistics
+    responses:
+      200:
+        description: 성공적으로 통계 데이터를 반환했습니다.
+        schema:
+          properties:
+            status:
+              type: string
+              example: success
+            data:
+              type: object
+              example: {"today": 0, "total": 1}
+    """
     try:
         total_count = Violation.query.count()
         today = date.today()
