@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, request, jsonify
 from flasgger import Swagger
 from flask_sqlalchemy import SQLAlchemy
@@ -8,7 +9,44 @@ import jwt
 from functools import wraps
 
 app = Flask(__name__)
-swagger = Swagger(app)
+swagger_config = {
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": 'apispec_1',
+            "route": '/apispec_1.json',
+            "rule_filter": lambda rule: True,
+            "model_filter": lambda rule: True,
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/apidocs/"
+}
+
+template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "PPE-Safence API",
+        "description": "실시간 데이터 및 스트리밍 연동 문서",
+        "version": "1.0.1"
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT 토큰을 입력하세요. (형식: Bearer {token})"
+        }
+    },
+    "security": [
+        {
+            "Bearer": []
+        }
+    ]
+}
+swagger = Swagger(app, config=swagger_config, template=template)
+
 app.config['SECRET_KEY'] = 'capston'
 app.config['JSON_AS_ASCII'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@localhost/capstone_db'
@@ -85,6 +123,43 @@ def receive_violation():
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/stream-urls', methods=['GET'])
+@token_required
+def stream_urls():
+    """
+    실시간 카메라 스트리밍 URL 조회 API
+    ---
+    tags:
+      - Camera
+    security:      
+      - Bearer: []      
+    responses:
+      200:
+        description: 카메라 목록 및 접속 URL 반환 성공
+      503:
+        description: 현장 Jetson 장비 오프라인 상태
+    """
+    try:
+        res = requests.get('http://localhost:5001/cameras', timeout=3)
+        cameras = res.json().get('cameras', [])
+        
+        return {
+            'status': 'success',
+            'cameras': [
+                {
+                    'name': cam,
+                    'url': f'http://43.200.27.117:5001/stream/{cam}'
+                }
+                for cam in cameras
+            ]
+        }, 200
+    except Exception as e:
+        return {
+            'status': 'jetson_offline',
+            'cameras': [],
+            'message': '현장 Jetson 디바이스와 연결할 수 없습니다.'
+        }, 503
 
 @app.route('/api/stats', methods=['GET'])
 @token_required
