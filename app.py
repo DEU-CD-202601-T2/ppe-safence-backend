@@ -4,7 +4,7 @@ from flasgger import Swagger
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 import jwt
 from functools import wraps
 
@@ -32,7 +32,7 @@ template = {
         "version": "1.0.1"
     },
     "securityDefinitions": {
-        "Bearer": {
+        "BearerAuth": {
             "type": "apiKey",
             "name": "Authorization",
             "in": "header",
@@ -41,7 +41,7 @@ template = {
     },
     "security": [
         {
-            "Bearer": []
+            "BearerAuth": []
         }
     ]
 }
@@ -65,66 +65,53 @@ class Violation(db.Model):
     image_path = db.Column(db.String(255))
     is_checked = db.Column(db.Boolean, default=False)
 
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    login_id = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100))
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'message': '권한이 없습니다'}), 401
+        auth_header = request.headers.get('Authorization')
+        if not auth_header:
+            return jsonify({'message': '권한이 없습니다 (헤더 없음)'}), 401
+            
         try:
-            if token.startswith('Bearer '):
-                token = token.split(" ")[1]
-            jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-        except:
-            return jsonify({'message': '유효하지 않습니다'}), 401
+            token = auth_header.replace('Bearer ', '').strip()
+            print(f"--- 해독 시도 토큰: {token[:15]}... ---")
+            
+
+            jwt.decode(token, 'capston', algorithms=["HS256"])
+            
+        except Exception as e:
+            print(f"!!! 해독 실패 원인: {str(e)} !!!")
+            return jsonify({'message': f'유효하지 않습니다 ({str(e)})'}), 401
+            
         return f(*args, **kwargs)
     return decorated
 
 @app.route('/api/login', methods=['POST'])
 def login():
     auth = request.json
-    if auth.get('id') == 'sim' and auth.get('pw') == 'capston':
+    input_id = auth.get('login_id')
+    input_pw = auth.get('password')
+
+    user = User.query.filter_by(login_id=input_id).first()
+
+    if user and user.password == input_pw:
+        now = datetime.now(timezone.utc) 
         token = jwt.encode({
-            'user': auth.get('id'),
-            'exp': datetime.utcnow() + timedelta(minutes=30)
-        }, app.config['SECRET_KEY'], algorithm="HS256")
+            'user': user.login_id,
+            'iat': now,
+            'exp': now + timedelta(hours=24) 
+        }, 'capston', algorithm="HS256") 
+        
         return jsonify({'status': 'success', 'token': token}), 200
-    return jsonify({'status': 'fail', 'message': '로그인 실패'}), 401
-
-@app.route('/api/violations', methods=['GET'])
-@token_required
-def get_violations():
-    try:
-        violations = Violation.query.order_by(Violation.detected_at.desc()).all()
-        data = []
-        for v in violations:
-            data.append({
-                "id": v.id,
-                "type": v.violation_type,
-                "area": v.area,
-                "time": v.detected_at.strftime('%Y-%m-%d %H:%M:%S'),
-                "checked": v.is_checked
-            })
-        return jsonify({"status": "success", "data": data}), 200
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-@app.route('/api/violations', methods=['POST'])
-def receive_violation():
-    try:
-        data = request.json
-        new_violation = Violation(
-            violation_type=data.get('type'),
-            area=data.get('area'),
-            image_path=data.get('image_path')
-        )
-        db.session.add(new_violation)
-        db.session.commit()
-        socketio.emit('new_violation', data)
-        return jsonify({"status": "success"}), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"status": "error", "message": str(e)}), 500
+    
+    return jsonify({'status': 'fail', 'message': '아이디 또는 비밀번호가 틀렸습니다.'}), 401
 
 @app.route('/api/stream-urls', methods=['GET'])
 @token_required
@@ -135,7 +122,7 @@ def stream_urls():
     tags:
       - Camera
     security:      
-      - Bearer: []      
+      - BearerAuth: []      
     responses:
       200:
         description: 카메라 목록 및 접속 URL 반환 성공
@@ -165,7 +152,32 @@ def stream_urls():
 
 @app.route('/api/stats', methods=['GET'])
 @token_required
-def get_stats():
+def get_starts():
+    """
+    실시간 통계 데이터 조회 API
+    ---
+    tags:
+      - Statistics
+    security:
+      - BearerAuth: []
+    responses:
+      200:
+        description: 성공적으로 통계 데이터를 반환했습니다.
+        schema:
+          properties:
+            status:
+              type: string
+              example: success
+            data:
+              type: object
+              properties:
+                today:
+                  type: integer
+                total:
+                  type: integer
+                update_time:
+                  type: string
+    """
     try:
         
         from datetime import date

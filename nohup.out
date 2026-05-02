@@ -404,3 +404,1219 @@ Werkzeug appears to be used in a production deployment. Consider switching to a 
  * Debugger is active!
  * Debugger PIN: 129-618-574
 112.156.191.233 - - [25/Apr/2026 08:18:26] "GET /api/stats HTTP/1.1" 401 -
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 806-602-605
+45.140.222.141 - - [27/Apr/2026 17:40:53] code 400, message Bad request version ('À\x14À')
+45.140.222.141 - - [27/Apr/2026 17:40:53] "\x16\x03\x01\x01\x00\x01\x00\x00ü\x03\x03\x952\x06í6i\x95ÃÊO¢\x15îs\x14ÓQz!\x8céúõÄçø%\x84\x9a£\x9em îç`ïíCßs,0FÌq\x9d\x87q§µ0µ\x05¡ü²©5#2&fÖñ\x00&Ì¨Ì©À/À0À+À,À\x13À\x09À\x14À" 400 -
+45.140.222.141 - - [27/Apr/2026 17:41:05] "GET / HTTP/1.0" 404 -
+45.140.222.141 - - [27/Apr/2026 17:41:05] code 400, message Bad request version ('RTSP/1.0')
+45.140.222.141 - - [27/Apr/2026 17:41:05] "OPTIONS / RTSP/1.0" 400 -
+45.140.222.141 - - [27/Apr/2026 17:41:11] code 400, message Bad HTTP/0.9 request type ('\x00')
+45.140.222.141 - - [27/Apr/2026 17:41:11] "\x00\x1e\x00\x06\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x07version\x04bind\x00\x00\x10\x00\x03" 400 -
+45.140.222.141 - - [27/Apr/2026 17:41:16] code 400, message Bad request version ('0.12\x00')
+45.140.222.141 - - [27/Apr/2026 17:41:16] "\x00\x00\x00¤ÿSMBr\x00\x00\x00\x00\x08\x01@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00@\x06\x00\x00\x01\x00\x00\x81\x00\x02PC NETWORK PROGRAM 1.0\x00\x02MICROSOFT NETWORKS 1.03\x00\x02MICROSOFT NETWORKS 3.0\x00\x02LANMAN1.0\x00\x02LM1.2X002\x00\x02Samba\x00\x02NT LANMAN 1.0\x00\x02NT LM 0.12\x00" 400 -
+45.140.222.141 - - [27/Apr/2026 17:41:21] code 400, message Bad request version ('GetClassName\x00\x00\x00\x02\x04\x00\x00\x00\x00\x01\x00')
+45.140.222.141 - - [27/Apr/2026 17:41:21] "\x00\x00\x00\x1f\x00\x00\x00\x00\x00\x00\x00\x0cGetClassName\x00\x00\x00\x02\x04\x00\x00\x00\x00\x01\x00" 400 -
+45.140.222.141 - - [27/Apr/2026 17:41:21] code 400, message Bad request syntax ('\x16\x03\x00\x00S\x01\x00\x00O\x03\x00?G×÷º,îê²`~ó\x00ý\x82{¹Õ\x96Èw\x9bæÄÛ<=Ûoï\x10n\x00\x00(\x00\x16\x00\x13\x00')
+45.140.222.141 - - [27/Apr/2026 17:41:21] "\x16\x03\x00\x00S\x01\x00\x00O\x03\x00?G×÷º,îê²`~ó\x00ý\x82{¹Õ\x96Èw\x9bæÄÛ<=Ûoï\x10n\x00\x00(\x00\x16\x00\x13\x00" 400 -
+45.140.222.141 - - [27/Apr/2026 17:41:22] code 400, message Bad request version ('\x00/\x00')
+45.140.222.141 - - [27/Apr/2026 17:41:22] "\x16\x03\x00\x00i\x01\x00\x00e\x03\x03U\x1c§ärandom1random2random3random4\x00\x00\x0c\x00/\x00" 400 -
+45.140.222.141 - - [27/Apr/2026 17:41:52] "GET / HTTP/1.1" 404 -
+147.185.132.207 - - [27/Apr/2026 19:39:31] "GET / HTTP/1.1" 404 -
+47.250.123.12 - - [27/Apr/2026 20:06:17] code 400, message Bad request version ('RTSP/1.0')
+47.250.123.12 - - [27/Apr/2026 20:06:17] "OPTIONS / RTSP/1.0" 400 -
+47.250.123.12 - - [27/Apr/2026 20:06:40] code 400, message Bad request version ('À\x13À')
+47.250.123.12 - - [27/Apr/2026 20:06:40] "\x16\x03\x01\x00î\x01\x00\x00ê\x03\x03I\x06²ù¼\x99iÀYûøºe-\x83Ud]\x0e\x8d·b8´gÆÝ9dZ8f gÁ\x81i³öòË°©\x19NÖ½\x95g|püé<Z¡\x90T·é¥8'O;\x00&À+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+47.250.123.12 - - [27/Apr/2026 20:06:50] "GET / HTTP/1.1" 404 -
+47.250.123.12 - - [27/Apr/2026 20:06:50] "GET / HTTP/1.1" 404 -
+47.88.18.245 - - [27/Apr/2026 20:07:19] "GET / HTTP/1.1" 404 -
+205.210.31.42 - - [27/Apr/2026 20:30:55] "GET / HTTP/1.1" 404 -
+222.108.125.201 - - [27/Apr/2026 20:53:18] "GET / HTTP/1.0" 404 -
+91.231.89.177 - - [27/Apr/2026 22:19:04] code 400, message Bad request version ('À#À¬À®À+À')
+91.231.89.177 - - [27/Apr/2026 22:19:04] "\x16\x03\x03\x01¦\x01\x00\x01¢\x03\x03\x09p!\x12¹æá×\x1fm\x17Ão®ðZv¬Cß90{FÏ«{;máà1 ´ º³1\x14H°\x9a\x1d\x0dò)àNí³²\x16\x83øs\x86\x90B#\x9fª$\x0dF\x0f\x00\x8a\x00\x16\x003\x00gÀ\x9eÀ¢\x00\x9e\x009\x00kÀ\x9fÀ£\x00\x9f\x00E\x00¾\x00\x88\x00Ä\x00\x9aÀ\x08À\x09À#À¬À®À+À" 400 -
+162.216.149.232 - - [28/Apr/2026 03:01:05] code 400, message Bad request version ('À\x13À')
+162.216.149.232 - - [28/Apr/2026 03:01:05] "\x16\x03\x01\x05Æ\x01\x00\x05Â\x03\x039\x0d*\x81×\x14\x92K\x9cô_ÂÓH\x96ã\\C» Ú·T6\x96\x90Eø8äÒP þWb\x91fo7\x0d8\x02\x1c\x0f=NÍupB\x16£»±õ³\x1e»ÚËóm\x16°\x00\x1aÀ+À/À,À0Ì©Ì¨À\x09À\x13À" 400 -
+162.216.149.232 - - [28/Apr/2026 03:01:06] code 400, message Bad request version ('À(À$À\x14À')
+162.216.149.232 - - [28/Apr/2026 03:01:06] "\x16\x03\x01\x00Ê\x01\x00\x00Æ\x03\x03pWÞW\x1ag\x1aï2Ð¼Éöêîî\x8c\x96\x1c(Û§x\x04÷´<ÍPÈÀä\x00\x00hÌ\x14Ì\x13À/À+À0À,À\x11À\x07À'À#À\x13À\x09À(À$À\x14À" 400 -
+168.144.112.247 - - [28/Apr/2026 03:15:59] "GET / HTTP/1.1" 404 -
+168.144.112.247 - - [28/Apr/2026 03:16:00] "GET /favicon.ico HTTP/1.1" 404 -
+106.101.136.70 - - [28/Apr/2026 04:19:24] "GET /api/stats HTTP/1.1" 401 -
+106.101.136.70 - - [28/Apr/2026 04:19:24] "GET /favicon.ico HTTP/1.1" 404 -
+/home/ubuntu/ppe-safence-backend/app.py:47: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+106.101.136.70 - - [28/Apr/2026 04:28:22] "POST /api/login HTTP/1.1" 200 -
+106.101.136.70 - - [28/Apr/2026 04:31:31] "GET /api/stats HTTP/1.1" 500 -
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 142-359-023
+106.101.136.70 - - [28/Apr/2026 04:38:53] "GET /api/stats HTTP/1.1" 500 -
+106.101.136.70 - - [28/Apr/2026 04:39:22] "GET /api/stats HTTP/1.1" 500 -
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 142-359-023
+106.101.136.70 - - [28/Apr/2026 04:46:45] "GET /api/stats HTTP/1.1" 500 -
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 142-359-023
+106.101.136.70 - - [28/Apr/2026 04:51:18] "GET /api/stats HTTP/1.1" 500 -
+106.101.136.70 - - [28/Apr/2026 04:51:20] "GET /api/stats HTTP/1.1" 500 -
+106.101.136.70 - - [28/Apr/2026 04:51:21] "GET /api/stats HTTP/1.1" 500 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 142-359-023
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 357-187-040
+16.58.56.214 - - [28/Apr/2026 09:04:40] "GET / HTTP/1.1" 404 -
+16.58.56.214 - - [28/Apr/2026 09:06:54] "GET / HTTP/1.1" 404 -
+16.58.56.214 - - [28/Apr/2026 09:08:40] code 400, message Bad request version ('À\x14À')
+16.58.56.214 - - [28/Apr/2026 09:08:40] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03TÙö¾j\x0cr9Ý\x05R\x10\x81ûðò\x96\x97E6Û­ÜQ)Q#\x19\x94¶ßT\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+16.58.56.214 - - [28/Apr/2026 09:10:03] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x9d¥e¥ë\x07²DÃ¦ºr\x97Ó\x93KÅ«à\x1b\x0eq«Ô\x92}\xad\x9b¾º\xad\x9f\x00\x00\x1aÀ/À+À\x11À\x07À\x13À')
+16.58.56.214 - - [28/Apr/2026 09:10:03] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x9d¥e¥ë\x07²DÃ¦ºr\x97Ó\x93KÅ«à\x1b\x0eq«Ô\x92}­\x9b¾º­\x9f\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+205.210.31.39 - - [28/Apr/2026 09:39:20] "GET / HTTP/1.1" 404 -
+18.116.101.220 - - [28/Apr/2026 12:43:50] "GET / HTTP/1.1" 404 -
+18.116.101.220 - - [28/Apr/2026 12:46:51] "GET / HTTP/1.1" 404 -
+18.116.101.220 - - [28/Apr/2026 12:47:56] code 400, message Bad request version ('À\x14À')
+18.116.101.220 - - [28/Apr/2026 12:47:56] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x0eU¾\x1föÄ\x80,qBR\x00·\x14Lòt[Ó\x92\x11þ.cx@Âp²\x1a'ì\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+18.116.101.220 - - [28/Apr/2026 13:17:08] "GET / HTTP/1.1" 404 -
+18.116.101.220 - - [28/Apr/2026 13:18:33] "GET / HTTP/1.1" 404 -
+18.116.101.220 - - [28/Apr/2026 13:20:11] code 400, message Bad request version ('À\x14À')
+18.116.101.220 - - [28/Apr/2026 13:20:11] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x0b\x97\x8f\x83u\x17ÉaD¥ ¹z«\x8c["\x92­²Åî\x99À¹S\x1bàèø\x11^\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+18.116.101.220 - - [28/Apr/2026 13:21:28] code 400, message Bad request version ('À\x14À')
+18.116.101.220 - - [28/Apr/2026 13:21:28] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03Rmï \x07©PYÉ_V~\x054\x19S[cX\x0f^\x1b#\x98Móß\x00ú\x03\x94ü\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+119.149.244.238 - - [28/Apr/2026 15:47:06] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 15:47:23] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 15:47:48] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 15:55:06] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 16:04:32] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 16:12:13] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 16:13:32] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 16:53:47] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 16:58:52] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 17:00:16] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 17:26:57] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 17:30:46] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 17:34:16] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 17:36:22] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 20:08:12] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 20:14:26] "POST / HTTP/1.1" 404 -
+119.149.244.238 - - [28/Apr/2026 20:19:21] "POST / HTTP/1.1" 404 -
+112.156.191.233 - - [29/Apr/2026 02:41:43] "GET /api/stats HTTP/1.1" 401 -
+/home/ubuntu/ppe-safence-backend/app.py:47: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+112.156.191.233 - - [29/Apr/2026 02:49:32] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 02:50:08] "GET /api/stats HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 92
+    """
+    ^
+IndentationError: expected an indented block after function definition on line 91
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 92
+    """
+    ^
+IndentationError: expected an indented block after function definition on line 91
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 181-581-492
+112.156.191.233 - - [29/Apr/2026 03:04:32] "GET /apidocs HTTP/1.1" 308 -
+112.156.191.233 - - [29/Apr/2026 03:04:32] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 03:04:32] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 03:04:32] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 03:04:32] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 03:04:32] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 03:04:33] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 03:04:33] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 200 -
+27.0.238.187 - - [29/Apr/2026 03:07:39] "GET /apidocs/ HTTP/1.1" 200 -
+27.0.238.187 - - [29/Apr/2026 04:56:23] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.2.209 - - [29/Apr/2026 05:07:12] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.2.209 - - [29/Apr/2026 05:07:12] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 200 -
+106.101.2.209 - - [29/Apr/2026 05:07:12] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 200 -
+106.101.2.209 - - [29/Apr/2026 05:07:12] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+106.101.2.209 - - [29/Apr/2026 05:07:12] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 200 -
+106.101.2.209 - - [29/Apr/2026 05:07:13] "GET /apispec_1.json HTTP/1.1" 200 -
+45.156.128.43 - - [29/Apr/2026 05:15:15] "GET /cgi-bin/authLogin.cgi HTTP/1.1" 404 -
+112.156.191.233 - - [29/Apr/2026 07:43:47] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 07:43:47] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:43:47] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:43:47] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:43:47] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:43:47] "GET /apispec_1.json HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 181-581-492
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 129-770-669
+112.156.191.233 - - [29/Apr/2026 07:46:36] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 07:46:36] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:46:36] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:46:36] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:46:36] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:46:36] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 07:46:36] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:49:00] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 07:49:00] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:49:00] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:49:00] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:49:00] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:49:00] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 07:49:00] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:50:08] "GET /api/stream-urls HTTP/1.1" 401 -
+/home/ubuntu/ppe-safence-backend/app.py:50: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+112.156.191.233 - - [29/Apr/2026 07:54:37] "POST /api/login HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 129-770-669
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 129-770-669
+112.156.191.233 - - [29/Apr/2026 07:57:19] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 07:57:19] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:57:19] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:57:19] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:57:19] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:57:19] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 07:57:19] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 07:58:03] "GET /api/stream-urls HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 08:02:29] "GET /api/stream-urls HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 08:02:34] "GET /api/stream-urls HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 08:02:48] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:02:49] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:02:49] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:02:49] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:02:49] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:02:49] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:02:49] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:02:52] "GET /api/stream-urls HTTP/1.1" 401 -
+/home/ubuntu/ppe-safence-backend/app.py:87: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+112.156.191.233 - - [29/Apr/2026 08:03:25] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:03:27] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:03:28] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:03:29] "POST /api/login HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 129-770-669
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 129-770-669
+112.156.191.233 - - [29/Apr/2026 08:06:35] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:06:35] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:06:35] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:06:35] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:06:35] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:06:35] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:06:35] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+/home/ubuntu/ppe-safence-backend/app.py:87: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+112.156.191.233 - - [29/Apr/2026 08:06:38] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:06:59] "GET /api/stream-urls HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 08:08:19] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:08:19] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:08:19] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:08:19] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:08:19] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:08:19] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:08:19] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:08:46] "GET /api/stream-urls HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 08:10:09] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:10:09] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:10:09] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:10:09] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:10:09] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:10:09] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:10:09] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:10:17] "GET /api/stream-urls HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/engineio/middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 78, in decorated
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+TypeError: stream_urls() missing 1 required positional argument: 'current_user'
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 129-770-669
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 129-770-669
+112.156.191.233 - - [29/Apr/2026 08:12:24] "GET /apidocs/ HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:12:24] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:12:24] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:12:24] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:12:24] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+112.156.191.233 - - [29/Apr/2026 08:12:24] "GET /apispec_1.json HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:12:24] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+/home/ubuntu/ppe-safence-backend/app.py:87: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+112.156.191.233 - - [29/Apr/2026 08:12:27] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 08:12:40] "GET /api/stream-urls HTTP/1.1" 503 -
+106.101.2.159 - - [29/Apr/2026 09:26:38] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.2.159 - - [29/Apr/2026 09:26:38] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.2.159 - - [29/Apr/2026 09:26:38] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.2.159 - - [29/Apr/2026 09:26:38] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.2.159 - - [29/Apr/2026 09:26:38] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.2.159 - - [29/Apr/2026 09:26:38] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.2.159 - - [29/Apr/2026 09:26:47] "GET /api/stream-urls HTTP/1.1" 401 -
+20.168.113.228 - - [29/Apr/2026 09:54:00] "GET /v2/ HTTP/1.1" 404 -
+106.101.2.159 - - [29/Apr/2026 10:19:49] "GET /apispec_1.json HTTP/1.1" 200 -
+211.231.103.106 - - [29/Apr/2026 10:23:46] "GET /apidocs/ HTTP/1.1" 200 -
+3.16.111.96 - - [29/Apr/2026 12:18:14] "GET / HTTP/1.1" 404 -
+3.16.111.96 - - [29/Apr/2026 12:19:48] "GET / HTTP/1.1" 404 -
+3.16.111.96 - - [29/Apr/2026 12:21:09] code 400, message Bad request version ('À\x14À')
+3.16.111.96 - - [29/Apr/2026 12:21:09] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03ö\x92B§)Ìt:Ð³\x89É6\\Ó\x0d¿_Iv\x06\x81~-þ/\\\x9aõG \x89\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.16.111.96 - - [29/Apr/2026 12:22:26] code 400, message Bad request version ('À\x14À')
+3.16.111.96 - - [29/Apr/2026 12:22:26] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x88·Q32\x1c\x16\x81\x09Æí\x9b³Æ\x88A\x94 \x9eÑ\x86h)\x80Bái\x00í~Aä\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 981-032-046
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 981-032-046
+112.156.191.233 - - [29/Apr/2026 13:16:13] "GET /api/stats HTTP/1.1" 401 -
+/home/ubuntu/ppe-safence-backend/app.py:87: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+112.156.191.233 - - [29/Apr/2026 13:16:31] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 13:17:41] "GET /api/stats HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 13:17:42] "GET /api/stats HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 13:20:08] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 13:21:50] "GET /api/stats HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 13:21:55] "GET /api/stats HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 13:21:58] "POST /api/login HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 981-032-046
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+112.156.191.233 - - [29/Apr/2026 13:23:53] "GET /api/stats HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/engineio/middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 80, in decorated
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+TypeError: get_stats() missing 1 required positional argument: 'current_user'
+98.80.4.38 - - [29/Apr/2026 13:23:56] code 400, message Bad request version ("\x16O/\x00V\x13\x02\x13\x03\x13\x01À,À0À+À/Ì©Ì¨\x00\x9f\x00\x9eÌªÀ¯À\xadÀ®À¬À$À(À#À'À")
+98.80.4.38 - - [29/Apr/2026 13:23:56] "\x16\x03\x01\x02\x00\x01\x00\x01ü\x03\x03?¾\x1fðÒå¦£÷%í1\x05Ê©Å×ñd¸{M¦¸Æ\x1cZJß\x04ü\x07 ¶\x99È êw.Wr\x08¨Ó1ÅÅ\x7f)\x8f=Ð­\x1cÝËâu\x02¼\x0d\x16O/\x00V\x13\x02\x13\x03\x13\x01À,À0À+À/Ì©Ì¨\x00\x9f\x00\x9eÌªÀ¯À­À®À¬À$À(À#À'À" 400 -
+98.80.4.38 - - [29/Apr/2026 13:23:57] "GET / HTTP/1.1" 404 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+112.156.191.233 - - [29/Apr/2026 13:25:43] "GET /api/stats HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 13:25:45] "GET /api/stats HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 13:25:45] "GET /api/stats HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 13:25:46] "GET /api/stats HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+112.156.191.233 - - [29/Apr/2026 13:30:11] "GET /api/stats HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+112.156.191.233 - - [29/Apr/2026 13:42:16] "GET /api/stats HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+112.156.191.233 - - [29/Apr/2026 13:44:57] "GET /api/stats HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 13:45:04] "GET /api/stats HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 13:45:11] "GET /api/stats HTTP/1.1" 200 -
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 347-303-673
+112.156.191.233 - - [29/Apr/2026 13:50:37] "GET /api/stats HTTP/1.1" 401 -
+112.156.191.233 - - [29/Apr/2026 13:51:59] "GET /api/stats HTTP/1.1" 401 -
+/home/ubuntu/ppe-safence-backend/app.py:89: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+112.156.191.233 - - [29/Apr/2026 13:52:49] "POST /api/login HTTP/1.1" 200 -
+112.156.191.233 - - [29/Apr/2026 13:53:13] "GET /api/stats HTTP/1.1" 200 -
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 5000 is in use by another program. Either identify and stop that program, or start the server with a different port.
+112.156.191.233 - - [29/Apr/2026 13:54:45] "GET /api/stats HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 15:37:58] "GET /apidocs/ HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 15:37:58] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 15:37:58] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 15:37:58] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 15:37:58] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 15:37:59] "GET /apispec_1.json HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 15:37:59] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 15:38:17] "GET / HTTP/1.1" 404 -
+119.149.244.238 - - [29/Apr/2026 15:38:17] "GET /favicon.ico HTTP/1.1" 404 -
+119.149.244.238 - - [29/Apr/2026 15:41:26] "GET /api/stream-urls HTTP/1.1" 401 -
+119.149.244.238 - - [29/Apr/2026 15:45:23] "GET /api/stream-urls HTTP/1.1" 401 -
+49.167.254.251 - - [29/Apr/2026 15:52:10] "GET / HTTP/1.0" 404 -
+119.149.244.238 - - [29/Apr/2026 16:05:52] "GET /api/stream-urls HTTP/1.1" 401 -
+119.149.244.238 - - [29/Apr/2026 16:06:01] "GET /apidocs/ HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 16:06:01] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+119.149.244.238 - - [29/Apr/2026 16:06:01] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+119.149.244.238 - - [29/Apr/2026 16:06:01] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+119.149.244.238 - - [29/Apr/2026 16:06:01] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+119.149.244.238 - - [29/Apr/2026 16:06:01] "GET /apispec_1.json HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 16:06:01] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+119.149.244.238 - - [29/Apr/2026 16:06:13] "GET /api/stream-urls HTTP/1.1" 401 -
+119.149.244.238 - - [29/Apr/2026 16:34:48] "POST /api/login HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 16:34:59] "POST /api/login HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 16:37:16] "POST /api/login HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 17:16:20] "POST /api/login HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 17:18:42] "POST /api/login HTTP/1.1" 200 -
+119.149.244.238 - - [29/Apr/2026 17:24:07] "POST /api/login HTTP/1.1" 200 -
+160.119.76.41 - - [30/Apr/2026 02:58:46] code 400, message Bad request syntax ('\x03\x00\x00\x13\x0eà\x00\x00\x00\x00\x00\x01\x00\x08\x00\x02\x00\x00\x00')
+160.119.76.41 - - [30/Apr/2026 02:58:46] "\x03\x00\x00\x13\x0eà\x00\x00\x00\x00\x00\x01\x00\x08\x00\x02\x00\x00\x00" 400 -
+123.160.175.213 - - [30/Apr/2026 04:23:36] "GET / HTTP/1.1" 404 -
+182.138.158.172 - - [30/Apr/2026 04:24:15] "GET / HTTP/1.1" 404 -
+106.101.129.210 - - [30/Apr/2026 05:08:11] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:08:11] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:08:11] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:08:11] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:08:11] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:08:12] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:08:12] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:08:50] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:09:11] "GET /api/stream-urls HTTP/1.1" 503 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 168
+    """
+IndentationError: unexpected indent
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 168
+    """
+IndentationError: unexpected indent
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 05:17:41] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:17:41] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:17:41] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:17:41] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:17:41] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:17:42] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:17:42] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+/home/ubuntu/ppe-safence-backend/app.py:89: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+106.101.129.210 - - [30/Apr/2026 05:18:10] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:18:27] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 05:18:53] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:18:53] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:18:53] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:18:53] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:18:53] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:18:53] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:18:53] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:18:56] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:19:11] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 05:19:36] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 05:20:00] "GET /api/stream-urls HTTP/1.1" 503 -
+106.101.129.210 - - [30/Apr/2026 05:23:05] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:30:06] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:30:06] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:30:06] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:30:06] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:30:06] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:30:07] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:30:07] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:30:17] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:30:33] "GET /api/stream-urls HTTP/1.1" 503 -
+106.101.129.210 - - [30/Apr/2026 05:30:47] "GET /api/stats HTTP/1.1" 401 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 05:33:51] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:33:51] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:33:52] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:33:52] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:33:52] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 05:33:52] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:33:52] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+/home/ubuntu/ppe-safence-backend/app.py:89: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'exp': datetime.utcnow() + timedelta(minutes=30)
+106.101.129.210 - - [30/Apr/2026 05:34:01] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 05:34:21] "GET /api/stats HTTP/1.1" 200 -
+211.231.103.107 - - [30/Apr/2026 05:35:33] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.198.142 - - [30/Apr/2026 05:36:53] "GET / HTTP/1.1" 404 -
+106.101.198.142 - - [30/Apr/2026 05:36:54] "GET /favicon.ico HTTP/1.1" 404 -
+106.101.198.142 - - [30/Apr/2026 05:36:57] "GET / HTTP/1.1" 404 -
+106.101.198.190 - - [30/Apr/2026 05:37:12] "GET / HTTP/1.1" 404 -
+106.101.198.190 - - [30/Apr/2026 05:37:13] "GET / HTTP/1.1" 404 -
+106.101.192.20 - - [30/Apr/2026 05:37:19] "GET / HTTP/1.1" 404 -
+106.101.192.20 - - [30/Apr/2026 05:37:22] "GET / HTTP/1.1" 404 -
+106.101.192.20 - - [30/Apr/2026 05:37:24] "GET / HTTP/1.1" 404 -
+106.101.198.82 - - [30/Apr/2026 05:37:50] "GET / HTTP/1.1" 404 -
+106.101.198.82 - - [30/Apr/2026 05:37:51] "GET / HTTP/1.1" 404 -
+106.101.192.68 - - [30/Apr/2026 05:38:08] "GET / HTTP/1.1" 404 -
+106.101.192.68 - - [30/Apr/2026 05:38:23] "GET / HTTP/1.1" 404 -
+106.101.129.210 - - [30/Apr/2026 06:20:44] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:20:44] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 06:20:44] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 06:20:44] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 06:20:44] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.129.210 - - [30/Apr/2026 06:20:44] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:20:44] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 06:36:25] "POST /api/login HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:37:26] "POST /api/login HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/engineio/middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 126, in login
+    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'datetime.datetime' has no attribute 'datetime'
+106.101.129.210 - - [30/Apr/2026 06:37:42] "POST /api/login HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:37:54] "POST /api/login HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:37:56] "POST /api/login HTTP/1.1" 401 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 06:42:39] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:42:55] "POST /api/login HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:43:00] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:43:35] "GET /api/stats HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:43:42] "GET /api/stream-urls HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:44:49] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:45:30] "GET /api/stats HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:45:32] "GET /api/stream-urls HTTP/1.1" 401 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.8.3 - - [30/Apr/2026 06:55:13] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.8.3 - - [30/Apr/2026 06:55:13] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.8.3 - - [30/Apr/2026 06:55:13] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.8.3 - - [30/Apr/2026 06:55:13] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.8.3 - - [30/Apr/2026 06:55:13] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.8.3 - - [30/Apr/2026 06:55:14] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:56:04] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:56:17] "GET /api/stats HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:56:20] "GET /api/stream-urls HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:58:31] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:59:00] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:59:05] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 06:59:21] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:59:22] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:59:32] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 06:59:37] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:01:03] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:02:04] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:02:08] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:02:15] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:02:18] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:02:31] "GET /api/stats HTTP/1.1" 401 -
+106.101.8.3 - - [30/Apr/2026 07:06:55] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.8.3 - - [30/Apr/2026 07:06:55] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.8.3 - - [30/Apr/2026 07:06:55] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.8.3 - - [30/Apr/2026 07:06:55] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.8.3 - - [30/Apr/2026 07:06:55] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.8.3 - - [30/Apr/2026 07:06:56] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:07:52] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:08:05] "GET /api/stats HTTP/1.1" 401 -
+106.101.9.76 - - [30/Apr/2026 07:08:06] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.9.76 - - [30/Apr/2026 07:08:06] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 200 -
+106.101.9.76 - - [30/Apr/2026 07:08:06] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 200 -
+106.101.9.76 - - [30/Apr/2026 07:08:06] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+106.101.9.76 - - [30/Apr/2026 07:08:06] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:08:07] "GET /api/stats HTTP/1.1" 401 -
+106.101.9.76 - - [30/Apr/2026 07:08:07] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 200 -
+106.101.9.76 - - [30/Apr/2026 07:08:07] "GET /apispec_1.json HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:08:08] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:10:28] "GET /api/stats HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:10:31] "GET /api/stream-urls HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:10:55] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:10:56] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:10:57] "GET /api/stats HTTP/1.1" 401 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 07:11:55] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:11:56] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:12:03] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:12:04] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:12:25] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:12:41] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:12:49] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:13:00] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:13:07] "GET /api/stats HTTP/1.1" 401 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+DEBUG - 토큰 해독 실패: Signature has expired
+DEBUG - 토큰 해독 실패: Signature has expired
+DEBUG - 토큰 해독 실패: Signature has expired
+DEBUG - 토큰 해독 실패: Signature has expired
+DEBUG - 토큰 해독 실패: Signature has expired
+DEBUG - 토큰 해독 실패: Signature has expired
+DEBUG - 토큰 해독 실패: Signature has expired
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 07:19:08] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:19:24] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:19:26] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:19:27] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:19:32] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:19:33] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:22:52] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:22:58] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:22:59] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:23:00] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:23:01] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:23:05] "POST /api/login HTTP/1.1" 200 -
+106.101.9.76 - - [30/Apr/2026 07:23:30] "GET /apidocs/ HTTP/1.1" 200 -
+106.101.9.76 - - [30/Apr/2026 07:23:30] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+106.101.9.76 - - [30/Apr/2026 07:23:30] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+106.101.9.76 - - [30/Apr/2026 07:23:30] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+106.101.9.76 - - [30/Apr/2026 07:23:30] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+106.101.9.76 - - [30/Apr/2026 07:23:31] "GET /apispec_1.json HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 07:24:56] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:24:58] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:25:15] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:25:36] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:25:39] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:25:45] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:25:46] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:25:48] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:25:51] "GET /api/stats HTTP/1.1" 401 -
+106.101.129.210 - - [30/Apr/2026 07:25:52] "GET /api/stats HTTP/1.1" 401 -
+106.101.9.76 - - [30/Apr/2026 07:25:58] "POST /api/login HTTP/1.1" 200 -
+106.101.9.76 - - [30/Apr/2026 07:26:17] "GET /api/stream-urls HTTP/1.1" 401 -
+106.101.9.76 - - [30/Apr/2026 07:26:29] "GET /api/stream-urls HTTP/1.1" 401 -
+106.101.9.76 - - [30/Apr/2026 07:26:52] "GET /api/stats HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+DEBUG - 토큰 해독 실패 원인: Signature has expired
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 07:28:51] "POST /api/login HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/engineio/middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 110, in login
+    now = datetime.now(timezone.utc) # 표준시로 고정
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'timezone' is not defined
+106.101.129.210 - - [30/Apr/2026 07:28:54] "POST /api/login HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/engineio/middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 110, in login
+    now = datetime.now(timezone.utc) # 표준시로 고정
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'timezone' is not defined
+106.101.129.210 - - [30/Apr/2026 07:29:32] "POST /api/login HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/engineio/middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 110, in login
+    now = datetime.now(timezone.utc) # 표준시로 고정
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'timezone' is not defined
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+106.101.129.210 - - [30/Apr/2026 07:31:02] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:31:03] "POST /api/login HTTP/1.1" 200 -
+106.101.129.210 - - [30/Apr/2026 07:31:12] "POST /api/login HTTP/1.1" 200 -
+138.68.168.175 - - [30/Apr/2026 08:18:58] "GET / HTTP/1.1" 404 -
+138.68.168.175 - - [30/Apr/2026 08:18:58] "GET /favicon.ico HTTP/1.1" 404 -
+185.93.89.190 - - [30/Apr/2026 09:49:42] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+3.131.220.121 - - [30/Apr/2026 12:11:09] "GET / HTTP/1.1" 404 -
+3.131.220.121 - - [30/Apr/2026 12:12:29] "GET / HTTP/1.1" 404 -
+3.131.220.121 - - [30/Apr/2026 12:13:39] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x035îQOÜÄÇPÍè\x7f/S(úÂe\x1b\x84°ýæat\x14wøXaäøð\x00\x00\x1aÀ/À+À\x11À\x07À\x13À')
+3.131.220.121 - - [30/Apr/2026 12:13:39] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x035îQOÜÄÇPÍè\x7f/S(úÂe\x1b\x84°ýæat\x14wøXaäøð\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.131.220.121 - - [30/Apr/2026 12:14:35] code 400, message Bad request version ('À\x14À')
+3.131.220.121 - - [30/Apr/2026 12:14:35] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03Îc-»ÐÎ¨!¯ÿ\x02½c+¢\x1câ\x0b³³¼u\x13\x90ùTËMw\x13Î\x96\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+54.193.233.194 - - [30/Apr/2026 17:03:52] "GET / HTTP/1.1" 404 -
+65.49.1.94 - - [01/May/2026 01:39:25] "GET / HTTP/1.1" 404 -
+65.49.1.98 - - [01/May/2026 01:40:17] "GET /favicon.ico HTTP/1.1" 404 -
+91.230.168.190 - - [01/May/2026 06:37:12] code 400, message Bad request version ('À#À¬À®À+À')
+91.230.168.190 - - [01/May/2026 06:37:12] "\x16\x03\x03\x01¦\x01\x00\x01¢\x03\x03Ó\x8bz\x0b\x1dÞ:\x1d\x9e\x93Ð\x07Ó\\a\x0f\x1c\x8dÊ\x14\x82\x1d'\x0e\x0cú\x14 \x10Êy; ý\x8dÿÕI\x8bír££¸Åá³ü\x996\x01÷q×Mó\x00îÏ2øË\x0dí­\x00\x8a\x00\x16\x003\x00gÀ\x9eÀ¢\x00\x9e\x009\x00kÀ\x9fÀ£\x00\x9f\x00E\x00¾\x00\x88\x00Ä\x00\x9aÀ\x08À\x09À#À¬À®À+À" 400 -
+91.230.168.137 - - [01/May/2026 06:37:15] "GET / HTTP/1.1" 404 -
+91.230.168.61 - - [01/May/2026 06:47:09] "GET /favicon.ico HTTP/1.1" 404 -
+195.184.76.210 - - [01/May/2026 06:48:13] "GET /favicon.ico HTTP/1.1" 404 -
+195.184.76.8 - - [01/May/2026 06:51:11] "GET /favicon.ico HTTP/1.1" 404 -
+3.131.220.121 - - [01/May/2026 11:45:17] "GET / HTTP/1.1" 404 -
+3.131.220.121 - - [01/May/2026 11:46:25] "GET / HTTP/1.1" 404 -
+3.131.220.121 - - [01/May/2026 11:47:49] code 400, message Bad request version ('À\x14À')
+3.131.220.121 - - [01/May/2026 11:47:49] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x1fæÏÜ·!ì¦Iäã©\x1a\x9f>Ëq;zÚbA\x9c¥­bj\x95Æäz/\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.131.220.121 - - [01/May/2026 11:49:10] code 400, message Bad request version ('À\x14À')
+3.131.220.121 - - [01/May/2026 11:49:10] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03ß8\x1bÔ°PIeãyÒ¦¡Tj¢&¡\x1d&Zg\x19\x9a8\x88^8Ê\x9cHÍ\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+178.255.52.251 - - [01/May/2026 13:49:37] "GET / HTTP/1.0" 404 -
+204.76.203.226 - - [01/May/2026 13:52:01] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+204.76.203.73 - - [01/May/2026 13:52:01] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+204.76.203.73 - - [01/May/2026 13:52:02] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+198.235.24.64 - - [01/May/2026 14:36:27] "GET / HTTP/1.1" 404 -
+205.210.31.250 - - [01/May/2026 23:00:52] "GET / HTTP/1.1" 404 -
+3.135.210.173 - - [02/May/2026 09:36:21] "GET / HTTP/1.1" 404 -
+3.135.210.173 - - [02/May/2026 09:37:37] "GET / HTTP/1.1" 404 -
+3.135.210.173 - - [02/May/2026 09:38:51] code 400, message Bad request version ('À\x14À')
+3.135.210.173 - - [02/May/2026 09:38:51] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03Ó\x1d\x1eù&¹u\x80\x0dA±<öË\x81¨¿3!\x9egîgêM·èhYÍ"¶\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.135.210.173 - - [02/May/2026 09:40:01] code 400, message Bad request version ('À\x14À')
+3.135.210.173 - - [02/May/2026 09:40:01] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03sÅ.*\x09kÂ\x06 \x96\x1bèO\x03Ö\\¨q\x8d\\\x95\x1bnö\x84qÕ2B;\x7f\x07\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+121.66.116.158 - - [02/May/2026 10:48:28] "POST /api/login HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 10:49:01] "GET /api/stats HTTP/1.1" 401 -
+121.66.116.158 - - [02/May/2026 10:50:53] "POST /api/login HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 10:51:18] "GET /api/stats HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 10:52:40] "GET /apidocs/ HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 10:52:40] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 10:52:40] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 10:52:40] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 10:52:40] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 10:52:40] "GET /apispec_1.json HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 10:52:58] "GET /api/stream-urls HTTP/1.1" 401 -
+121.66.116.158 - - [02/May/2026 10:53:23] "GET /api/stats HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 10:53:25] "GET /api/stats HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 10:53:28] "GET /api/stream-urls HTTP/1.1" 401 -
+121.66.116.158 - - [02/May/2026 10:53:31] "GET /api/stream-urls HTTP/1.1" 401 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+--- 해독 시도 토큰: eyJhbGciOiJIUzI... ---
+!!! 해독 실패 원인: Signature has expired !!!
+--- 해독 시도 토큰: eyJhbGciOiJIUzI... ---
+--- 해독 시도 토큰: eyJhbGciOiJIUzI... ---
+--- 해독 시도 토큰: eyJhbGciOiJIUzI... ---
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 562-551-528
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 138-584-525
+121.66.116.158 - - [02/May/2026 11:01:38] "POST /api/login HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 11:01:51] "GET /api/stats HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 11:01:53] "GET /api/stats HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 11:02:10] "GET /api/stream-urls HTTP/1.1" 401 -
+121.66.116.158 - - [02/May/2026 11:02:13] "GET /apidocs/ HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 11:02:13] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 11:02:13] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 11:02:13] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 11:02:13] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 11:02:13] "GET /apispec_1.json HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 11:02:13] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+121.66.116.158 - - [02/May/2026 11:02:33] "GET /api/stats HTTP/1.1" 200 -
+121.66.116.158 - - [02/May/2026 11:02:39] "GET /api/stream-urls HTTP/1.1" 503 -
+211.221.51.182 - - [02/May/2026 12:40:02] "GET /apidocs/ HTTP/1.1" 200 -
+211.221.51.182 - - [02/May/2026 12:40:02] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+211.221.51.182 - - [02/May/2026 12:40:02] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+211.221.51.182 - - [02/May/2026 12:40:02] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+211.221.51.182 - - [02/May/2026 12:40:02] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+211.221.51.182 - - [02/May/2026 12:40:03] "GET /apispec_1.json HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/ppe-safence-backend/app.py', reloading
+--- 해독 시도 토큰: eyJhbGciOiJIUzI... ---
+--- 해독 시도 토큰: eyJhbGciOiJIUzI... ---
+--- 해독 시도 토큰: eyJhbGciOiJIUzI... ---
+--- 해독 시도 토큰: eyJhbGciOiJIUzI... ---
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 138-584-525
+211.221.51.182 - - [02/May/2026 12:44:58] "POST /api/login HTTP/1.1" 200 -
+211.221.51.182 - - [02/May/2026 12:45:20] "GET /api/stats HTTP/1.1" 200 -
+211.221.51.182 - - [02/May/2026 12:45:50] "GET /api/stats HTTP/1.1" 200 -
+211.221.51.182 - - [02/May/2026 12:45:58] "GET /api/stream-urls HTTP/1.1" 503 -
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.34.195:5000
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 768-356-234
