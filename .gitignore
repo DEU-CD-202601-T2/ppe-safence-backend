@@ -9,4 +9,4 @@ app_backup.py
 
 # 가상환경 폴더 
 venv/
-.venv/
+.venv/nohup.out
