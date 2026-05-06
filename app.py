@@ -49,7 +49,7 @@ swagger = Swagger(app, config=swagger_config, template=template)
 
 app.config['SECRET_KEY'] = 'capston'
 app.config['JSON_AS_ASCII'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@localhost/capstone_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -71,6 +71,8 @@ class User(db.Model):
     login_id = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100))
+    role = db.Column(db.String(50))
+    zone = db.Column(db.String(50))
 
 def token_required(f):
     @wraps(f)
@@ -102,9 +104,13 @@ def login():
     user = User.query.filter_by(login_id=input_id).first()
 
     if user and user.password == input_pw:
+        if user.role == '작업자':
+            return jsonify({'status': 'fail', 'message': '작업자 계정은 로그인이 제한됩니다.'}), 403
         now = datetime.now(timezone.utc) 
         token = jwt.encode({
             'user': user.login_id,
+            'role': user.role,  
+            'zone': user.zone,  
             'iat': now,
             'exp': now + timedelta(hours=24) 
         }, 'capston', algorithm="HS256") 
@@ -112,6 +118,32 @@ def login():
         return jsonify({'status': 'success', 'token': token}), 200
     
     return jsonify({'status': 'fail', 'message': '아이디 또는 비밀번호가 틀렸습니다.'}), 401
+
+@app.route('/api/alarms', methods=['GET'])
+@token_required  
+def get_alarms(current_user):
+    user_role = current_user.get('role')
+    user_zone = current_user.get('zone')
+
+    if user_role == '최고 관리자':
+        alarms = Violation.query.all()
+    else:
+        alarms = Violation.query.filter_by(zone=user_zone).all()
+
+    output = []
+    for alarm in alarms:
+        output.append({
+            "Id": alarm.id,
+            "Uid": alarm.uid,
+            "Type": alarm.type,
+            "Time": alarm.time.strftime('%Y-%m-%d %H:%M:%S'),
+            "Zone": alarm.zone,
+            "Cam": alarm.cam,
+            "Status": alarm.status,
+            "Image": alarm.image_url
+        })
+
+    return jsonify(output), 200
 
 @app.route('/api/stream-urls', methods=['GET'])
 @token_required
