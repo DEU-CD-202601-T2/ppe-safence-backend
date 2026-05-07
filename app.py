@@ -65,7 +65,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # 환경별 override:
 #   - Tailscale 직결: export JETSON_BASE_URL=http://100.113.160.25:5001
 #   - 같은 LAN:       export JETSON_BASE_URL=http://192.168.45.86:5001
-JETSON_BASE_URL = os.environ.get('JETSON_BASE_URL', 'http://43.200.27.117:5001')
+JETSON_BASE_URL = os.environ.get('JETSON_BASE_URL', 'http://100.113.160.25:5001')
 
 db = SQLAlchemy(app)
 CORS(app)
