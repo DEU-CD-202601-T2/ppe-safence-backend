@@ -54,7 +54,7 @@ app.config['SECRET_KEY'] = 'capston'
 app.config['JSON_AS_ASCII'] = False
 
 # 깃허브 및 서버 업로드 시 주석 해제
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117:3308/capstone_db'
 
 # 로컬 환경에서 코드 수정 후 테스트 시 주석 해제 (교내 내부망 특정 포트 차단 issue)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@127.0.0.1:3307/capstone_db'
