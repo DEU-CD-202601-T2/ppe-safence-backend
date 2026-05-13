@@ -54,10 +54,10 @@ app.config['SECRET_KEY'] = 'capston'
 app.config['JSON_AS_ASCII'] = False
 
 # 깃허브 및 서버 업로드 시 주석 해제
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
 
 # 로컬 환경에서 코드 수정 후 테스트 시 주석 해제 (교내 내부망 특정 포트 차단 issue)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@127.0.0.1:3307/capstone_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@127.0.0.1:3308/capstone_db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -127,9 +127,10 @@ class User(db.Model):
     __tablename__ = 'users'
     id       = db.Column(db.Integer, primary_key=True)
     login_id = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     name     = db.Column(db.String(100))
     role     = db.Column(db.String(50))
+    is_active = db.Column(db.Boolean, default=True)
 
     # 다중 구역 N:M
     areas = db.relationship(
@@ -218,7 +219,36 @@ def role_required(*allowed_roles):
         return decorated
     return decorator
 
+class Log(db.Model):
+    __tablename__ = 'logs'
+    id          = db.Column(db.Integer, primary_key=True)
+    log_type    = db.Column(db.String(100)) # 로그 종류 (로그인, 알림 해결 등) 
+    timestamp   = db.Column(db.DateTime, default=db.func.current_timestamp()) # 발생 시간 
+    area_id     = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True) # 구역 
+    camera_key  = db.Column(db.String(100), nullable=True) # 카메라 
+    user_id     = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True) # 작업자 ID 
+    status      = db.Column(db.String(50), nullable=True) # 상태 (해결/미해결/null) [cite: 2, 3]
+    description = db.Column(db.Text) # 설명(detail) 
+
+    # 관계 설정: 로그 조회 시 이름 등을 바로 가져오기 위함
+    user = db.relationship('User', backref='logs')
+    area = db.relationship('Area', backref='logs')
+
+    def to_dict(self):
+        return {
+            'logID': self.id,
+            'logType': self.log_type,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S') if self.timestamp else None,
+            'area': self.area.area_name if self.area else None,
+            'camera': self.camera_key,
+            'user': {'id': self.user.id, 'name': self.user.name} if self.user else None,
+            'status': self.status,
+            'detail': self.description
+        }
+
 @app.route('/api/register', methods=['POST'])
+@token_required
+@role_required('최고 관리자')
 def register():
     """
     사용자 추가 API
@@ -362,6 +392,11 @@ def login():
     user = User.query.filter_by(login_id=input_id).first()
 
     if user and check_password_hash(user.password, input_pw):
+        if not user.is_active:
+            return jsonify({
+                'status': 'fail',
+                'message': '삭제(비활성화)된 계정입니다. 관리자에게 문의하세요.'
+            }), 401
         if user.role == '작업자':
             return jsonify({'status': 'fail', 'message': '작업자 계정은 로그인이 제한됩니다.'}), 403
         now = datetime.now(timezone.utc)
@@ -372,10 +407,40 @@ def login():
             'iat': now,
             'exp': now + timedelta(hours=24)
         }, 'capston', algorithm="HS256")
+
+        new_log = Log(
+            log_type='로그인',
+            user_id=user.id,
+            description=f"사용자 {user.login_id}님이 시스템에 접속했습니다."
+        )
+        db.session.add(new_log)
+        db.session.commit() # 로그인 기록을 DB에 저장
         
         return jsonify({'status': 'success', 'token': token}), 200
     
     return jsonify({'status': 'fail', 'message': '아이디 또는 비밀번호가 틀렸습니다.'}), 401
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    """
+    로그아웃 API
+    ---
+    tags:
+      - Auth
+    responses:
+      200:
+        description: 로그아웃 성공
+        schema:
+          properties:
+            status:
+              type: string
+              example: success
+            message:
+              type: string
+              example: 로그아웃 되었습니다.
+    """
+    
+    return jsonify({'status': 'success', 'message': '로그아웃 되었습니다.'}), 200
 
 @app.route('/api/users/<int:user_id>', methods=['PUT'])
 @token_required
@@ -540,11 +605,20 @@ def delete_user(user_id):
     }
 
     try:
-        db.session.delete(user)
-        db.session.commit()
+        user.is_active = False # 데이터 삭제 대신 비활성화
+ 
+        new_log = Log(
+            log_type='작업자 상태 변경',
+            user_id=g.current_user.get('id'), # 현재 삭제를 수행한 관리자 ID
+            description=f"사용자 {user.login_id}(ID: {user_id}) 계정이 비활성화되었습니다."
+        )
+        db.session.add(new_log) # 장부에 임시 기록
+
+        db.session.commit() # 3. 비활성화와 로그를 한 번에 DB에 저장
+    
         return jsonify({
             'status': 'success',
-            'message': '사용자가 삭제되었습니다.',
+            'message': '사용자가 삭제(비활성화) 처리되었습니다.',
             'deleted_user': deleted_info
         }), 200
     except Exception as e:
@@ -579,9 +653,74 @@ def get_alarms():
     if user_role != '최고 관리자' and user_area_ids:
         q = q.filter(Alarm.area_id.in_(user_area_ids))
 
+    # 검색 필터 로직 (조건이 붙을 때 작동)
+    status_filter = request.args.get('status')
+    area_filter = request.args.get('area') # 구역 선택
+
+    if status_filter:
+        q = q.filter(Alarm.status == status_filter)
+    if area_filter:
+        q = q.filter(Alarm.area_id == area_filter)
+
     alarms = q.order_by(Alarm.time.desc()).all()
     return jsonify([a.to_dict() for a in alarms]), 200
 
+@app.route('/api/alarms/<string:alarm_id>', methods=['PATCH'])
+@token_required
+def update_alarm_status(alarm_id):
+    """
+    알림 해결 처리 API
+    ---
+    tags:
+      - Alarms
+    parameters:
+      - in: path
+        name: alarm_id
+        type: string
+        required: true
+      - in: body
+        name: body
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: "해결"
+    responses:
+      200:
+        description: 수정 성공
+      404:
+        description: 알림을 찾을 수 없음
+    """
+    alarm = Alarm.query.get(alarm_id)
+    if not alarm:
+        return jsonify({'status': 'fail', 'message': '해당 알림을 찾을 수 없습니다.'}), 404
+
+    data = request.json or {}
+    
+    # 상태 업데이트 (미해결 -> 해결)
+    if 'status' in data:
+        alarm.status = data['status']
+
+    new_log = Log(
+        log_type='알림 해결 처리',
+        area_id=alarm.area_id,
+        user_id=g.current_user.get('id'), # 현재 로그인 중인 관리자 ID
+        status='해결',
+        description=f"알림 ID {alarm_id}번이 조치 완료되었습니다."
+    )
+    db.session.add(new_log)
+
+    try:
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': '알림이 해결 처리되었습니다.',
+            'alarm': alarm.to_dict()
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/api/stream-urls', methods=['GET'])
 @token_required
@@ -968,6 +1107,28 @@ def get_starts():
             "status": "error", 
             "message": f"DB 처리 중 에러 발생: {str(e)}"
         }), 500
+
+@app.route('/api/logs', methods=['GET'])
+@token_required
+def get_logs():
+    """
+    시스템 이력/로그 목록 조회
+    ---
+    tags:
+      - Logs
+    responses:
+      200:
+        description: 로그 목록 반환 성공
+    """
+    try:
+        # 최신 로그가 위로 오도록 정렬해서 가져오기
+        logs = Log.query.order_by(Log.timestamp.desc()).all()
+        
+        # 리스트 형태로 변환해서 전달
+        return jsonify([log.to_dict() for log in logs]), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 # 교내 내부망 5000 포트 차단으로 인한 포트 변경 (5000 -> 5002)
 if __name__ == '__main__':
