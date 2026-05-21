@@ -1,0 +1,185 @@
+nohup: ignoring input
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5002
+ * Running on http://172.31.34.195:5002
+Press CTRL+C to quit
+ * Restarting with stat
+Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Debugger is active!
+ * Debugger PIN: 846-857-363
+113.198.241.8 - - [07/May/2026 07:30:12] "GET /stream HTTP/1.1" 404 -
+113.198.241.8 - - [07/May/2026 07:30:40] "GET /api/violations HTTP/1.1" 404 -
+113.198.234.42 - - [07/May/2026 07:33:01] "POST /api/login HTTP/1.1" 200 -
+113.198.234.42 - - [07/May/2026 07:33:10] "GET /apidocs/ HTTP/1.1" 200 -
+113.198.234.42 - - [07/May/2026 07:33:10] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:33:10] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:33:10] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:33:10] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:33:10] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:33:10] "GET /apispec_1.json HTTP/1.1" 200 -
+113.198.234.42 - - [07/May/2026 07:33:15] "POST /api/login HTTP/1.1" 200 -
+113.198.241.8 - - [07/May/2026 07:35:13] "GET /stream HTTP/1.1" 404 -
+113.198.241.8 - - [07/May/2026 07:35:17] "GET /api/violations HTTP/1.1" 404 -
+113.198.234.42 - - [07/May/2026 07:37:12] "GET /apidocs/ HTTP/1.1" 200 -
+113.198.234.42 - - [07/May/2026 07:37:12] "GET /flasgger_static/swagger-ui.css HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:37:12] "GET /flasgger_static/swagger-ui-bundle.js HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:37:12] "GET /flasgger_static/lib/jquery.min.js HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:37:12] "GET /flasgger_static/swagger-ui-standalone-preset.js HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:37:12] "GET /apispec_1.json HTTP/1.1" 200 -
+113.198.234.42 - - [07/May/2026 07:37:12] "GET /flasgger_static/favicon-32x32.png HTTP/1.1" 304 -
+113.198.234.42 - - [07/May/2026 07:37:16] "POST /api/login HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 575, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 826, in _read_query_result
+    result.read()
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 1203, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 751, in _read_packet
+    packet_header = self._read_bytes(4)
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 805, in _read_bytes
+    raise err.OperationalError(
+pymysql.err.OperationalError: (2013, 'Lost connection to MySQL server during query')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_socketio/__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/engineio/middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ppe-safence-backend/app.py", line 362, in login
+    user = User.query.filter_by(login_id=input_id).first()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2766, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2864, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 575, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 826, in _read_query_result
+    result.read()
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 1203, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 751, in _read_packet
+    packet_header = self._read_bytes(4)
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/pymysql/connections.py", line 805, in _read_bytes
+    raise err.OperationalError(
+sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')
+[SQL: SELECT anon_1.users_id AS anon_1_users_id, anon_1.users_login_id AS anon_1_users_login_id, anon_1.users_password AS anon_1_users_password, anon_1.users_name AS anon_1_users_name, anon_1.users_role AS anon_1_users_role, areas_1.area_id AS areas_1_area_id, areas_1.area_name AS areas_1_area_name, areas_1.area_code AS areas_1_area_code, areas_1.camera_key AS areas_1_camera_key, areas_1.description AS areas_1_description, areas_1.risk_level AS areas_1_risk_level, areas_1.is_active AS areas_1_is_active, areas_1.created_at AS areas_1_created_at, areas_1.updated_at AS areas_1_updated_at 
+FROM (SELECT users.id AS users_id, users.login_id AS users_login_id, users.password AS users_password, users.name AS users_name, users.role AS users_role 
+FROM users 
+WHERE users.login_id = %(login_id_1)s 
+ LIMIT %(param_1)s) AS anon_1 LEFT OUTER JOIN (user_areas AS user_areas_1 INNER JOIN areas AS areas_1 ON areas_1.area_id = user_areas_1.area_id) ON anon_1.users_id = user_areas_1.user_id]
+[parameters: {'login_id_1': 'a001', 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+91.230.168.168 - - [07/May/2026 14:22:15] code 400, message Bad request version ('P`\x9bÜ\x96Þºgå\xad÷')
+91.230.168.168 - - [07/May/2026 14:22:15] "\x16\x03\x03\x02b\x01\x00\x02^\x03\x03pboâÝÓ>6s´\x8d«1\x93\x0dÇN/ªº\x83x\x1e\x876¼×\x14\x9bosô 1\x9f!ÂÍ\x17\x83®¡ø=ÿ·Ó$\x1fP`\x9bÜ\x96Þºgå­÷" 400 -
+91.230.168.77 - - [07/May/2026 14:22:19] "GET / HTTP/1.1" 404 -
+195.184.76.53 - - [07/May/2026 14:24:09] "GET /favicon.ico HTTP/1.1" 404 -
+3.132.26.232 - - [07/May/2026 14:42:18] "GET / HTTP/1.1" 404 -
+3.132.26.232 - - [07/May/2026 14:43:03] "GET / HTTP/1.1" 404 -
+3.132.26.232 - - [07/May/2026 14:46:51] code 400, message Bad HTTP/0.9 request type ("\x16\x03\x01\x00{\x01\x00\x00w\x03\x03'\x7fa\x86¹©ìE±:hô\x18Î\x81ï%>;ÂH½Ö*êí5\x91ó\x02Ð¼\x00\x00\x1aÀ/À+À\x11À\x07À\x13À")
+3.132.26.232 - - [07/May/2026 14:46:51] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03'\x7fa\x86¹©ìE±:hô\x18Î\x81ï%>;ÂH½Ö*êí5\x91ó\x02Ð¼\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.132.26.232 - - [07/May/2026 14:47:43] code 400, message Bad request version ('À\x14À')
+3.132.26.232 - - [07/May/2026 14:47:43] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03P\x92«\x09\x09lF&µ¼dIFVõìDO(ß\x0c\x1aü\x87Ì\x8cóUnS®Ø\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+204.76.203.225 - - [08/May/2026 09:32:25] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+204.76.203.73 - - [08/May/2026 09:32:26] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+204.76.203.226 - - [08/May/2026 09:32:26] "CONNECT proxy2.proxiesfood.com:443 HTTP/1.1" 404 -
+180.67.7.211 - - [08/May/2026 10:33:44] "GET /stream HTTP/1.1" 404 -
+180.67.7.211 - - [08/May/2026 10:33:46] "GET /api/violations HTTP/1.1" 404 -
+180.67.7.211 - - [08/May/2026 10:43:48] "GET /stream HTTP/1.1" 404 -
+180.67.7.211 - - [08/May/2026 10:43:49] "GET /stream HTTP/1.1" 404 -
+16.58.56.214 - - [08/May/2026 15:34:46] "GET / HTTP/1.1" 404 -
+16.58.56.214 - - [08/May/2026 15:35:30] "GET / HTTP/1.1" 404 -
+16.58.56.214 - - [08/May/2026 15:37:09] code 400, message Bad request version ('À\x14À')
+16.58.56.214 - - [08/May/2026 15:37:09] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03ÌF:äyvz¥\x11¤¸Z¼S\x06\x86I»Óù_\x00u\x8e®r;°\x0b\x7ff\x8e\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+16.58.56.214 - - [08/May/2026 15:37:58] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00{\x01\x00\x00w\x03\x03r\x88\x07Ô\x83#\x17õ´s\x95\x19or\x9fn¾O8BºÙÒjÁw¹\x86ãb\x03\x9b\x00\x00\x1aÀ/À+À\x11À\x07À\x13À')
+16.58.56.214 - - [08/May/2026 15:37:58] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03r\x88\x07Ô\x83#\x17õ´s\x95\x19or\x9fn¾O8BºÙÒjÁw¹\x86ãb\x03\x9b\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.131.220.121 - - [09/May/2026 14:46:51] "GET / HTTP/1.1" 404 -
+3.131.220.121 - - [09/May/2026 14:49:42] "GET / HTTP/1.1" 404 -
+3.131.220.121 - - [09/May/2026 14:52:41] code 400, message Bad request version ('À\x14À')
+3.131.220.121 - - [09/May/2026 14:52:41] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03eÚ|-q\x8f\x9a\x85\x1cCÊÏg8Gö}\x1bKÂí\x139O±XvßÞÿÿ\x7f\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -
+3.131.220.121 - - [09/May/2026 14:53:23] code 400, message Bad request version ('À\x14À')
+3.131.220.121 - - [09/May/2026 14:53:23] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03dµ$~\x81UÝ\x8cO[©QóÈîkµ\x83Øc \x1cÛÍ\x1dc\x83H2z¥ù\x00\x00\x1aÀ/À+À\x11À\x07À\x13À\x09À\x14À" 400 -

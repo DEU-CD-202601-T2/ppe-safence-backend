@@ -1,0 +1,26 @@
+[
+    {
+        "alert_type": "안전모",
+        "use_alert": true,
+        "send_to_admin": true,
+        "repeat_interval": 30,
+        "min_risk_level": "보통",
+        "stop_work_linkage": true
+    },
+    {
+        "alert_type": "장갑",
+        "use_alert": true,
+        "send_to_admin": true,
+        "repeat_interval": null,
+        "min_risk_level": "낮음",
+        "stop_work_linkage": false
+    },
+    {
+        "alert_type": "마스크",
+        "use_alert": true,
+        "send_to_admin": true,
+        "repeat_interval": 60,
+        "min_risk_level": "보통",
+        "stop_work_linkage": false
+    }
+]

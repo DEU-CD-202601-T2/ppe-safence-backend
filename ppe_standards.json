@@ -1,0 +1,15 @@
+[
+    {
+        "zoneID": 1,
+        "required_ppe": [
+            "장갑",
+            "마스크"
+        ]
+    },
+    {
+        "zoneID": 5,
+        "required_ppe": [
+            "장갑"
+        ]
+    }
+]

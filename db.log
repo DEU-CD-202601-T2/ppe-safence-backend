@@ -1,0 +1,3 @@
+nohup: ignoring input
+mariadbd: Please consult the Knowledge Base to find out how to run mysqld as root!
+2026-05-06  9:04:14 0 [ERROR] Aborting
