@@ -10,6 +10,8 @@ from datetime import date, datetime, timedelta, timezone
 import jwt
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.dialects.mysql import MEDIUMBLOB
+from flask import Response, abort
 
 app = Flask(__name__)
 swagger_config = {
@@ -55,10 +57,10 @@ app.config['JSON_AS_ASCII'] = False
 
 # 깃허브 및 서버 업로드 시 주석 해제
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117:3308/capstone_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117:3308/capstone_db'
 
 # 로컬 환경에서 코드 수정 후 테스트 시 주석 해제 (교내 내부망 특정 포트 차단 issue)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@127.0.0.1:3308/capstone_db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@127.0.0.1:3308/capstone_db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -100,10 +102,11 @@ class Violation(db.Model):
     violation_type = db.Column(db.String(50), nullable=False)
     detected_at    = db.Column(db.DateTime, default=db.func.current_timestamp())
     area_id        = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
-    image_path     = db.Column(db.String(255))
+    person_id      = db.Column(db.Integer, nullable=True)
+    image_data     = db.Column(MEDIUMBLOB)
+    image_mime     = db.Column(db.String(20), default='image/jpeg')
     is_checked     = db.Column(db.Boolean, default=False)
 
-    # Area 객체로 바로 접근하기 위한 관계 (lazy='joined' = SELECT 시 자동 JOIN)
     area = db.relationship('Area', backref='violations', lazy='joined')
 
     def to_dict(self):
@@ -113,7 +116,9 @@ class Violation(db.Model):
             'detected_at':    self.detected_at.strftime('%Y-%m-%d %H:%M:%S') if self.detected_at else None,
             'area_id':        self.area_id,
             'area':           self.area.to_dict() if self.area else None,
-            'image_path':     self.image_path,
+            'person_id':      self.person_id,
+            'image_url':      f'/api/violations/{self.id}/image' if self.image_data else None,
+            'image_mime':     self.image_mime,
             'is_checked':     self.is_checked,
         }
 
@@ -628,6 +633,40 @@ def delete_user(user_id):
             'status': 'error',
             'message': f'삭제 중 오류 발생: {str(e)}'
         }), 500
+
+
+@app.route('/api/violations/<int:violation_id>/image', methods=['GET'])
+@token_required
+def get_violation_image(violation_id):
+    """
+    위반 사건의 증거 이미지(BLOB)를 JPEG로 응답
+    ---
+    tags:
+      - Violations
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: violation_id
+        in: path
+        type: integer
+        required: true
+    responses:
+      200:
+        description: JPEG 이미지
+      404:
+        description: 위반이 없거나 이미지가 없음
+    """
+    violation = Violation.query.get(violation_id)
+    if violation is None or violation.image_data is None:
+        abort(404)
+    return Response(
+        violation.image_data,
+        mimetype=violation.image_mime or 'image/jpeg',
+        headers={
+            'Content-Disposition': f'inline; filename="violation_{violation_id}.jpg"',
+            'Cache-Control': 'private, max-age=3600',
+        },
+    )
 
 @app.route('/api/alarms', methods=['GET'])
 @token_required
@@ -1175,6 +1214,154 @@ def get_violations():
         return jsonify({'status': 'error', 'message': f"위반 관리 DB 조회 오류: {str(e)}"}), 500
 
 
+@app.route('/api/violations/<int:violation_id>', methods=['GET'])
+@token_required
+def get_violation_detail(violation_id):
+    """
+    4. 위반 관리 - 위반 상세 조회
+    ---
+    tags:
+      - Violations
+    parameters:
+      - name: violation_id
+        in: path
+        type: integer
+        required: true
+        description: 조회할 위반 ID
+    responses:
+      200:
+        description: 성공
+      404:
+        description: 해당 ID의 위반을 찾을 수 없음
+    """
+    try:
+        v = Violation.query.get(violation_id)
+        if v is None:
+            return jsonify({'status': 'error', 'message': '해당 위반을 찾을 수 없습니다.'}), 404
+
+        result = {
+            "id":             v.id,
+            "detected_at":    v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
+            "area_id":        v.area_id,
+            "area_name":      v.area.area_name if v.area else None,
+            "camera_key":     v.area.camera_key if v.area else None,
+            "person_id":      v.person_id,
+            "violation_type": v.violation_type,
+            "image_url":      f'/api/violations/{v.id}/image' if v.image_data else None,
+            "image_mime":     v.image_mime,
+            "status":         "해결" if v.is_checked else "미해결",
+            "is_checked":     bool(v.is_checked),
+        }
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': f"위반 상세 조회 오류: {str(e)}"}), 500
+
+
+@app.route('/api/violations/<int:violation_id>', methods=['PATCH'])
+@token_required
+def update_violation(violation_id):
+    """
+    4. 위반 관리 - 위반 수정 (주로 is_checked 변경)
+    ---
+    tags:
+      - Violations
+    parameters:
+      - name: violation_id
+        in: path
+        type: integer
+        required: true
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            is_checked:
+              type: boolean
+              description: 처리 여부 (true=해결, false=미해결)
+            violation_type:
+              type: string
+              description: 위반 유형 (오인식 정정 시)
+            area_id:
+              type: integer
+              description: 구역 ID (오인식 정정 시)
+    responses:
+      200:
+        description: 수정 성공
+      400:
+        description: 수정할 필드가 없거나 잘못된 요청
+      404:
+        description: 해당 ID의 위반을 찾을 수 없음
+    """
+    try:
+        v = Violation.query.get(violation_id)
+        if v is None:
+            return jsonify({'status': 'error', 'message': '해당 위반을 찾을 수 없습니다.'}), 404
+
+        data = request.get_json() or {}
+
+        # 화이트리스트: 수정 허용 필드만 (image_data, detected_at, person_id 등은 변경 불가)
+        ALLOWED_FIELDS = {'is_checked', 'violation_type', 'area_id'}
+        updated_fields = []
+
+        for field in ALLOWED_FIELDS:
+            if field in data:
+                setattr(v, field, data[field])
+                updated_fields.append(field)
+
+        if not updated_fields:
+            return jsonify({
+                'status': 'error',
+                'message': f'수정할 필드가 없습니다. 허용 필드: {list(ALLOWED_FIELDS)}'
+            }), 400
+
+        db.session.commit()
+        return jsonify({
+            'status': 'ok',
+            'message': '수정되었습니다.',
+            'updated_fields': updated_fields,
+            'violation': v.to_dict()
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': f"위반 수정 오류: {str(e)}"}), 500
+
+
+@app.route('/api/violations/<int:violation_id>', methods=['DELETE'])
+@token_required
+def delete_violation(violation_id):
+    """
+    4. 위반 관리 - 위반 삭제
+    ---
+    tags:
+      - Violations
+    parameters:
+      - name: violation_id
+        in: path
+        type: integer
+        required: true
+    responses:
+      200:
+        description: 삭제 성공
+      404:
+        description: 해당 ID의 위반을 찾을 수 없음
+    """
+    try:
+        v = Violation.query.get(violation_id)
+        if v is None:
+            return jsonify({'status': 'error', 'message': '해당 위반을 찾을 수 없습니다.'}), 404
+
+        db.session.delete(v)
+        db.session.commit()
+        return jsonify({
+            'status': 'ok',
+            'message': f'위반 {violation_id}이(가) 삭제되었습니다.'
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': f"위반 삭제 오류: {str(e)}"}), 500
+
+
 @app.route('/api/users', methods=['GET'])
 @token_required
 def get_users_list():
@@ -1252,29 +1439,6 @@ def get_log_detail(log_id):
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"로그 상세 조회 DB 오류: {str(e)}"}), 500
 
-@app.route('/api/violations/images/<path:filename>', methods=['GET'])
-def get_violation_image(filename):
-    """
-    4. 위반 관리 - 위반 이미지 응답 API
-    ---
-    tags:
-      - Violations
-    responses:
-      200:
-        description: 성공
-    """
-    try:
-        from flask import send_from_directory
-        # 서버 컴퓨터 내에서 위반 이미지 사진들이 저장되는 폴더 경로 지정
-        image_dir = os.path.join(os.getcwd(), 'violations_images')
-        
-        # 만약 해당 폴더가 없으면 에러 방지를 위해 자동으로 생성해둡니다.
-        if not os.path.exists(image_dir):
-            os.makedirs(image_dir)
-            
-        return send_from_directory(image_dir, filename)
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': f"이미지를 불러올 수 없습니다: {str(e)}"}), 404
 
 import json
 
