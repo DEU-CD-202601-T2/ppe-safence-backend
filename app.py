@@ -1203,13 +1203,13 @@ def get_violations():
         result = []
         for v in violations:
             result.append({
-                "id":             v.id,
-                "detected_at":    v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
-                "area_name":      v.area.area_name if v.area else None,
-                "camera_key":     v.area.camera_key if v.area else None,
-                "worker_id":      None,  # 현재 DB Violation 테이블에 작업자 ID 칸이 없으므로 안전하게 null 처리
+                "id": v.id,
+                "detected_at": v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
+                "area_name": v.area.area_name if v.area else None,
+                "camera_key": v.area.camera_key if v.area else None,
+                "person_id": v.person_id,
                 "violation_type": v.violation_type,
-                "status":         "해결" if v.is_checked else "미해결"
+                "status": "해결" if v.is_checked else "미해결"
             })
         return jsonify(result), 200
     except Exception as e:
