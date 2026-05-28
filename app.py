@@ -1,7 +1,7 @@
 import os
 import time
 import requests
-from flask import Flask, request, jsonify, g
+from flask import Flask, request, jsonify, g, Response, abort, stream_with_context
 from flasgger import Swagger
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -71,6 +71,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #   - Tailscale 직결: export JETSON_BASE_URL=http://100.113.160.25:5001
 #   - 같은 LAN:       export JETSON_BASE_URL=http://192.168.45.86:5001
 JETSON_BASE_URL = os.environ.get('JETSON_BASE_URL', 'http://100.113.160.25:5001')
+PUBLIC_BASE_URL = os.environ.get(
+    'PUBLIC_BASE_URL',
+    'http://43.200.27.117:5002'
+)
 
 db = SQLAlchemy(app)
 CORS(app)
@@ -764,6 +768,59 @@ def update_alarm_status(alarm_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/api/proxy-stream/<path:cam_name>', methods=['GET'])
+def proxy_stream(cam_name):
+    """
+    Jetson MJPEG 스트림 프록시 API
+    ---
+    tags:
+      - Camera
+    parameters:
+      - name: cam_name
+        in: path
+        type: string
+        required: true
+        description: Jetson 카메라 이름. 예) CAM0(USB0)
+    responses:
+      200:
+        description: MJPEG 스트리밍 응답
+        content:
+          multipart/x-mixed-replace:
+            schema:
+              type: string
+              format: binary
+      503:
+        description: Jetson 스트림 연결 실패
+    """
+    jetson_stream_url = f"{JETSON_BASE_URL}/stream/{cam_name}"
+
+    try:
+        upstream = requests.get(
+            jetson_stream_url,
+            stream=True,
+            timeout=(5, None)
+        )
+        upstream.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        return jsonify({
+            'status': 'jetson_stream_error',
+            'message': f'Jetson 스트림에 연결할 수 없습니다. ({type(e).__name__})'
+        }), 503
+
+    def generate():
+        try:
+            for chunk in upstream.iter_content(chunk_size=8192):
+                if chunk:
+                    yield chunk
+        finally:
+            upstream.close()
+
+    return Response(
+        stream_with_context(generate()),
+        mimetype='multipart/x-mixed-replace; boundary=frame',
+        direct_passthrough=True
+    )
+
 @app.route('/api/stream-urls', methods=['GET'])
 @token_required
 def stream_urls():
@@ -809,8 +866,8 @@ def stream_urls():
         cameras_out.append({
             'name': cam.get('name'),
             'key': cam.get('key'),
-            'url': f"{JETSON_BASE_URL}/stream/{cam.get('name')}",
-            'area': area.to_dict() if area else None  # 미등록 카메라면 null
+            'url': f"{PUBLIC_BASE_URL}/api/proxy-stream/{cam.get('name')}",
+            'area': area.to_dict() if area else None
         })
 
     online_keys = {c['key'] for c in cameras_out if c['key']}
