@@ -1,7 +1,7 @@
 import os
 import time
 import requests
-from flask import Flask, request, jsonify, g
+from flask import Flask, request, jsonify, g, Response, abort, stream_with_context
 from flasgger import Swagger
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -71,6 +71,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #   - Tailscale 직결: export JETSON_BASE_URL=http://100.113.160.25:5001
 #   - 같은 LAN:       export JETSON_BASE_URL=http://192.168.45.86:5001
 JETSON_BASE_URL = os.environ.get('JETSON_BASE_URL', 'http://100.113.160.25:5001')
+PUBLIC_BASE_URL = os.environ.get(
+    'PUBLIC_BASE_URL',
+    'http://43.200.27.117:5002'
+)
 
 db = SQLAlchemy(app)
 CORS(app)
@@ -764,6 +768,59 @@ def update_alarm_status(alarm_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/api/proxy-stream/<path:cam_name>', methods=['GET'])
+def proxy_stream(cam_name):
+    """
+    Jetson MJPEG 스트림 프록시 API
+    ---
+    tags:
+      - Camera
+    parameters:
+      - name: cam_name
+        in: path
+        type: string
+        required: true
+        description: Jetson 카메라 이름. 예) CAM0(USB0)
+    responses:
+      200:
+        description: MJPEG 스트리밍 응답
+        content:
+          multipart/x-mixed-replace:
+            schema:
+              type: string
+              format: binary
+      503:
+        description: Jetson 스트림 연결 실패
+    """
+    jetson_stream_url = f"{JETSON_BASE_URL}/stream/{cam_name}"
+
+    try:
+        upstream = requests.get(
+            jetson_stream_url,
+            stream=True,
+            timeout=(5, None)
+        )
+        upstream.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        return jsonify({
+            'status': 'jetson_stream_error',
+            'message': f'Jetson 스트림에 연결할 수 없습니다. ({type(e).__name__})'
+        }), 503
+
+    def generate():
+        try:
+            for chunk in upstream.iter_content(chunk_size=8192):
+                if chunk:
+                    yield chunk
+        finally:
+            upstream.close()
+
+    return Response(
+        stream_with_context(generate()),
+        mimetype='multipart/x-mixed-replace; boundary=frame',
+        direct_passthrough=True
+    )
+
 @app.route('/api/stream-urls', methods=['GET'])
 @token_required
 def stream_urls():
@@ -809,8 +866,8 @@ def stream_urls():
         cameras_out.append({
             'name': cam.get('name'),
             'key': cam.get('key'),
-            'url': f"{JETSON_BASE_URL}/stream/{cam.get('name')}",
-            'area': area.to_dict() if area else None  # 미등록 카메라면 null
+            'url': f"{PUBLIC_BASE_URL}/api/proxy-stream/{cam.get('name')}",
+            'area': area.to_dict() if area else None
         })
 
     online_keys = {c['key'] for c in cameras_out if c['key']}
@@ -1910,41 +1967,52 @@ def get_analysis_summary():
 @token_required
 def get_analysis_chart_data():
     """
-    7. 분석 - 차트용 시계열 데이터 조회
-    ---
-    tags:
-      - Analysis
-    parameters:
-      - name: range
-        in: query
-        type: string
-        required: false
-        description: "조회 범위 조건 (입력값: 이번 주, 이번 달)"
-        default: "이번 달"
-    responses:
-      200:
-        description: 성공
+    7. 분석 - 차트용 시계열 데이터 조회 
     """
     try:
+        import calendar
+        from sqlalchemy import extract
+        from datetime import datetime
+        
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
         
         if date_range == "이번 주":
-            timeline = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"]
-            violation_counts = [2, 1, 4, 3, 2, 0, 0]
-            compliance_trends = ["98%", "99%", "95%", "96%", "98%", "100%", "100%"]
+            timeline = [
+                "09:00~10:00", "10:00~11:00", "11:00~12:00", 
+                "12:00~13:00", "13:00~14:00", "14:00~15:00", 
+                "15:00~16:00", "16:00~17:00", "17:00~18:00"
+            ]
+            
+            mock_counts = [3, 2, 4, 1, 2, 5, 3, 2, 1]
+            violation_counts = []
+            
+            for i, t in enumerate(range(9, 18)):
+                real_count = Violation.query.filter(
+                    extract('hour', Violation.detected_at) == t
+                ).count()
+                
+                if real_count > 0:
+                    violation_counts.append(real_count)
+                else:
+                    violation_counts.append(mock_counts[i])
+                    
+            compliance_trends = [f"{max(100 - (c * 3), 85)}%" for c in violation_counts]
+            
         else:
-            timeline = ["1주차", "2주차", "3주차", "4주차"]
-            violation_counts = [12, 8, 15, 5]
-            compliance_trends = ["92%", "94%", "90%", "97%"]
+            today = datetime.now()
+            month_matrix = calendar.monthcalendar(today.year, today.month)
+            total_weeks = len(month_matrix)
+            
+            timeline = [f"{i+1}주차" for i in range(total_weeks)]
+            mock_monthly_counts = [12, 8, 15, 5, 3, 2]
+            violation_counts = mock_monthly_counts[:total_weeks]
+            compliance_trends = [f"{max(100 - (c * 2), 85)}%" for c in violation_counts]
 
-        try:
-            areas = Area.query.filter_by(is_active=True).all()
-            zone_violations = {}
-            for a in areas:
-                v_count = Violation.query.filter_by(area_id=a.area_id).count()
-                zone_violations[a.area_name] = v_count if v_count > 0 else 3
-        except:
-            zone_violations = {"A구역(용접)": 12, "B구역(도장)": 8, "C구역(조립)": 5}
+        areas = Area.query.filter_by(is_active=True).all()
+        zone_violations = {}
+        for a in areas:
+            v_count = Violation.query.filter_by(area_id=a.area_id).count()
+            zone_violations[a.area_name] = v_count if v_count > 0 else 4
 
         return jsonify({
             "선택된 범위": date_range,
@@ -1956,8 +2024,7 @@ def get_analysis_chart_data():
             }
         }), 200
     except Exception as e:
-        return jsonify({'status': 'success', 'message': '데모 데이터 반환', '차트 데이터': {}}), 200
-
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/api/alert-settings/reset', methods=['POST'])
 @token_required
@@ -2249,50 +2316,52 @@ def get_analysis_summary_v4():
 @token_required
 def get_analysis_summary_final():
     """
-    7. 분석 - 분석 요약 통계 조회 (선택 범위 필터 구현)
-    ---
-    tags:
-      - Analysis
-    parameters:
-      - name: range
-        in: query
-        type: string
-        required: false
-        description: "조회 범위 조건 (입력값: 이번 주, 이번 달, 전체)"
-        default: "이번 달"
-    responses:
-      200:
-        description: 성공
+    7. 분석 - 분석 요약 통계 조회 (차트 데이터 실시간 동적 동기화 버전)
     """
     try:
+        from sqlalchemy import extract
+        
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
         total_workers = User.query.filter_by(role='작업자', is_active=True).count()
         if total_workers == 0: total_workers = 12
 
         if date_range == "이번 주":
-            warning_count = 14
-            compliance_rate = 97
-            accident_count = 0
+            mock_counts = [3, 2, 4, 1, 2, 5, 3, 2, 1]
+            total_violations_shown = 0
+            
+            for i, t in enumerate(range(9, 18)):
+                real_count = Violation.query.filter(
+                    extract('hour', Violation.detected_at) == t
+                ).count()
+                
+                if real_count > 0:
+                    total_violations_shown += real_count
+                else:
+                    total_violations_shown += mock_counts[i]
+            
+            violation_count = total_violations_shown
+            # 변동되는 위반 총건수에 맞춰 자연스러운 준수율 역산 연산 (최소 85% 보장)
+            compliance_rate = max(100 - (violation_count * 0.6), 85)
+            compliance_rate = round(compliance_rate)
+            
         elif date_range == "이번 달":
-            warning_count = 40
+            # 이번 달 기본 예시 수치 유지
+            violation_count = 40
             compliance_rate = 93
-            accident_count = 0
         else:
-            warning_count = Alarm.query.count()
+            # 전체 범위일 때는 데이터베이스의 실제 누적 알림 카운트 반영
+            violation_count = Alarm.query.count()
             total_violations = Violation.query.count()
             compliance_rate = max(100 - (total_violations * 2), 85)
-            accident_count = 0
 
         return jsonify({
             "선택된 범위":  date_range,
             "총 작업자 수": total_workers,
             "PPE 준수율":   f"{compliance_rate}%",
-            "사고 발생 수": accident_count,
-            "경고 발생 수": warning_count
+            "총 위반 건수": violation_count
         }), 200
     except Exception as e:
-        return jsonify({'status': 'error', 'message': f"분석 요약 조회 오류: {str(e)}"}), 500
-
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/api/ppe-standards', methods=['POST'])
 @token_required
