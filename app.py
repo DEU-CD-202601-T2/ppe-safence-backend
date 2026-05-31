@@ -1968,6 +1968,19 @@ def get_analysis_summary():
 def get_analysis_chart_data():
     """
     7. 분석 - 차트용 시계열 데이터 조회 
+    ---
+    tags:
+      - Analysis
+    parameters:
+      - name: range
+        in: query
+        type: string
+        required: false
+        description: "조회 범위 조건 (입력값: 이번 주, 이번 달)"
+        default: "이번 달"
+    responses:
+      200:
+        description: 성공
     """
     try:
         import calendar
@@ -2317,6 +2330,19 @@ def get_analysis_summary_v4():
 def get_analysis_summary_final():
     """
     7. 분석 - 분석 요약 통계 조회 (차트 데이터 실시간 동적 동기화 버전)
+    ---
+    tags:
+      - Analysis
+    parameters:
+      - name: range
+        in: query
+        type: string
+        required: false
+        description: "조회 범위 조건 (입력값: 이번 주, 이번 달)"
+        default: "이번 달"
+    responses:
+      200:
+        description: 성공
     """
     try:
         from sqlalchemy import extract
@@ -2524,9 +2550,418 @@ if 'resume_workers_work_status_v2' in app.view_functions: app.view_functions['re
 app.view_functions['get_alert_settings'] = get_alert_settings
 if 'get_api_alert_settings' in app.view_functions: app.view_functions['get_api_alert_settings'] = get_alert_settings
 
+
+
+# -----------------------------------------------------------------
+# PPE 기준 설정 helper
+# -----------------------------------------------------------------
+
+def area_required_ppe_list(area):
+    """Area.enforce_* 값을 WinForms 표시용 한글 PPE 리스트로 변환."""
+    required = []
+
+    if bool(getattr(area, "enforce_helmet", False)):
+        required.append("안전모")
+
+    if bool(getattr(area, "enforce_mask", False)):
+        required.append("마스크")
+
+    if bool(getattr(area, "enforce_glove_left", False)):
+        required.append("왼손 장갑")
+
+    if bool(getattr(area, "enforce_glove_right", False)):
+        required.append("오른손 장갑")
+
+    return required
+
+
+def apply_required_ppe_to_area(area, required_ppe):
+    """WinForms에서 받은 required_ppe 리스트를 Area.enforce_* 컬럼에 반영."""
+    required = set(required_ppe or [])
+
+    area.enforce_helmet = "안전모" in required
+    area.enforce_mask = "마스크" in required
+
+    # 기존 호환성: 예전 값 "장갑"이 오면 양손 장갑 모두 단속
+    area.enforce_glove_left = ("왼손 장갑" in required) or ("장갑" in required)
+    area.enforce_glove_right = ("오른손 장갑" in required) or ("장갑" in required)
+
+
+# -----------------------------------------------------------------
+# PPE 기준 설정 DB 저장 강제 Override
+# - 기존 ppe_standards.json 저장 방식 무시
+# - areas.enforce_* 컬럼을 직접 수정
+# -----------------------------------------------------------------
+
+@token_required
+def get_ppe_standards_db_override():
+    """
+    8. 설정 - PPE 기준 설정 조회 (DB areas.enforce_* 기준)
+    """
+    try:
+        areas = Area.query.filter_by(is_active=True).order_by(Area.area_id).all()
+        result = []
+
+        for a in areas:
+            result.append({
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
+                "required_ppe": area_required_ppe_list(a),
+                "enforce_helmet": bool(a.enforce_helmet),
+                "enforce_mask": bool(a.enforce_mask),
+                "enforce_glove_left": bool(a.enforce_glove_left),
+                "enforce_glove_right": bool(a.enforce_glove_right),
+            })
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 조회 오류: {str(e)}"
+        }), 500
+
+
+@token_required
+def save_ppe_standards_db_override():
+    """
+    8. 설정 - PPE 기준 설정 저장 (DB areas.enforce_* 반영)
+    """
+    try:
+        ppe_data = request.json
+
+        if not isinstance(ppe_data, list):
+            return jsonify({
+                "status": "fail",
+                "message": "PPE 기준 데이터는 배열이어야 합니다."
+            }), 400
+
+        updated = []
+
+        for item in ppe_data:
+            zone_id = item.get("zoneID") or item.get("zone_id") or item.get("area_id")
+            if zone_id is None:
+                continue
+
+            area = Area.query.get(int(zone_id))
+            if not area:
+                continue
+
+            required_ppe = item.get("required_ppe") or []
+            apply_required_ppe_to_area(area, required_ppe)
+            updated.append(area.area_id)
+
+        db.session.commit()
+
+        return jsonify({
+            "status": "success",
+            "message": "구역별 PPE 단속 기준이 DB에 저장되었습니다.",
+            "updated_area_ids": updated
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 저장 오류: {str(e)}"
+        }), 500
+
+
+for _endpoint in [
+    "get_ppe_standards",
+    "get_ppe_standards_v2",
+    "get_ppe_standards_v3",
+    "get_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = get_ppe_standards_db_override
+
+
+for _endpoint in [
+    "save_ppe_standards",
+    "save_ppe_standards_v2",
+    "save_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = save_ppe_standards_db_override
+
+
+
+# -----------------------------------------------------------------
+# PPE 기준 설정 DB 저장 Raw SQL Override
+# - 기존 ppe_standards.json 저장 방식 무시
+# - areas.enforce_* 컬럼을 UPDATE 문으로 직접 반영
+# - 저장 직후 SELECT 결과를 응답에 포함
+# -----------------------------------------------------------------
+
+@token_required
+def save_ppe_standards_rawsql_override():
+    try:
+        from sqlalchemy import text
+
+        ppe_data = request.json
+
+        if not isinstance(ppe_data, list):
+            return jsonify({
+                "status": "fail",
+                "message": "PPE 기준 데이터는 배열이어야 합니다."
+            }), 400
+
+        updated = []
+        after_rows = []
+
+        for item in ppe_data:
+            zone_id = item.get("zoneID") or item.get("zone_id") or item.get("area_id")
+            if zone_id is None:
+                continue
+
+            required = set(item.get("required_ppe") or [])
+
+            enforce_helmet = 1 if "안전모" in required else 0
+            enforce_mask = 1 if "마스크" in required else 0
+            enforce_glove_left = 1 if ("왼손 장갑" in required or "장갑" in required) else 0
+            enforce_glove_right = 1 if ("오른손 장갑" in required or "장갑" in required) else 0
+
+            result = db.session.execute(
+                text("""
+                    UPDATE areas
+                    SET
+                        enforce_helmet = :enforce_helmet,
+                        enforce_mask = :enforce_mask,
+                        enforce_glove_left = :enforce_glove_left,
+                        enforce_glove_right = :enforce_glove_right
+                    WHERE area_id = :area_id
+                """),
+                {
+                    "enforce_helmet": enforce_helmet,
+                    "enforce_mask": enforce_mask,
+                    "enforce_glove_left": enforce_glove_left,
+                    "enforce_glove_right": enforce_glove_right,
+                    "area_id": int(zone_id),
+                }
+            )
+
+            if result.rowcount > 0:
+                updated.append(int(zone_id))
+
+        db.session.commit()
+
+        if updated:
+            rows = db.session.execute(
+                text("""
+                    SELECT
+                        area_id,
+                        area_name,
+                        enforce_helmet,
+                        enforce_mask,
+                        enforce_glove_left,
+                        enforce_glove_right
+                    FROM areas
+                    WHERE area_id IN :ids
+                    ORDER BY area_id
+                """),
+                {"ids": tuple(updated)}
+            ).mappings().all()
+
+            after_rows = [dict(r) for r in rows]
+
+        return jsonify({
+            "status": "success",
+            "message": "구역별 PPE 단속 기준이 DB에 저장되었습니다.",
+            "updated_area_ids": updated,
+            "after": after_rows
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 저장 오류: {str(e)}"
+        }), 500
+
+
+for _endpoint in [
+    "save_ppe_standards",
+    "save_ppe_standards_v2",
+    "save_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = save_ppe_standards_rawsql_override
+
 # 교내 내부망 5000 포트 차단으로 인한 포트 변경 (5000 -> 5002)
+
+# -----------------------------------------------------------------
+# PPE 기준 설정 GET/POST 최종 Runtime Override
+# - 반드시 첫 번째 socketio.run() 실행 전에 적용되어야 함
+# -----------------------------------------------------------------
+
+@token_required
+def get_ppe_standards_runtime_override():
+    try:
+        from sqlalchemy import text
+
+        rows = db.session.execute(
+            text("""
+                SELECT
+                    area_id,
+                    area_name,
+                    enforce_helmet,
+                    enforce_mask,
+                    enforce_glove_left,
+                    enforce_glove_right
+                FROM areas
+                WHERE is_active = 1
+                ORDER BY area_id
+            """)
+        ).mappings().all()
+
+        result = []
+
+        for r in rows:
+            required_ppe = []
+
+            if int(r["enforce_helmet"] or 0) == 1:
+                required_ppe.append("안전모")
+            if int(r["enforce_mask"] or 0) == 1:
+                required_ppe.append("마스크")
+            if int(r["enforce_glove_left"] or 0) == 1:
+                required_ppe.append("왼손 장갑")
+            if int(r["enforce_glove_right"] or 0) == 1:
+                required_ppe.append("오른손 장갑")
+
+            result.append({
+                "zoneID": r["area_id"],
+                "zone_name": r["area_name"],
+                "required_ppe": required_ppe,
+                "enforce_helmet": int(r["enforce_helmet"] or 0) == 1,
+                "enforce_mask": int(r["enforce_mask"] or 0) == 1,
+                "enforce_glove_left": int(r["enforce_glove_left"] or 0) == 1,
+                "enforce_glove_right": int(r["enforce_glove_right"] or 0) == 1
+            })
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 조회 오류: {str(e)}"
+        }), 500
+
+
+@token_required
+def save_ppe_standards_runtime_override():
+    try:
+        from sqlalchemy import text
+
+        ppe_data = request.json
+
+        if not isinstance(ppe_data, list):
+            return jsonify({
+                "status": "fail",
+                "message": "PPE 기준 데이터는 배열이어야 합니다."
+            }), 400
+
+        updated = []
+        after_rows = []
+
+        for item in ppe_data:
+            zone_id = item.get("zoneID") or item.get("zone_id") or item.get("area_id")
+            if zone_id is None:
+                continue
+
+            required = set(item.get("required_ppe") or [])
+
+            enforce_helmet = 1 if "안전모" in required else 0
+            enforce_mask = 1 if "마스크" in required else 0
+            enforce_glove_left = 1 if ("왼손 장갑" in required or "장갑" in required) else 0
+            enforce_glove_right = 1 if ("오른손 장갑" in required or "장갑" in required) else 0
+
+            result = db.session.execute(
+                text("""
+                    UPDATE areas
+                    SET
+                        enforce_helmet = :enforce_helmet,
+                        enforce_mask = :enforce_mask,
+                        enforce_glove_left = :enforce_glove_left,
+                        enforce_glove_right = :enforce_glove_right
+                    WHERE area_id = :area_id
+                """),
+                {
+                    "enforce_helmet": enforce_helmet,
+                    "enforce_mask": enforce_mask,
+                    "enforce_glove_left": enforce_glove_left,
+                    "enforce_glove_right": enforce_glove_right,
+                    "area_id": int(zone_id),
+                }
+            )
+
+            if result.rowcount > 0:
+                updated.append(int(zone_id))
+
+        db.session.commit()
+
+        if updated:
+            id_csv = ",".join(str(i) for i in updated)
+            rows = db.session.execute(
+                text(f"""
+                    SELECT
+                        area_id,
+                        area_name,
+                        enforce_helmet,
+                        enforce_mask,
+                        enforce_glove_left,
+                        enforce_glove_right
+                    FROM areas
+                    WHERE area_id IN ({id_csv})
+                    ORDER BY area_id
+                """)
+            ).mappings().all()
+
+            after_rows = [dict(r) for r in rows]
+
+        return jsonify({
+            "status": "success",
+            "message": "구역별 PPE 단속 기준이 DB에 저장되었습니다.",
+            "updated_area_ids": updated,
+            "after": after_rows
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 저장 오류: {str(e)}"
+        }), 500
+
+
+for _endpoint in [
+    "get_ppe_standards",
+    "get_ppe_standards_v2",
+    "get_ppe_standards_v3",
+    "get_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = get_ppe_standards_runtime_override
+
+
+for _endpoint in [
+    "save_ppe_standards",
+    "save_ppe_standards_v2",
+    "save_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = save_ppe_standards_runtime_override
+
+
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=5002, allow_unsafe_werkzeug=True)
+    socketio.run(
+        app,
+        debug=False,
+        host='0.0.0.0',
+        port=5002,
+        allow_unsafe_werkzeug=True,
+        use_reloader=False
+    )
 import os
 import time
 import requests
@@ -4495,7 +4930,24 @@ def get_analysis_summary():
 @token_required
 def get_analysis_chart_data():
     """
-    7. 분석 - 차트용 시계열 데이터 조회 (09~18시 1시간 단위 정밀 연동 버전)
+    7. 분석 - 차트용 시계열 데이터 조회 
+    ---
+    tags:
+      - Analysis
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: range
+        in: query
+        type: string
+        required: false
+        description: "조회 범위 조건 (입력값: 이번 주, 이번 달, 전체)"
+        default: "이번 달"
+    responses:
+      200:
+        description: 성공적으로 차트 시계열 데이터를 반환했습니다.
+      401:
+        description: 토큰 인증 실패
     """
     try:
         import calendar
@@ -4843,7 +5295,24 @@ def get_analysis_summary_v4():
 @token_required
 def get_analysis_summary_final():
     """
-    7. 분석 - 분석 요약 통계 조회 (차트 데이터 실시간 동적 동기화 및 지표 통합 버전)
+    7. 분석 - 분석 요약 통계 조회
+    ---
+    tags:
+      - Analysis
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: range
+        in: query
+        type: string
+        required: false
+        description: "조회 범위 조건 (입력값: 이번 주, 이번 달, 전체)"
+        default: "이번 달"
+    responses:
+      200:
+        description: 성공적으로 분석 요약 통계 데이터를 반환했습니다.
+      401:
+        description: 토큰 인증 실패
     """
     try:
         from sqlalchemy import extract
@@ -5048,6 +5517,324 @@ if 'resume_workers_work_status_v2' in app.view_functions: app.view_functions['re
 app.view_functions['get_alert_settings'] = get_alert_settings
 if 'get_api_alert_settings' in app.view_functions: app.view_functions['get_api_alert_settings'] = get_alert_settings
 
+
+
+# -----------------------------------------------------------------
+# PPE 기준 설정 helper
+# -----------------------------------------------------------------
+
+def area_required_ppe_list(area):
+    """Area.enforce_* 값을 WinForms 표시용 한글 PPE 리스트로 변환."""
+    required = []
+
+    if bool(getattr(area, "enforce_helmet", False)):
+        required.append("안전모")
+
+    if bool(getattr(area, "enforce_mask", False)):
+        required.append("마스크")
+
+    if bool(getattr(area, "enforce_glove_left", False)):
+        required.append("왼손 장갑")
+
+    if bool(getattr(area, "enforce_glove_right", False)):
+        required.append("오른손 장갑")
+
+    return required
+
+
+def apply_required_ppe_to_area(area, required_ppe):
+    """WinForms에서 받은 required_ppe 리스트를 Area.enforce_* 컬럼에 반영."""
+    required = set(required_ppe or [])
+
+    area.enforce_helmet = "안전모" in required
+    area.enforce_mask = "마스크" in required
+
+    # 기존 호환성: 예전 값 "장갑"이 오면 양손 장갑 모두 단속
+    area.enforce_glove_left = ("왼손 장갑" in required) or ("장갑" in required)
+    area.enforce_glove_right = ("오른손 장갑" in required) or ("장갑" in required)
+
+
+# -----------------------------------------------------------------
+# PPE 기준 설정 DB 저장 강제 Override
+# - 기존 ppe_standards.json 저장 방식 무시
+# - areas.enforce_* 컬럼을 직접 수정
+# -----------------------------------------------------------------
+
+@token_required
+def get_ppe_standards_db_override():
+    """
+    8. 설정 - PPE 기준 설정 조회 (DB areas.enforce_* 기준)
+    """
+    try:
+        areas = Area.query.filter_by(is_active=True).order_by(Area.area_id).all()
+        result = []
+
+        for a in areas:
+            result.append({
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
+                "required_ppe": area_required_ppe_list(a),
+                "enforce_helmet": bool(a.enforce_helmet),
+                "enforce_mask": bool(a.enforce_mask),
+                "enforce_glove_left": bool(a.enforce_glove_left),
+                "enforce_glove_right": bool(a.enforce_glove_right),
+            })
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 조회 오류: {str(e)}"
+        }), 500
+
+
+@token_required
+def save_ppe_standards_db_override():
+    """
+    8. 설정 - PPE 기준 설정 저장 (DB areas.enforce_* 반영)
+    """
+    try:
+        ppe_data = request.json
+
+        if not isinstance(ppe_data, list):
+            return jsonify({
+                "status": "fail",
+                "message": "PPE 기준 데이터는 배열이어야 합니다."
+            }), 400
+
+        updated = []
+
+        for item in ppe_data:
+            zone_id = item.get("zoneID") or item.get("zone_id") or item.get("area_id")
+            if zone_id is None:
+                continue
+
+            area = Area.query.get(int(zone_id))
+            if not area:
+                continue
+
+            required_ppe = item.get("required_ppe") or []
+            apply_required_ppe_to_area(area, required_ppe)
+            updated.append(area.area_id)
+
+        db.session.commit()
+
+        return jsonify({
+            "status": "success",
+            "message": "구역별 PPE 단속 기준이 DB에 저장되었습니다.",
+            "updated_area_ids": updated
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 저장 오류: {str(e)}"
+        }), 500
+
+
+for _endpoint in [
+    "get_ppe_standards",
+    "get_ppe_standards_v2",
+    "get_ppe_standards_v3",
+    "get_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = get_ppe_standards_db_override
+
+
+for _endpoint in [
+    "save_ppe_standards",
+    "save_ppe_standards_v2",
+    "save_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = save_ppe_standards_db_override
+
+
+
+# -----------------------------------------------------------------
+# PPE 기준 설정 DB 저장 Raw SQL Override
+# - 기존 ppe_standards.json 저장 방식 무시
+# - areas.enforce_* 컬럼을 UPDATE 문으로 직접 반영
+# - 저장 직후 SELECT 결과를 응답에 포함
+# -----------------------------------------------------------------
+
+@token_required
+def save_ppe_standards_rawsql_override():
+    try:
+        from sqlalchemy import text
+
+        ppe_data = request.json
+
+        if not isinstance(ppe_data, list):
+            return jsonify({
+                "status": "fail",
+                "message": "PPE 기준 데이터는 배열이어야 합니다."
+            }), 400
+
+        updated = []
+        after_rows = []
+
+        for item in ppe_data:
+            zone_id = item.get("zoneID") or item.get("zone_id") or item.get("area_id")
+            if zone_id is None:
+                continue
+
+            required = set(item.get("required_ppe") or [])
+
+            enforce_helmet = 1 if "안전모" in required else 0
+            enforce_mask = 1 if "마스크" in required else 0
+            enforce_glove_left = 1 if ("왼손 장갑" in required or "장갑" in required) else 0
+            enforce_glove_right = 1 if ("오른손 장갑" in required or "장갑" in required) else 0
+
+            result = db.session.execute(
+                text("""
+                    UPDATE areas
+                    SET
+                        enforce_helmet = :enforce_helmet,
+                        enforce_mask = :enforce_mask,
+                        enforce_glove_left = :enforce_glove_left,
+                        enforce_glove_right = :enforce_glove_right
+                    WHERE area_id = :area_id
+                """),
+                {
+                    "enforce_helmet": enforce_helmet,
+                    "enforce_mask": enforce_mask,
+                    "enforce_glove_left": enforce_glove_left,
+                    "enforce_glove_right": enforce_glove_right,
+                    "area_id": int(zone_id),
+                }
+            )
+
+            if result.rowcount > 0:
+                updated.append(int(zone_id))
+
+        db.session.commit()
+
+        if updated:
+            rows = db.session.execute(
+                text("""
+                    SELECT
+                        area_id,
+                        area_name,
+                        enforce_helmet,
+                        enforce_mask,
+                        enforce_glove_left,
+                        enforce_glove_right
+                    FROM areas
+                    WHERE area_id IN :ids
+                    ORDER BY area_id
+                """),
+                {"ids": tuple(updated)}
+            ).mappings().all()
+
+            after_rows = [dict(r) for r in rows]
+
+        return jsonify({
+            "status": "success",
+            "message": "구역별 PPE 단속 기준이 DB에 저장되었습니다.",
+            "updated_area_ids": updated,
+            "after": after_rows
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 저장 오류: {str(e)}"
+        }), 500
+
+
+for _endpoint in [
+    "save_ppe_standards",
+    "save_ppe_standards_v2",
+    "save_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = save_ppe_standards_rawsql_override
+
 # 교내 내부망 5000 포트 차단으로 인한 포트 변경 (5000 -> 5002)
+
+# -----------------------------------------------------------------
+# PPE 기준 설정 GET 최종 Raw SQL Override
+# - Area 모델 속성 접근 금지
+# - areas 테이블을 SQL로 직접 조회
+# -----------------------------------------------------------------
+
+@token_required
+def get_ppe_standards_rawsql_final_override():
+    try:
+        from sqlalchemy import text
+
+        rows = db.session.execute(
+            text("""
+                SELECT
+                    area_id,
+                    area_name,
+                    enforce_helmet,
+                    enforce_mask,
+                    enforce_glove_left,
+                    enforce_glove_right
+                FROM areas
+                WHERE is_active = 1
+                ORDER BY area_id
+            """)
+        ).mappings().all()
+
+        result = []
+
+        for r in rows:
+            required_ppe = []
+
+            if int(r["enforce_helmet"] or 0) == 1:
+                required_ppe.append("안전모")
+
+            if int(r["enforce_mask"] or 0) == 1:
+                required_ppe.append("마스크")
+
+            if int(r["enforce_glove_left"] or 0) == 1:
+                required_ppe.append("왼손 장갑")
+
+            if int(r["enforce_glove_right"] or 0) == 1:
+                required_ppe.append("오른손 장갑")
+
+            result.append({
+                "zoneID": r["area_id"],
+                "zone_name": r["area_name"],
+                "required_ppe": required_ppe,
+                "enforce_helmet": int(r["enforce_helmet"] or 0) == 1,
+                "enforce_mask": int(r["enforce_mask"] or 0) == 1,
+                "enforce_glove_left": int(r["enforce_glove_left"] or 0) == 1,
+                "enforce_glove_right": int(r["enforce_glove_right"] or 0) == 1
+            })
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"PPE 기준 조회 오류: {str(e)}"
+        }), 500
+
+
+for _endpoint in [
+    "get_ppe_standards",
+    "get_ppe_standards_v2",
+    "get_ppe_standards_v3",
+    "get_ppe_standards_final",
+]:
+    if _endpoint in app.view_functions:
+        app.view_functions[_endpoint] = get_ppe_standards_rawsql_final_override
+
+
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=5002, allow_unsafe_werkzeug=True)
+    socketio.run(
+        app,
+        debug=False,
+        host='0.0.0.0',
+        port=5002,
+        allow_unsafe_werkzeug=True,
+        use_reloader=False
+    )
