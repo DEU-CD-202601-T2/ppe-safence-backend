@@ -1967,10 +1967,12 @@ def get_analysis_summary():
 @token_required
 def get_analysis_chart_data():
     """
-    7. 분석 - 차트용 시계열 데이터 조회 
+    7. 분석 - 차트용 시계열 및 구역별 데이터 실시간 DB 연동 조회
     ---
     tags:
       - Analysis
+    security:
+      - BearerAuth: []
     parameters:
       - name: range
         in: query
@@ -1984,10 +1986,15 @@ def get_analysis_chart_data():
     """
     try:
         import calendar
-        from sqlalchemy import extract
-        from datetime import datetime
+        from sqlalchemy import extract, and_
+        from datetime import datetime, timedelta, time
         
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
+        today = datetime.now()
+        
+        # 💡 정확한 시간 경계 기준점 실시간 동적 계산
+        start_of_week = datetime.combine(today.date() - timedelta(days=today.weekday()), time.min)
+        start_of_month = datetime(today.year, today.month, 1, 0, 0, 0)
         
         if date_range == "이번 주":
             timeline = [
@@ -1995,37 +2002,64 @@ def get_analysis_chart_data():
                 "12:00~13:00", "13:00~14:00", "14:00~15:00", 
                 "15:00~16:00", "16:00~17:00", "17:00~18:00"
             ]
-            
-            mock_counts = [3, 2, 4, 1, 2, 5, 3, 2, 1]
             violation_counts = []
             
-            for i, t in enumerate(range(9, 18)):
+            # 시간별 라이브 집계 + 이번 주 날짜 제한 필터 바인딩
+            for t in range(9, 18):
                 real_count = Violation.query.filter(
-                    extract('hour', Violation.detected_at) == t
+                    and_(
+                        extract('hour', Violation.detected_at) == t,
+                        Violation.detected_at >= start_of_week
+                    )
                 ).count()
-                
-                if real_count > 0:
-                    violation_counts.append(real_count)
-                else:
-                    violation_counts.append(mock_counts[i])
+                violation_counts.append(real_count)
                     
-            compliance_trends = [f"{max(100 - (c * 3), 85)}%" for c in violation_counts]
+            compliance_trends = [f"{max(100 - (c * 5), 80)}%" for c in violation_counts]
+            
+            # 구역별 실시간 위반 현황 집계 (이번 주 필터 반영)
+            areas = Area.query.filter_by(is_active=True).all()
+            zone_violations = {}
+            for a in areas:
+                v_count = Violation.query.filter(
+                    and_(
+                        Violation.area_id == a.area_id,
+                        Violation.detected_at >= start_of_week
+                    )
+                ).count()
+                zone_violations[a.area_name] = v_count
             
         else:
-            today = datetime.now()
+            # 이번 달: 주차별 실시간 분기 집계
             month_matrix = calendar.monthcalendar(today.year, today.month)
-            total_weeks = len(month_matrix)
+            violation_counts = []
+            timeline = []
             
-            timeline = [f"{i+1}주차" for i in range(total_weeks)]
-            mock_monthly_counts = [12, 8, 15, 5, 3, 2]
-            violation_counts = mock_monthly_counts[:total_weeks]
+            for idx, week in enumerate(month_matrix):
+                timeline.append(f"{idx+1}주차")
+                valid_days = [d for d in week if d > 0]
+                if not valid_days:
+                    violation_counts.append(0)
+                    continue
+                
+                start_date = datetime(today.year, today.month, min(valid_days), 0, 0, 0)
+                end_date = datetime(today.year, today.month, max(valid_days), 23, 59, 59)
+                
+                c = Violation.query.filter(Violation.detected_at.between(start_date, end_date)).count()
+                violation_counts.append(c)
+                    
             compliance_trends = [f"{max(100 - (c * 2), 85)}%" for c in violation_counts]
-
-        areas = Area.query.filter_by(is_active=True).all()
-        zone_violations = {}
-        for a in areas:
-            v_count = Violation.query.filter_by(area_id=a.area_id).count()
-            zone_violations[a.area_name] = v_count if v_count > 0 else 4
+            
+            # 구역별 실시간 위반 현황 집계 (이번 달 필터 반영)
+            areas = Area.query.filter_by(is_active=True).all()
+            zone_violations = {}
+            for a in areas:
+                v_count = Violation.query.filter(
+                    and_(
+                        Violation.area_id == a.area_id,
+                        Violation.detected_at >= start_of_month
+                    )
+                ).count()
+                zone_violations[a.area_name] = v_count
 
         return jsonify({
             "선택된 범위": date_range,
@@ -2329,10 +2363,12 @@ def get_analysis_summary_v4():
 @token_required
 def get_analysis_summary_final():
     """
-    7. 분석 - 분석 요약 통계 조회 (차트 데이터 실시간 동적 동기화 버전)
+    7. 분석 - 분석 요약 통계 실시간 DB 동적 연동 조회
     ---
     tags:
       - Analysis
+    security:
+      - BearerAuth: []
     parameters:
       - name: range
         in: query
@@ -2345,45 +2381,34 @@ def get_analysis_summary_final():
         description: 성공
     """
     try:
-        from sqlalchemy import extract
+        from sqlalchemy import and_
+        from datetime import datetime, timedelta, time
         
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
+        
+        # 실제 등록된 활성 작업자 전수 실시간 카운트
         total_workers = User.query.filter_by(role='작업자', is_active=True).count()
         if total_workers == 0: total_workers = 12
 
+        today = datetime.now()
+        start_of_week = datetime.combine(today.date() - timedelta(days=today.weekday()), time.min)
+        start_of_month = datetime(today.year, today.month, 1, 0, 0, 0)
+
+        #  선택 범위 조건에 맞춰 실시간 쿼리 연산 처리
         if date_range == "이번 주":
-            mock_counts = [3, 2, 4, 1, 2, 5, 3, 2, 1]
-            total_violations_shown = 0
-            
-            for i, t in enumerate(range(9, 18)):
-                real_count = Violation.query.filter(
-                    extract('hour', Violation.detected_at) == t
-                ).count()
-                
-                if real_count > 0:
-                    total_violations_shown += real_count
-                else:
-                    total_violations_shown += mock_counts[i]
-            
-            violation_count = total_violations_shown
-            # 변동되는 위반 총건수에 맞춰 자연스러운 준수율 역산 연산 (최소 85% 보장)
-            compliance_rate = max(100 - (violation_count * 0.6), 85)
-            compliance_rate = round(compliance_rate)
-            
+            violation_count = Violation.query.filter(Violation.detected_at >= start_of_week).count()
+            compliance_rate = max(100 - (violation_count * 1.5), 80)
         elif date_range == "이번 달":
-            # 이번 달 기본 예시 수치 유지
-            violation_count = 40
-            compliance_rate = 93
+            violation_count = Violation.query.filter(Violation.detected_at >= start_of_month).count()
+            compliance_rate = max(100 - (violation_count * 0.5), 85)
         else:
-            # 전체 범위일 때는 데이터베이스의 실제 누적 알림 카운트 반영
-            violation_count = Alarm.query.count()
-            total_violations = Violation.query.count()
-            compliance_rate = max(100 - (total_violations * 2), 85)
+            violation_count = Violation.query.count()
+            compliance_rate = max(100 - (violation_count * 0.1), 85)
 
         return jsonify({
             "선택된 범위":  date_range,
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율":   f"{round(compliance_rate)}%",
             "총 위반 건수": violation_count
         }), 200
     except Exception as e:
@@ -4930,7 +4955,7 @@ def get_analysis_summary():
 @token_required
 def get_analysis_chart_data():
     """
-    7. 분석 - 차트용 시계열 데이터 조회 
+    7. 분석 - 차트용 시계열 및 구역별 데이터 실시간 DB 연동 조회
     ---
     tags:
       - Analysis
@@ -4941,20 +4966,23 @@ def get_analysis_chart_data():
         in: query
         type: string
         required: false
-        description: "조회 범위 조건 (입력값: 이번 주, 이번 달, 전체)"
+        description: "조회 범위 조건 (입력값: 이번 주, 이번 달)"
         default: "이번 달"
     responses:
       200:
-        description: 성공적으로 차트 시계열 데이터를 반환했습니다.
-      401:
-        description: 토큰 인증 실패
+        description: 성공
     """
     try:
         import calendar
-        from sqlalchemy import extract
-        from datetime import datetime
+        from sqlalchemy import extract, and_
+        from datetime import datetime, timedelta, time
         
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
+        today = datetime.now()
+        
+        # 💡 정확한 시간 경계 기준점 실시간 동적 계산
+        start_of_week = datetime.combine(today.date() - timedelta(days=today.weekday()), time.min)
+        start_of_month = datetime(today.year, today.month, 1, 0, 0, 0)
         
         if date_range == "이번 주":
             timeline = [
@@ -4962,36 +4990,64 @@ def get_analysis_chart_data():
                 "12:00~13:00", "13:00~14:00", "14:00~15:00", 
                 "15:00~16:00", "16:00~17:00", "17:00~18:00"
             ]
-            mock_counts = [3, 2, 4, 1, 2, 5, 3, 2, 1]
             violation_counts = []
             
-            for i, t in enumerate(range(9, 18)):
+            # 시간별 라이브 집계 + 이번 주 날짜 제한 필터 바인딩
+            for t in range(9, 18):
                 real_count = Violation.query.filter(
-                    extract('hour', Violation.detected_at) == t
+                    and_(
+                        extract('hour', Violation.detected_at) == t,
+                        Violation.detected_at >= start_of_week
+                    )
                 ).count()
-                
-                if real_count > 0:
-                    violation_counts.append(real_count)
-                else:
-                    violation_counts.append(mock_counts[i])
+                violation_counts.append(real_count)
                     
-            compliance_trends = [f"{max(100 - (c * 3), 85)}%" for c in violation_counts]
+            compliance_trends = [f"{max(100 - (c * 5), 80)}%" for c in violation_counts]
+            
+            # 구역별 실시간 위반 현황 집계 (이번 주 필터 반영)
+            areas = Area.query.filter_by(is_active=True).all()
+            zone_violations = {}
+            for a in areas:
+                v_count = Violation.query.filter(
+                    and_(
+                        Violation.area_id == a.area_id,
+                        Violation.detected_at >= start_of_week
+                    )
+                ).count()
+                zone_violations[a.area_name] = v_count
             
         else:
-            today = datetime.now()
+            # 이번 달: 주차별 실시간 분기 집계
             month_matrix = calendar.monthcalendar(today.year, today.month)
-            total_weeks = len(month_matrix)
+            violation_counts = []
+            timeline = []
             
-            timeline = [f"{i+1}주차" for i in range(total_weeks)]
-            mock_monthly_counts = [12, 8, 15, 5, 3, 2]
-            violation_counts = mock_monthly_counts[:total_weeks]
+            for idx, week in enumerate(month_matrix):
+                timeline.append(f"{idx+1}주차")
+                valid_days = [d for d in week if d > 0]
+                if not valid_days:
+                    violation_counts.append(0)
+                    continue
+                
+                start_date = datetime(today.year, today.month, min(valid_days), 0, 0, 0)
+                end_date = datetime(today.year, today.month, max(valid_days), 23, 59, 59)
+                
+                c = Violation.query.filter(Violation.detected_at.between(start_date, end_date)).count()
+                violation_counts.append(c)
+                    
             compliance_trends = [f"{max(100 - (c * 2), 85)}%" for c in violation_counts]
-
-        areas = Area.query.filter_by(is_active=True).all()
-        zone_violations = {}
-        for a in areas:
-            v_count = Violation.query.filter_by(area_id=a.area_id).count()
-            zone_violations[a.area_name] = v_count if v_count > 0 else 4
+            
+            # 구역별 실시간 위반 현황 집계 (이번 달 필터 반영)
+            areas = Area.query.filter_by(is_active=True).all()
+            zone_violations = {}
+            for a in areas:
+                v_count = Violation.query.filter(
+                    and_(
+                        Violation.area_id == a.area_id,
+                        Violation.detected_at >= start_of_month
+                    )
+                ).count()
+                zone_violations[a.area_name] = v_count
 
         return jsonify({
             "선택된 범위": date_range,
@@ -5248,44 +5304,58 @@ def get_ppe_standards_v3():
 
 @app.route('/api/analysis/summary', methods=['GET'])
 @token_required
-def get_analysis_summary_v4():
+def get_analysis_summary_final():
     """
-    7. 분석 - 분석 요약 통계 조회
+    7. 분석 - 분석 요약 통계 실시간 DB 동적 연동 조회
     ---
     tags:
       - Analysis
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: range
+        in: query
+        type: string
+        required: false
+        description: "조회 범위 조건 (입력값: 이번 주, 이번 달)"
+        default: "이번 달"
     responses:
       200:
         description: 성공
     """
     try:
+        from sqlalchemy import and_
+        from datetime import datetime, timedelta, time
+        
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
+        
+        # 실제 등록된 활성 작업자 전수 실시간 카운트
         total_workers = User.query.filter_by(role='작업자', is_active=True).count()
         if total_workers == 0: total_workers = 12
 
+        today = datetime.now()
+        start_of_week = datetime.combine(today.date() - timedelta(days=today.weekday()), time.min)
+        start_of_month = datetime(today.year, today.month, 1, 0, 0, 0)
+
+        # 선택 범위 조건에 맞춰 실시간 라이브 쿼리 연산 처리 (고정값 상수 완전 청산)
         if date_range == "이번 주":
-            warning_count = 14
-            compliance_rate = 97
-            accident_count = 0
+            violation_count = Violation.query.filter(Violation.detected_at >= start_of_week).count()
+            compliance_rate = max(100 - (violation_count * 1.5), 80)
         elif date_range == "이번 달":
-            warning_count = 40
-            compliance_rate = 93
-            accident_count = 0
+            violation_count = Violation.query.filter(Violation.detected_at >= start_of_month).count()
+            compliance_rate = max(100 - (violation_count * 0.5), 85)
         else:
-            warning_count = Alarm.query.count()
-            total_violations = Violation.query.count()
-            compliance_rate = max(100 - (total_violations * 2), 85)
-            accident_count = 0
+            violation_count = Violation.query.count()
+            compliance_rate = max(100 - (violation_count * 0.1), 85)
 
         return jsonify({
             "선택된 범위":  date_range,
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
-            "사고 발생 수": accident_count,
-            "경고 발생 수": warning_count
+            "PPE 준수율":   f"{round(compliance_rate)}%",
+            "총 위반 건수": violation_count
         }), 200
     except Exception as e:
-        return jsonify({'status': 'error', 'message': f"분석 요약 조회 오류: {str(e)}"}), 500
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 # =================================================================
 # Swagger 파라미터 규격 공식 매핑 및 라우팅 스위칭 세트
