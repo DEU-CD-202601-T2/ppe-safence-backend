@@ -1232,7 +1232,7 @@ def get_logs():
 @token_required
 def get_violations():
     """
-    4. 위반 관리 - 기간별 이력 검색 목록 조회
+    4. 위반 관리 - 기간/구역/유형/상태별 이력 검색 목록 조회
     ---
     tags:
       - Violations
@@ -1241,32 +1241,44 @@ def get_violations():
         description: 성공
     """
     try:
-        status_filter = request.args.get('status')  # 필터 조건 ('미해결'/'해결')
-        area_filter = request.args.get('area')      # 필터 조건 (구역 ID)
+        status_filter = request.args.get('status')
+        area_id_filter = request.args.get('area_id')
+        vtype_filter = request.args.get('violation_type')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
 
         q = Violation.query
 
-        # DB의 is_checked(True/False) 컬럼과 문자열 조건 대조
-        if status_filter:
-            is_checked_bool = (status_filter == '해결')
-            q = q.filter(Violation.is_checked == is_checked_bool)
+        if status_filter in ('해결', '미해결'):
+            q = q.filter(Violation.is_checked == (status_filter == '해결'))
+        if area_id_filter and area_id_filter != '전체':
+            q = q.filter(Violation.area_id == area_id_filter)
+        if vtype_filter and vtype_filter != '전체':
+            q = q.filter(Violation.violation_type == vtype_filter)
+        if start_date:
+            q = q.filter(Violation.detected_at >= f"{start_date} 00:00:00")
+        if end_date:
+            q = q.filter(Violation.detected_at <= f"{end_date} 23:59:59")
 
-        if area_filter:
-            q = q.filter(Violation.area_id == area_filter)
-
-        # 최신 위반 이력이 맨 위로 오도록 정렬하여 가져오기
         violations = q.order_by(Violation.detected_at.desc()).all()
 
         result = []
         for v in violations:
             result.append({
-                "id": v.id,
-                "detected_at": v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
-                "area_name": v.area.area_name if v.area else None,
-                "camera_key": v.area.camera_key if v.area else None,
-                "person_id": v.person_id,
-                "violation_type": v.violation_type,
-                "status": "해결" if v.is_checked else "미해결"
+                "id": str(v.id),
+                "type": v.violation_type,
+                "time": v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
+                "worker_id": str(v.person_id) if v.person_id is not None else None,
+                "camera_name": v.area.camera_key if v.area else None,
+                "area": {
+                    "area_id": str(v.area.area_id) if v.area else None,
+                    "area_name": v.area.area_name if v.area else None,
+                    "area_code": v.area.area_code if v.area else None,
+                    "camera_key": v.area.camera_key if v.area else None,
+                } if v.area else None,
+                "is_checked": 1 if v.is_checked else 0,
+                "status": "해결" if v.is_checked else "미해결",
+                "image_url": f'/api/violations/{v.id}/image' if v.image_data else None,
             })
         return jsonify(result), 200
     except Exception as e:
@@ -1967,22 +1979,7 @@ def get_analysis_summary():
 @token_required
 def get_analysis_chart_data():
     """
-    7. 분석 - 차트용 시계열 및 구역별 데이터 실시간 DB 연동 조회
-    ---
-    tags:
-      - Analysis
-    security:
-      - BearerAuth: []
-    parameters:
-      - name: range
-        in: query
-        type: string
-        required: false
-        description: "조회 범위 조건 (입력값: 이번 주, 이번 달)"
-        default: "이번 달"
-    responses:
-      200:
-        description: 성공
+    7. 분석 - 차트용 시계열 데이터 조회 
     """
     try:
         import calendar
@@ -1991,11 +1988,11 @@ def get_analysis_chart_data():
         
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
         today = datetime.now()
-        
+
         # 💡 정확한 시간 경계 기준점 실시간 동적 계산
         start_of_week = datetime.combine(today.date() - timedelta(days=today.weekday()), time.min)
         start_of_month = datetime(today.year, today.month, 1, 0, 0, 0)
-        
+
         if date_range == "이번 주":
             timeline = [
                 "09:00~10:00", "10:00~11:00", "11:00~12:00", 
@@ -2015,7 +2012,7 @@ def get_analysis_chart_data():
                 violation_counts.append(real_count)
                     
             compliance_trends = [f"{max(100 - (c * 5), 80)}%" for c in violation_counts]
-            
+
             # 구역별 실시간 위반 현황 집계 (이번 주 필터 반영)
             areas = Area.query.filter_by(is_active=True).all()
             zone_violations = {}
@@ -2040,15 +2037,15 @@ def get_analysis_chart_data():
                 if not valid_days:
                     violation_counts.append(0)
                     continue
-                
+
                 start_date = datetime(today.year, today.month, min(valid_days), 0, 0, 0)
                 end_date = datetime(today.year, today.month, max(valid_days), 23, 59, 59)
-                
+
                 c = Violation.query.filter(Violation.detected_at.between(start_date, end_date)).count()
                 violation_counts.append(c)
-                    
+
             compliance_trends = [f"{max(100 - (c * 2), 85)}%" for c in violation_counts]
-            
+
             # 구역별 실시간 위반 현황 집계 (이번 달 필터 반영)
             areas = Area.query.filter_by(is_active=True).all()
             zone_violations = {}
@@ -2385,7 +2382,7 @@ def get_analysis_summary_final():
         from datetime import datetime, timedelta, time
         
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
-        
+
         # 실제 등록된 활성 작업자 전수 실시간 카운트
         total_workers = User.query.filter_by(role='작업자', is_active=True).count()
         if total_workers == 0: total_workers = 12
@@ -4979,11 +4976,11 @@ def get_analysis_chart_data():
         
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
         today = datetime.now()
-        
+
         # 💡 정확한 시간 경계 기준점 실시간 동적 계산
         start_of_week = datetime.combine(today.date() - timedelta(days=today.weekday()), time.min)
         start_of_month = datetime(today.year, today.month, 1, 0, 0, 0)
-        
+
         if date_range == "이번 주":
             timeline = [
                 "09:00~10:00", "10:00~11:00", "11:00~12:00", 
@@ -5003,7 +5000,7 @@ def get_analysis_chart_data():
                 violation_counts.append(real_count)
                     
             compliance_trends = [f"{max(100 - (c * 5), 80)}%" for c in violation_counts]
-            
+
             # 구역별 실시간 위반 현황 집계 (이번 주 필터 반영)
             areas = Area.query.filter_by(is_active=True).all()
             zone_violations = {}
@@ -5028,15 +5025,15 @@ def get_analysis_chart_data():
                 if not valid_days:
                     violation_counts.append(0)
                     continue
-                
+
                 start_date = datetime(today.year, today.month, min(valid_days), 0, 0, 0)
                 end_date = datetime(today.year, today.month, max(valid_days), 23, 59, 59)
-                
+
                 c = Violation.query.filter(Violation.detected_at.between(start_date, end_date)).count()
                 violation_counts.append(c)
-                    
+
             compliance_trends = [f"{max(100 - (c * 2), 85)}%" for c in violation_counts]
-            
+
             # 구역별 실시간 위반 현황 집계 (이번 달 필터 반영)
             areas = Area.query.filter_by(is_active=True).all()
             zone_violations = {}
@@ -5326,9 +5323,9 @@ def get_analysis_summary_final():
     try:
         from sqlalchemy import and_
         from datetime import datetime, timedelta, time
-        
+
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
-        
+
         # 실제 등록된 활성 작업자 전수 실시간 카운트
         total_workers = User.query.filter_by(role='작업자', is_active=True).count()
         if total_workers == 0: total_workers = 12
