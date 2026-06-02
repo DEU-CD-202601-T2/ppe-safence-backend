@@ -58,7 +58,7 @@ app.config['SECRET_KEY'] = 'capston'
 app.config['JSON_AS_ASCII'] = False
 
 # 깃허브 및 서버 업로드 시 주석 해제
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117:3308/capstone_db'
 
 # 로컬 환경에서 코드 수정 후 테스트 시 주석 해제 (교내 내부망 특정 포트 차단 issue)
@@ -80,68 +80,74 @@ db = SQLAlchemy(app)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+
 class Alarm(db.Model):
     __tablename__ = 'alarms'
-    id        = db.Column(db.String(100), primary_key=True)
-    type      = db.Column(db.String(100))
-    time      = db.Column(db.DateTime)
-    area_id   = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
-    status    = db.Column(db.String(20), default='미해결')
+    id = db.Column(db.String(100), primary_key=True)
+    type = db.Column(db.String(100))
+    time = db.Column(db.DateTime)
+    area_id = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
+    status = db.Column(db.String(20), default='미해결')
     image_url = db.Column(db.Text)
 
     area = db.relationship('Area', backref='alarms', lazy='joined')
 
     def to_dict(self):
         return {
-            'id':        self.id,
-            'type':      self.type,
-            'time':      self.time.strftime('%Y-%m-%d %H:%M:%S') if self.time else None,
-            'area_id':   self.area_id,
-            'area':      self.area.to_dict() if self.area else None,
-            'status':    self.status,
+            'id': self.id,
+            'type': self.type,
+            'time': self.time.strftime('%Y-%m-%d %H:%M:%S') if self.time else None,
+            'area_id': self.area_id,
+            'area': self.area.to_dict() if self.area else None,
+            'status': self.status,
             'image_url': self.image_url,
         }
 
+
 class Violation(db.Model):
     __tablename__ = 'violations'
-    id             = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     violation_type = db.Column(db.String(50), nullable=False)
-    detected_at    = db.Column(db.DateTime, default=db.func.current_timestamp())
-    area_id        = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
-    person_id      = db.Column(db.Integer, nullable=True)
-    image_data     = db.Column(MEDIUMBLOB)
-    image_mime     = db.Column(db.String(20), default='image/jpeg')
-    is_checked     = db.Column(db.Boolean, default=False)
+    detected_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    area_id = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
+    person_id = db.Column(db.Integer, nullable=True)
+    image_data = db.Column(MEDIUMBLOB)
+    image_mime = db.Column(db.String(20), default='image/jpeg')
+    enforced_ppe = db.Column(db.String(100), nullable=True)
+    is_checked = db.Column(db.Boolean, default=False)
 
     area = db.relationship('Area', backref='violations', lazy='joined')
 
     def to_dict(self):
         return {
-            'id':             self.id,
+            'id': self.id,
             'violation_type': self.violation_type,
-            'detected_at':    self.detected_at.strftime('%Y-%m-%d %H:%M:%S') if self.detected_at else None,
-            'area_id':        self.area_id,
-            'area':           self.area.to_dict() if self.area else None,
-            'person_id':      self.person_id,
-            'image_url':      f'/api/violations/{self.id}/image' if self.image_data else None,
-            'image_mime':     self.image_mime,
-            'is_checked':     self.is_checked,
+            'detected_at': self.detected_at.strftime('%Y-%m-%d %H:%M:%S') if self.detected_at else None,
+            'area_id': self.area_id,
+            'area': self.area.to_dict() if self.area else None,
+            'person_id': self.person_id,
+            'image_url': f'/api/violations/{self.id}/image' if self.image_data else None,
+            'image_mime': self.image_mime,
+            'enforced_ppe': self.enforced_ppe,
+            'is_checked': self.is_checked,
         }
+
 
 user_areas = db.Table(
     'user_areas',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'),       primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
     db.Column('area_id', db.Integer, db.ForeignKey('areas.area_id', ondelete='CASCADE'), primary_key=True),
     db.Column('created_at', db.DateTime, default=db.func.current_timestamp()),
 )
 
+
 class User(db.Model):
     __tablename__ = 'users'
-    id       = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     login_id = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    name     = db.Column(db.String(100))
-    role     = db.Column(db.String(50))
+    name = db.Column(db.String(100))
+    role = db.Column(db.String(50))
     is_active = db.Column(db.Boolean, default=True)
 
     # 다중 구역 N:M
@@ -158,38 +164,40 @@ class User(db.Model):
 
     def to_dict(self):
         return {
-            'id':            self.id,
-            'login_id':      self.login_id,
-            'name':          self.name,
-            'role':          self.role,
-            'area_ids':      [a.area_id for a in self.areas],
-            'areas':         [a.to_dict() for a in self.areas],
+            'id': self.id,
+            'login_id': self.login_id,
+            'name': self.name,
+            'role': self.role,
+            'area_ids': [a.area_id for a in self.areas],
+            'areas': [a.to_dict() for a in self.areas],
             'global_access': self.has_global_access(),
         }
 
+
 class Area(db.Model):
     __tablename__ = 'areas'
-    area_id     = db.Column(db.Integer, primary_key=True)
-    area_name   = db.Column(db.String(50),  unique=True, nullable=False)
-    area_code   = db.Column(db.String(20),  unique=True)
-    camera_key  = db.Column(db.String(100), unique=True)   # NULL 허용
+    area_id = db.Column(db.Integer, primary_key=True)
+    area_name = db.Column(db.String(50), unique=True, nullable=False)
+    area_code = db.Column(db.String(20), unique=True)
+    camera_key = db.Column(db.String(100), unique=True)  # NULL 허용
     description = db.Column(db.String(255))
-    risk_level  = db.Column(db.String(20),  default='normal')
-    is_active   = db.Column(db.Boolean,     default=True)
-    created_at  = db.Column(db.DateTime,    default=db.func.current_timestamp())
-    updated_at  = db.Column(db.DateTime,    default=db.func.current_timestamp(),
-                            onupdate=db.func.current_timestamp())
+    risk_level = db.Column(db.String(20), default='normal')
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(),
+                           onupdate=db.func.current_timestamp())
 
     def to_dict(self):
         return {
-            'area_id':     self.area_id,
-            'area_name':   self.area_name,
-            'area_code':   self.area_code,
-            'camera_key':  self.camera_key,
+            'area_id': self.area_id,
+            'area_name': self.area_name,
+            'area_code': self.area_code,
+            'camera_key': self.camera_key,
             'description': self.description,
-            'risk_level':  self.risk_level,
-            'is_active':   self.is_active,
+            'risk_level': self.risk_level,
+            'is_active': self.is_active,
         }
+
 
 def token_required(f):
     @wraps(f)
@@ -210,7 +218,9 @@ def token_required(f):
             return jsonify({'message': f'유효하지 않습니다 ({str(e)})'}), 401
 
         return f(*args, **kwargs)
+
     return decorated
+
 
 def role_required(*allowed_roles):
     """
@@ -218,6 +228,7 @@ def role_required(*allowed_roles):
     반드시 @token_required 다음에 사용해야 한다.
     예시: @role_required('최고 관리자', '보안 팀장')
     """
+
     def decorator(f):
         @wraps(f)
         def decorated(*args, **kwargs):
@@ -228,19 +239,22 @@ def role_required(*allowed_roles):
                     'message': f'이 작업을 수행할 권한이 없습니다. (필요 권한: {", ".join(allowed_roles)} / 현재: {user_role})'
                 }), 403
             return f(*args, **kwargs)
+
         return decorated
+
     return decorator
+
 
 class Log(db.Model):
     __tablename__ = 'logs'
-    id          = db.Column(db.Integer, primary_key=True)
-    log_type    = db.Column(db.String(100)) # 로그 종류 (로그인, 알림 해결 등) 
-    timestamp   = db.Column(db.DateTime, default=db.func.current_timestamp()) # 발생 시간 
-    area_id     = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True) # 구역 
-    camera_key  = db.Column(db.String(100), nullable=True) # 카메라 
-    user_id     = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True) # 작업자 ID 
-    status      = db.Column(db.String(50), nullable=True) # 상태 (해결/미해결/null) [cite: 2, 3]
-    description = db.Column(db.Text) # 설명(detail) 
+    id = db.Column(db.Integer, primary_key=True)
+    log_type = db.Column(db.String(100))  # 로그 종류 (로그인, 알림 해결 등)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())  # 발생 시간
+    area_id = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)  # 구역
+    camera_key = db.Column(db.String(100), nullable=True)  # 카메라
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # 작업자 ID
+    status = db.Column(db.String(50), nullable=True)  # 상태 (해결/미해결/null) [cite: 2, 3]
+    description = db.Column(db.Text)  # 설명(detail)
 
     # 관계 설정: 로그 조회 시 이름 등을 바로 가져오기 위함
     user = db.relationship('User', backref='logs')
@@ -257,6 +271,7 @@ class Log(db.Model):
             'status': self.status,
             'detail': self.description
         }
+
 
 @app.route('/api/register', methods=['POST'])
 @token_required
@@ -359,6 +374,7 @@ def register():
             'message': f'등록 중 오류 발생: {str(e)}'
         }), 500
 
+
 @app.route('/api/login', methods=['POST'])
 def login():
     """
@@ -426,11 +442,12 @@ def login():
             description=f"사용자 {user.login_id}님이 시스템에 접속했습니다."
         )
         db.session.add(new_log)
-        db.session.commit() # 로그인 기록을 DB에 저장
-        
+        db.session.commit()  # 로그인 기록을 DB에 저장
+
         return jsonify({'status': 'success', 'token': token}), 200
-    
+
     return jsonify({'status': 'fail', 'message': '아이디 또는 비밀번호가 틀렸습니다.'}), 401
+
 
 @app.route('/api/logout', methods=['POST'])
 def logout():
@@ -451,8 +468,9 @@ def logout():
               type: string
               example: 로그아웃 되었습니다.
     """
-    
+
     return jsonify({'status': 'success', 'message': '로그아웃 되었습니다.'}), 200
+
 
 @app.route('/api/users/<int:user_id>', methods=['PUT'])
 @token_required
@@ -567,6 +585,7 @@ def update_user(user_id):
             'message': f'수정 중 오류 발생: {str(e)}'
         }), 500
 
+
 @app.route('/api/users/<int:user_id>', methods=['DELETE'])
 @token_required
 @role_required('최고 관리자', '보안 팀장')
@@ -617,17 +636,17 @@ def delete_user(user_id):
     }
 
     try:
-        user.is_active = False # 데이터 삭제 대신 비활성화
- 
+        user.is_active = False  # 데이터 삭제 대신 비활성화
+
         new_log = Log(
             log_type='작업자 상태 변경',
-            user_id=g.current_user.get('id'), # 현재 삭제를 수행한 관리자 ID
+            user_id=g.current_user.get('id'),  # 현재 삭제를 수행한 관리자 ID
             description=f"사용자 {user.login_id}(ID: {user_id}) 계정이 비활성화되었습니다."
         )
-        db.session.add(new_log) # 장부에 임시 기록
+        db.session.add(new_log)  # 장부에 임시 기록
 
-        db.session.commit() # 3. 비활성화와 로그를 한 번에 DB에 저장
-    
+        db.session.commit()  # 3. 비활성화와 로그를 한 번에 DB에 저장
+
         return jsonify({
             'status': 'success',
             'message': '사용자가 삭제(비활성화) 처리되었습니다.',
@@ -674,6 +693,7 @@ def get_violation_image(violation_id):
         },
     )
 
+
 @app.route('/api/alarms', methods=['GET'])
 @token_required
 def get_alarms():
@@ -701,7 +721,7 @@ def get_alarms():
 
     # 검색 필터 로직 (조건이 붙을 때 작동)
     status_filter = request.args.get('status')
-    area_filter = request.args.get('area') # 구역 선택
+    area_filter = request.args.get('area')  # 구역 선택
 
     if status_filter:
         q = q.filter(Alarm.status == status_filter)
@@ -710,6 +730,7 @@ def get_alarms():
 
     alarms = q.order_by(Alarm.time.desc()).all()
     return jsonify([a.to_dict() for a in alarms]), 200
+
 
 @app.route('/api/alarms/<string:alarm_id>', methods=['PATCH'])
 @token_required
@@ -743,7 +764,7 @@ def update_alarm_status(alarm_id):
         return jsonify({'status': 'fail', 'message': '해당 알림을 찾을 수 없습니다.'}), 404
 
     data = request.json or {}
-    
+
     # 상태 업데이트 (미해결 -> 해결)
     if 'status' in data:
         alarm.status = data['status']
@@ -751,7 +772,7 @@ def update_alarm_status(alarm_id):
     new_log = Log(
         log_type='알림 해결 처리',
         area_id=alarm.area_id,
-        user_id=g.current_user.get('id'), # 현재 로그인 중인 관리자 ID
+        user_id=g.current_user.get('id'),  # 현재 로그인 중인 관리자 ID
         status='해결',
         description=f"알림 ID {alarm_id}번이 조치 완료되었습니다."
     )
@@ -767,6 +788,7 @@ def update_alarm_status(alarm_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/api/proxy-stream/<path:cam_name>', methods=['GET'])
 def proxy_stream(cam_name):
@@ -820,6 +842,7 @@ def proxy_stream(cam_name):
         mimetype='multipart/x-mixed-replace; boundary=frame',
         direct_passthrough=True
     )
+
 
 @app.route('/api/stream-urls', methods=['GET'])
 @token_required
@@ -997,6 +1020,7 @@ def create_area():
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f'등록 중 오류: {str(e)}'}), 500
 
+
 @app.route('/api/areas', methods=['GET'])
 @token_required
 def list_areas():
@@ -1025,6 +1049,7 @@ def list_areas():
         'count': len(areas),
         'areas': [a.to_dict() for a in areas]
     }), 200
+
 
 @app.route('/api/areas/<int:area_id>', methods=['PUT'])
 @token_required
@@ -1095,6 +1120,7 @@ def update_area(area_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f'수정 중 오류: {str(e)}'}), 500
 
+
 @app.route('/api/areas/<int:area_id>', methods=['DELETE'])
 @token_required
 @role_required('최고 관리자', '보안 팀장', '구역 매니저')
@@ -1142,6 +1168,7 @@ def delete_area(area_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f'삭제 중 오류: {str(e)}'}), 500
 
+
 @app.route('/api/stats', methods=['GET'])
 @token_required
 def get_starts():
@@ -1171,26 +1198,23 @@ def get_starts():
                   type: string
     """
     try:
-        
+
         from datetime import date
         today_date = date.today()
 
-        
         try:
             total_count = Violation.query.count()
         except:
             total_count = 0
 
-        
         try:
-            
+
             today_count = Violation.query.filter(
                 db.func.date(Violation.detected_at) == today_date
             ).count()
         except:
             today_count = 0
 
-        
         return jsonify({
             "status": "success",
             "data": {
@@ -1201,11 +1225,12 @@ def get_starts():
         }), 200
 
     except Exception as e:
-        
+
         return jsonify({
-            "status": "error", 
+            "status": "error",
             "message": f"DB 처리 중 에러 발생: {str(e)}"
         }), 500
+
 
 @app.route('/api/logs', methods=['GET'])
 @token_required
@@ -1222,11 +1247,12 @@ def get_logs():
     try:
         # 최신 로그가 위로 오도록 정렬해서 가져오기
         logs = Log.query.order_by(Log.timestamp.desc()).all()
-        
+
         # 리스트 형태로 변환해서 전달
         return jsonify([log.to_dict() for log in logs]), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/api/violations', methods=['GET'])
 @token_required
@@ -1279,6 +1305,7 @@ def get_violations():
                 "is_checked": 1 if v.is_checked else 0,
                 "status": "해결" if v.is_checked else "미해결",
                 "image_url": f'/api/violations/{v.id}/image' if v.image_data else None,
+                "enforced_ppe": v.enforced_ppe,
             })
         return jsonify(result), 200
     except Exception as e:
@@ -1311,17 +1338,17 @@ def get_violation_detail(violation_id):
             return jsonify({'status': 'error', 'message': '해당 위반을 찾을 수 없습니다.'}), 404
 
         result = {
-            "id":             v.id,
-            "detected_at":    v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
-            "area_id":        v.area_id,
-            "area_name":      v.area.area_name if v.area else None,
-            "camera_key":     v.area.camera_key if v.area else None,
-            "person_id":      v.person_id,
+            "id": v.id,
+            "detected_at": v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
+            "area_id": v.area_id,
+            "area_name": v.area.area_name if v.area else None,
+            "camera_key": v.area.camera_key if v.area else None,
+            "person_id": v.person_id,
             "violation_type": v.violation_type,
-            "image_url":      f'/api/violations/{v.id}/image' if v.image_data else None,
-            "image_mime":     v.image_mime,
-            "status":         "해결" if v.is_checked else "미해결",
-            "is_checked":     bool(v.is_checked),
+            "image_url": f'/api/violations/{v.id}/image' if v.image_data else None,
+            "image_mime": v.image_mime,
+            "status": "해결" if v.is_checked else "미해결",
+            "is_checked": bool(v.is_checked),
         }
         return jsonify(result), 200
     except Exception as e:
@@ -1452,12 +1479,12 @@ def get_users_list():
             # 사용자가 속한 구역 이름들을 콤마(,)로 합쳐서 소속 표시
             dept = ", ".join([a.area_name for a in u.areas]) if u.areas else "전체 권한"
             result.append({
-                "userID":     u.id,
-                "name":       u.name,
-                "login_id":   u.login_id,
-                "role":       u.role,
+                "userID": u.id,
+                "name": u.name,
+                "login_id": u.login_id,
+                "role": u.role,
                 "department": dept,
-                "status":     "활성" if u.is_active else "비활성"
+                "status": "활성" if u.is_active else "비활성"
             })
         return jsonify(result), 200
     except Exception as e:
@@ -1477,13 +1504,14 @@ def get_ppe_standards():
             # [주의] 현재 Area 모델에 필수 PPE 컬럼이 따로 없으므로, 위험도(risk_level)에 따라 자동 매핑하여 에러 방지
             default_ppe = ["안전모", "마스크", "장갑"] if a.risk_level == "high" else ["안전모", "마스크"]
             result.append({
-                "zoneID":       a.area_id,
-                "zone_name":    a.area_name,
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
                 "required_ppe": default_ppe
             })
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"구역 설정 DB 조회 오류: {str(e)}"}), 500
+
 
 @app.route('/api/logs/<int:log_id>', methods=['GET'])
 @token_required
@@ -1500,13 +1528,13 @@ def get_log_detail(log_id):
     try:
         # 데이터베이스에서 주소창에 실어 보낸 log_id 번호와 일치하는 로그를 한 건 찾습니다.
         log = Log.query.get(log_id)
-        
+
         # 만약 없는 번호를 요청하면 안전하게 오류 메시지를 보냅니다.
         if not log:
             return jsonify({'status': 'fail', 'message': '해당 로그를 찾을 수 없습니다.'}), 404
-           
+
         return jsonify(log.to_dict()), 200
-        
+
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"로그 상세 조회 DB 오류: {str(e)}"}), 500
 
@@ -1515,19 +1543,24 @@ import json
 
 SETTINGS_FILE = os.path.join(os.getcwd(), 'alert_settings.json')
 
+
 def get_default_settings():
     """알림 설정 초기화 및 최초 생성용 기본값 설정 장부"""
     return [
-        {"alert_type": "안전모", "use_alert": True, "send_to_admin": True, "repeat_interval": 30, "min_risk_level": "보통", "stop_work_linkage": True},
-        {"alert_type": "장갑", "use_alert": True, "send_to_admin": True, "repeat_interval": None, "min_risk_level": "낮음", "stop_work_linkage": False},
-        {"alert_type": "마스크", "use_alert": True, "send_to_admin": True, "repeat_interval": 60, "min_risk_level": "보통", "stop_work_linkage": False}
+        {"alert_type": "안전모", "use_alert": True, "send_to_admin": True, "repeat_interval": 30, "min_risk_level": "보통",
+         "stop_work_linkage": True},
+        {"alert_type": "장갑", "use_alert": True, "send_to_admin": True, "repeat_interval": None, "min_risk_level": "낮음",
+         "stop_work_linkage": False},
+        {"alert_type": "마스크", "use_alert": True, "send_to_admin": True, "repeat_interval": 60, "min_risk_level": "보통",
+         "stop_work_linkage": False}
     ]
+
 
 @app.route('/api/alert-settings', methods=['GET'])
 @token_required
 def get_alert_settings():
     """
-    8. 설정 - 알림 설정 조회 
+    8. 설정 - 알림 설정 조회
     ---
     tags:
       - Settings
@@ -1537,8 +1570,8 @@ def get_alert_settings():
     """
     try:
         import os
-        
-        # 1. 장비별 독립 설정 기본 구조 정의 
+
+        # 1. 장비별 독립 설정 기본 구조 정의
         default_equipment_settings = {
             "안전모": {
                 "use_alert": True,
@@ -1559,21 +1592,22 @@ def get_alert_settings():
                 "repeat_interval": 10
             }
         }
-        
+
         # 2. 서버 내에 기존 장부 파일이 존재하면 읽기
         if os.path.exists('alert_settings.json'):
             with open('alert_settings.json', 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                
+
                 # 구조가 바뀌었거나 장비별 독립 설정이 없으면 강제 업데이트
-                if 'alert_type' not in data or not isinstance(data['alert_type'], dict) or "안전모" not in data['alert_type']:
+                if 'alert_type' not in data or not isinstance(data['alert_type'], dict) or "안전모" not in data[
+                    'alert_type']:
                     data['alert_type'] = default_equipment_settings
                 else:
                     # 기존 장비별 데이터 내부에 min_risk_level 누락 시 기본값 보정
                     for eq in ["안전모", "장갑", "마스크"]:
                         if eq in data['alert_type'] and 'min_risk_level' not in data['alert_type'][eq]:
                             data['alert_type'][eq]['min_risk_level'] = default_equipment_settings[eq]['min_risk_level']
-                
+
                 # 공통 글로벌 필드 안전장치
                 if 'send_to_admin' not in data:
                     data['send_to_admin'] = True
@@ -1581,10 +1615,10 @@ def get_alert_settings():
                     data['stop_work_linkage'] = False
                 if 'use_vibration' not in data:
                     data['use_vibration'] = True
-                    
+
                 return jsonify(data), 200
-        
-        # 3. 장부 파일이 아예 없을 때 데이터 세트 
+
+        # 3. 장부 파일이 아예 없을 때 데이터 세트
         final_blueprint = {
             "use_vibration": True,
             "send_to_admin": True,
@@ -1604,11 +1638,12 @@ def get_alert_settings():
             }
         }), 200
 
+
 @app.route('/api/alert-settings', methods=['POST'])
 @token_required
 def save_alert_settings():
     """
-    8. 설정 - 알림 설정 저장 
+    8. 설정 - 알림 설정 저장
     ---
     tags:
       - Settings
@@ -1642,17 +1677,18 @@ def save_alert_settings():
     """
     try:
         user_settings = request.json
-        
+
         # 빈 데이터 방어 코드
         if not user_settings:
             return jsonify({'status': 'error', 'message': '전송된 설정 데이터가 없습니다.'}), 400
-            
+
         with open('alert_settings.json', 'w', encoding='utf-8') as f:
             json.dump(user_settings, f, ensure_ascii=False, indent=4)
-            
+
         return jsonify({'status': 'success', 'message': '장비별 알림 설정이 서버에 안전하게 저장되었습니다.'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f'설정 저장 중 오류 발생: {str(e)}'}), 500
+
 
 @app.route('/api/alert-settings/reset', methods=['POST'])
 @token_required
@@ -1668,6 +1704,7 @@ def reset_alert_settings():
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"알림 설정 초기화 오류: {str(e)}"}), 500
 
+
 @app.route('/api/alarms/<string:alarm_id>', methods=['PATCH'])
 @token_required
 def update_alarm_status_v2(alarm_id):
@@ -1681,12 +1718,12 @@ def update_alarm_status_v2(alarm_id):
             return jsonify({'status': 'fail', 'message': '해당 알림을 찾을 수 없습니다.'}), 404
 
         data = request.json or {}
-        
+
         # 프론트엔드가 한글이나 영어 어떤 컬럼명으로 보내든 안전하게 인식하도록 처리합니다.
-        admin_id  = data.get('관리자ID') or data.get('admin_id') or g.current_user.get('user')
+        admin_id = data.get('관리자ID') or data.get('admin_id') or g.current_user.get('user')
         worker_id = data.get('작업자ID') or data.get('worker_id') or "미지정"
-        memo      = data.get('메모') or data.get('memo') or "내용 없음"
-        status    = data.get('상태') or data.get('status') or "해결"
+        memo = data.get('메모') or data.get('memo') or "내용 없음"
+        status = data.get('상태') or data.get('status') or "해결"
 
         # 1. 알림 테이블의 상태를 미해결 -> 해결로 변경
         alarm.status = status
@@ -1714,7 +1751,9 @@ def update_alarm_status_v2(alarm_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f"알림 해결 처리 중 오류 발생: {str(e)}"}), 500
 
+
 PPE_SETTINGS_FILE = os.path.join(os.getcwd(), 'ppe_standards.json')
+
 
 @app.route('/api/ppe-standards', methods=['GET'])
 @token_required
@@ -1727,20 +1766,21 @@ def get_ppe_standards_v2():
         if os.path.exists(PPE_SETTINGS_FILE):
             with open(PPE_SETTINGS_FILE, 'r', encoding='utf-8') as f:
                 return jsonify(json.load(f)), 200
-                
+
         # 파일이 없을 때만 실행되는 초기 기본값 생성 로직
         areas = Area.query.filter_by(is_active=True).all()
         result = []
         for a in areas:
             default_ppe = ["안전모", "마스크", "장갑"] if a.risk_level == "high" else ["안전모", "마스크"]
             result.append({
-                "zoneID":       a.area_id,
-                "zone_name":    a.area_name,
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
                 "required_ppe": default_ppe
             })
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 기준 조회 오류: {str(e)}"}), 500
+
 
 @app.route('/api/ppe-standards', methods=['POST'])
 @token_required
@@ -1753,12 +1793,13 @@ def save_ppe_standards():
         ppe_data = request.json
         if not ppe_data:
             return jsonify({'status': 'fail', 'message': '저장할 PPE 기준 데이터가 없습니다.'}), 400
-            
+
         with open(PPE_SETTINGS_FILE, 'w', encoding='utf-8') as f:
             json.dump(ppe_data, f, ensure_ascii=False, indent=4)
         return jsonify({'status': 'success', 'message': '구역별 PPE 필수 착용 기준이 성공적으로 저장되었습니다.'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 기준 저장 오류: {str(e)}"}), 500
+
 
 @app.route('/api/ppe-zones', methods=['GET'])
 @token_required
@@ -1774,11 +1815,12 @@ def get_ppe_zones_list():
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 구역 목록 조회 오류: {str(e)}"}), 500
 
+
 @app.route('/api/control/summary', methods=['GET'])
 @token_required
 def get_control_summary():
     """
-    5. 대응/제어 - 대응 현황 요약 조회 
+    5. 대응/제어 - 대응 현황 요약 조회
     ---
     tags:
       - Control
@@ -1803,15 +1845,16 @@ def get_control_summary():
 
         return jsonify({
             "PPE 미착용 인원수": ppe_unworn_count,
-            "경고 발생 수":      warning_count,
-            "센서 상태":         "정상"
+            "경고 발생 수": warning_count,
+            "센서 상태": "정상"
         }), 200
     except Exception as e:
         return jsonify({
             "PPE 미착용 인원수": 0,
-            "경고 발생 수":      0,
-            "센서 상태":         "정상 (데모)"
+            "경고 발생 수": 0,
+            "센서 상태": "정상 (데모)"
         }), 200
+
 
 @app.route('/api/control/workers', methods=['GET'])
 @token_required
@@ -1823,20 +1866,20 @@ def get_live_workers_list():
     try:
         # DB에서 현재 활성화된 '작업자' 역할의 사용자들을 전부 긁어옵니다.
         workers = User.query.filter_by(role='작업자', is_active=True).all()
-        
+
         result = []
         for w in workers:
             # 작업자가 배정된 첫 번째 구역 이름을 가져오고, 없으면 '미지정' 처리
             zone_name = w.areas[0].area_name if w.areas else "미지정"
-            
+
             # 실시간 센서 연동 전이므로 규격에 맞춰 안전한 기본값을 조합해 에러를 방어합니다.
             result.append({
-                "작업자ID":     w.id,
-                "이름":         w.name,
-                "구역":         zone_name,
+                "작업자ID": w.id,
+                "이름": w.name,
+                "구역": zone_name,
                 "PPE 착용 상태": "착용 완료",
-                "작업 상태":     "작업 중",  # 기본값: 작업 중 (작업 중 / 작업 중지)
-                "시간":         datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                "작업 상태": "작업 중",  # 기본값: 작업 중 (작업 중 / 작업 중지)
+                "시간": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
         return jsonify(result), 200
     except Exception as e:
@@ -1854,7 +1897,7 @@ def resume_workers_work_status():
         data = request.json or {}
         # 프론트엔드가 한글 배열이나 영어 배열 중 어떤 것으로 보내든 유연하게 인식합니다.
         worker_ids = data.get('작업자 ID 목록') or data.get('worker_ids') or []
-        status     = data.get('상태') or data.get('status') or "작업 중"
+        status = data.get('상태') or data.get('status') or "작업 중"
 
         if not worker_ids:
             return jsonify({'status': 'fail', 'message': '상태를 변경할 작업자 ID 목록이 제공되지 않았습니다.'}), 400
@@ -1863,7 +1906,7 @@ def resume_workers_work_status():
         for wid in worker_ids:
             target_worker = User.query.get(wid)
             worker_name = target_worker.name if target_worker else f"ID {wid}"
-            
+
             new_log = Log(
                 log_type='작업자 상태 변경',
                 user_id=g.current_user.get('id'),  # 명령을 내린 로그인 중인 관리자 ID
@@ -1874,13 +1917,14 @@ def resume_workers_work_status():
 
         db.session.commit()
         return jsonify({
-            'status': 'success', 
+            'status': 'success',
             'message': f'선택한 작업자 {len(worker_ids)}명의 작업 중지 상태가 해제되어 [{status}] 상태로 변경 및 관제 장부에 기록되었습니다.'
         }), 200
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f"작업 중지 해제 처리 중 오류 발생: {str(e)}"}), 500
+
 
 @app.route('/api/monitoring/summary', methods=['GET'])
 @token_required
@@ -1896,11 +1940,11 @@ def get_monitoring_summary():
 
         # 시스템에 등록된 활성화된 구역들을 전부 가져옵니다.
         areas = Area.query.filter_by(is_active=True).all()
-        
+
         unworn_dict = {}
         worker_dict = {}
         compliance_dict = {}
-        
+
         total_cams = 0
         online_cams = 0
 
@@ -1915,10 +1959,10 @@ def get_monitoring_summary():
 
             # 2. 구역별 현재 작업자 수 (해당 구역 소속인 작업자 수 조회)
             worker_count = User.query.filter(
-                User.role == '작업자', 
+                User.role == '작업자',
                 User.is_active == True
             ).filter(User.areas.any(area_id=a.area_id)).count()
-            
+
             # 초기 개발 환경에서 작업자가 0명으로 뜨면 대시보드가 쓸쓸하므로 안전하게 데모용 보정값(3명) 세팅
             worker_dict[a.area_name] = worker_count if worker_count > 0 else 3
 
@@ -1939,11 +1983,12 @@ def get_monitoring_summary():
         return jsonify({
             "구역별 미착용 인원수": unworn_dict,
             "구역별 현재 작업자 수": worker_dict,
-            "구역별 PPE 준수율":    compliance_dict,
-            "전체 카메라 상태":     f"정상 가동 중 ({online_cams}/{total_cams})" if total_cams > 0 else "등록된 카메라 없음"
+            "구역별 PPE 준수율": compliance_dict,
+            "전체 카메라 상태": f"정상 가동 중 ({online_cams}/{total_cams})" if total_cams > 0 else "등록된 카메라 없음"
         }), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"실시간 모니터링 통계 조회 오류: {str(e)}"}), 500
+
 
 @app.route('/api/analysis/summary', methods=['GET'])
 @token_required
@@ -1964,10 +2009,10 @@ def get_analysis_summary():
         # 실제 데이터가 쌓이기 전이므로, 대시보드 그래프가 깨지지 않도록 누적 데이터 기반 자동 보정 연산을 적용합니다.
         total_violations = Violation.query.count()
         compliance_rate = max(100 - (total_violations * 2), 85)  # 위반당 2점 감점, 최소 85% 유지
-        
+
         return jsonify({
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율": f"{compliance_rate}%",
             "사고 발생 수": 0,  # 아카이빙용 기본값
             "경고 발생 수": total_alarms
         }), 200
@@ -1979,13 +2024,13 @@ def get_analysis_summary():
 @token_required
 def get_analysis_chart_data():
     """
-    7. 분석 - 차트용 시계열 데이터 조회 
+    7. 분석 - 차트용 시계열 데이터 조회
     """
     try:
         import calendar
         from sqlalchemy import extract, and_
         from datetime import datetime, timedelta, time
-        
+
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
         today = datetime.now()
 
@@ -1995,12 +2040,12 @@ def get_analysis_chart_data():
 
         if date_range == "이번 주":
             timeline = [
-                "09:00~10:00", "10:00~11:00", "11:00~12:00", 
-                "12:00~13:00", "13:00~14:00", "14:00~15:00", 
+                "09:00~10:00", "10:00~11:00", "11:00~12:00",
+                "12:00~13:00", "13:00~14:00", "14:00~15:00",
                 "15:00~16:00", "16:00~17:00", "17:00~18:00"
             ]
             violation_counts = []
-            
+
             # 시간별 라이브 집계 + 이번 주 날짜 제한 필터 바인딩
             for t in range(9, 18):
                 real_count = Violation.query.filter(
@@ -2010,7 +2055,7 @@ def get_analysis_chart_data():
                     )
                 ).count()
                 violation_counts.append(real_count)
-                    
+
             compliance_trends = [f"{max(100 - (c * 5), 80)}%" for c in violation_counts]
 
             # 구역별 실시간 위반 현황 집계 (이번 주 필터 반영)
@@ -2024,15 +2069,15 @@ def get_analysis_chart_data():
                     )
                 ).count()
                 zone_violations[a.area_name] = v_count
-            
+
         else:
             # 이번 달: 주차별 실시간 분기 집계
             month_matrix = calendar.monthcalendar(today.year, today.month)
             violation_counts = []
             timeline = []
-            
+
             for idx, week in enumerate(month_matrix):
-                timeline.append(f"{idx+1}주차")
+                timeline.append(f"{idx + 1}주차")
                 valid_days = [d for d in week if d > 0]
                 if not valid_days:
                     violation_counts.append(0)
@@ -2061,14 +2106,15 @@ def get_analysis_chart_data():
         return jsonify({
             "선택된 범위": date_range,
             "차트 데이터": {
-                "시계열":          timeline,
+                "시계열": timeline,
                 "PPE 준수율 추이": compliance_trends,
-                "위반 건수 추이":   violation_counts,
+                "위반 건수 추이": violation_counts,
                 "구역별 위반 현황": zone_violations
             }
         }), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/api/alert-settings/reset', methods=['POST'])
 @token_required
@@ -2107,7 +2153,7 @@ def save_ppe_standards_v2():
         ppe_data = request.json
         if not ppe_data:
             return jsonify({'status': 'fail', 'message': '저장할 PPE 기준 데이터가 없습니다.'}), 400
-            
+
         with open(PPE_SETTINGS_FILE, 'w', encoding='utf-8') as f:
             json.dump(ppe_data, f, ensure_ascii=False, indent=4)
         return jsonify({'status': 'success', 'message': '구역별 PPE 필수 착용 기준이 성공적으로 저장되었습니다.'}), 200
@@ -2134,6 +2180,7 @@ def get_ppe_zones_list_v2():
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 구역 목록 조회 오류: {str(e)}"}), 500
 
+
 @app.route('/api/control/workers', methods=['GET'])
 @token_required
 def get_live_workers_list_v2():
@@ -2153,12 +2200,12 @@ def get_live_workers_list_v2():
         for w in workers:
             zone_name = w.areas[0].area_name if w.areas else "미지정"
             result.append({
-                "작업자ID":     w.id,
-                "이름":         w.name,
-                "구역":         zone_name,
+                "작업자ID": w.id,
+                "이름": w.name,
+                "구역": zone_name,
                 "PPE 착용 상태": "착용 완료",
-                "작업 상태":     "작업 중",
-                "시간":         datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                "작업 상태": "작업 중",
+                "시간": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
         return jsonify(result), 200
     except Exception as e:
@@ -2180,7 +2227,7 @@ def resume_workers_work_status_v2():
     try:
         data = request.json or {}
         worker_ids = data.get('작업자 ID 목록') or data.get('worker_ids') or []
-        status     = data.get('상태') or data.get('status') or "작업 중"
+        status = data.get('상태') or data.get('status') or "작업 중"
 
         if not worker_ids:
             return jsonify({'status': 'fail', 'message': '상태를 변경할 작업자 ID 목록이 제공되지 않았습니다.'}), 400
@@ -2220,10 +2267,10 @@ def get_analysis_summary_v2():
         total_alarms = Alarm.query.count()
         total_violations = Violation.query.count()
         compliance_rate = max(100 - (total_violations * 2), 85)
-        
+
         return jsonify({
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율": f"{compliance_rate}%",
             "사고 발생 수": 0,
             "경고 발생 수": total_alarms
         }), 200
@@ -2254,12 +2301,12 @@ def get_analysis_summary_v3():
         # 2. 차트 조회 API와 통일성을 주기 위해 범위별로 데이터를 분기 연산합니다.
         # 주간/월간 버튼을 클릭할 때 대시보드 숫자가 연동되어 바뀌는 효과
         if date_range == "이번 주":
-            warning_count = 14       # 이번 주 누적 알림 예시값
-            compliance_rate = 97     # 이번 주 안전 준수율
+            warning_count = 14  # 이번 주 누적 알림 예시값
+            compliance_rate = 97  # 이번 주 안전 준수율
             accident_count = 0
         elif date_range == "이번 달":
-            warning_count = 40       # 이번 달 누적 알림 예시값
-            compliance_rate = 93     # 이번 달 안전 준수율
+            warning_count = 40  # 이번 달 누적 알림 예시값
+            compliance_rate = 93  # 이번 달 안전 준수율
             accident_count = 0
         else:  # 전체 범위일 때
             # 데이터베이스에 쌓인 실제 총 누적 개수를 기반으로 실시간 연산
@@ -2270,9 +2317,9 @@ def get_analysis_summary_v3():
 
         # 요청한 "선택된 범위" Key를 포함하여 전송
         return jsonify({
-            "선택된 범위":  date_range,
+            "선택된 범위": date_range,
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율": f"{compliance_rate}%",
             "사고 발생 수": accident_count,
             "경고 발생 수": warning_count
         }), 200
@@ -2296,14 +2343,14 @@ def get_ppe_standards_v3():
         if os.path.exists(PPE_SETTINGS_FILE):
             with open(PPE_SETTINGS_FILE, 'r', encoding='utf-8') as f:
                 return jsonify(json.load(f)), 200
-                
+
         areas = Area.query.filter_by(is_active=True).all()
         result = []
         for a in areas:
             default_ppe = ["안전모", "마스크", "장갑"] if a.risk_level == "high" else ["안전모", "마스크"]
             result.append({
-                "zoneID":       a.area_id,
-                "zone_name":    a.area_name,
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
                 "required_ppe": default_ppe
             })
         return jsonify(result), 200
@@ -2343,14 +2390,15 @@ def get_analysis_summary_v4():
             accident_count = 0
 
         return jsonify({
-            "선택된 범위":  date_range,
+            "선택된 범위": date_range,
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율": f"{compliance_rate}%",
             "사고 발생 수": accident_count,
             "경고 발생 수": warning_count
         }), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"분석 요약 조회 오류: {str(e)}"}), 500
+
 
 # =================================================================
 # Swagger 파라미터 규격 공식 매핑 및 라우팅 스위칭 세트
@@ -2380,7 +2428,7 @@ def get_analysis_summary_final():
     try:
         from sqlalchemy import and_
         from datetime import datetime, timedelta, time
-        
+
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
 
         # 실제 등록된 활성 작업자 전수 실시간 카운트
@@ -2403,13 +2451,14 @@ def get_analysis_summary_final():
             compliance_rate = max(100 - (violation_count * 0.1), 85)
 
         return jsonify({
-            "선택된 범위":  date_range,
+            "선택된 범위": date_range,
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{round(compliance_rate)}%",
+            "PPE 준수율": f"{round(compliance_rate)}%",
             "총 위반 건수": violation_count
         }), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/api/ppe-standards', methods=['POST'])
 @token_required
@@ -2448,7 +2497,7 @@ def save_ppe_standards_final():
         ppe_data = request.json
         if not ppe_data:
             return jsonify({'status': 'fail', 'message': '저장할 PPE 기준 데이터가 없습니다.'}), 400
-            
+
         with open(PPE_SETTINGS_FILE, 'w', encoding='utf-8') as f:
             json.dump(ppe_data, f, ensure_ascii=False, indent=4)
         return jsonify({'status': 'success', 'message': '구역별 PPE 필수 착용 기준이 성공적으로 저장되었습니다.'}), 200
@@ -2472,28 +2521,32 @@ def get_ppe_standards_final():
         if os.path.exists(PPE_SETTINGS_FILE):
             with open(PPE_SETTINGS_FILE, 'r', encoding='utf-8') as f:
                 return jsonify(json.load(f)), 200
-                
+
         areas = Area.query.filter_by(is_active=True).all()
         result = []
         for a in areas:
             default_ppe = ["안전모", "마스크", "장갑"] if a.risk_level == "high" else ["안전모", "마스크"]
             result.append({
-                "zoneID":       a.area_id,
-                "zone_name":    a.area_name,
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
                 "required_ppe": default_ppe
             })
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 기준 조회 오류: {str(e)}"}), 500
 
+
 # -----------------------------------------------------------------
 #  Flask 매핑 테이블을 최신 마스터본(final) 함수로 강제 강탈/교체
 # 위에 쌓여있던 모든 중복 함수 무시 및 무조건 최신 코드 실행
 # -----------------------------------------------------------------
 app.view_functions['get_analysis_summary'] = get_analysis_summary_final
-if 'get_analysis_summary_v2' in app.view_functions: app.view_functions['get_analysis_summary_v2'] = get_analysis_summary_final
-if 'get_analysis_summary_v3' in app.view_functions: app.view_functions['get_analysis_summary_v3'] = get_analysis_summary_final
-if 'get_analysis_summary_v4' in app.view_functions: app.view_functions['get_analysis_summary_v4'] = get_analysis_summary_final
+if 'get_analysis_summary_v2' in app.view_functions: app.view_functions[
+    'get_analysis_summary_v2'] = get_analysis_summary_final
+if 'get_analysis_summary_v3' in app.view_functions: app.view_functions[
+    'get_analysis_summary_v3'] = get_analysis_summary_final
+if 'get_analysis_summary_v4' in app.view_functions: app.view_functions[
+    'get_analysis_summary_v4'] = get_analysis_summary_final
 
 app.view_functions['save_ppe_standards'] = save_ppe_standards_final
 if 'save_ppe_standards_v2' in app.view_functions: app.view_functions['save_ppe_standards_v2'] = save_ppe_standards_final
@@ -2501,6 +2554,7 @@ if 'save_ppe_standards_v2' in app.view_functions: app.view_functions['save_ppe_s
 app.view_functions['get_ppe_standards'] = get_ppe_standards_final
 if 'get_ppe_standards_v2' in app.view_functions: app.view_functions['get_ppe_standards_v2'] = get_ppe_standards_final
 if 'get_ppe_standards_v3' in app.view_functions: app.view_functions['get_ppe_standards_v3'] = get_ppe_standards_final
+
 
 @app.route('/api/control/workers/resume', methods=['PATCH'])
 @token_required
@@ -2533,7 +2587,7 @@ def resume_workers_work_status_final():
     try:
         data = request.json or {}
         worker_ids = data.get('작업자 ID 목록') or data.get('worker_ids') or []
-        status     = data.get('상태') or data.get('status') or "작업 중"
+        status = data.get('상태') or data.get('status') or "작업 중"
 
         if not worker_ids:
             return jsonify({'status': 'fail', 'message': '상태를 변경할 작업자 ID 목록이 제공되지 않았습니다.'}), 400
@@ -2541,7 +2595,7 @@ def resume_workers_work_status_final():
         for wid in worker_ids:
             target_worker = User.query.get(wid)
             worker_name = target_worker.name if target_worker else f"ID {wid}"
-            
+
             new_log = Log(
                 log_type='작업자 상태 변경',
                 user_id=g.current_user.get('id'),
@@ -2552,7 +2606,7 @@ def resume_workers_work_status_final():
 
         db.session.commit()
         return jsonify({
-            'status': 'success', 
+            'status': 'success',
             'message': f'선택한 작업자 {len(worker_ids)}명의 작업 중지 상태가 해제되어 [{status}] 상태로 변경되었습니다.'
         }), 200
     except Exception as e:
@@ -2564,14 +2618,14 @@ def resume_workers_work_status_final():
 # 강제 스위칭 테이블
 # -----------------------------------------------------------------
 app.view_functions['resume_workers_work_status'] = resume_workers_work_status_final
-if 'resume_workers_work_status_v2' in app.view_functions: app.view_functions['resume_workers_work_status_v2'] = resume_workers_work_status_final
+if 'resume_workers_work_status_v2' in app.view_functions: app.view_functions[
+    'resume_workers_work_status_v2'] = resume_workers_work_status_final
 
 # -----------------------------------------------------------------
-# alert_type 
+# alert_type
 # -----------------------------------------------------------------
 app.view_functions['get_alert_settings'] = get_alert_settings
 if 'get_api_alert_settings' in app.view_functions: app.view_functions['get_api_alert_settings'] = get_alert_settings
-
 
 
 # -----------------------------------------------------------------
@@ -2698,7 +2752,6 @@ for _endpoint in [
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = get_ppe_standards_db_override
 
-
 for _endpoint in [
     "save_ppe_standards",
     "save_ppe_standards_v2",
@@ -2706,7 +2759,6 @@ for _endpoint in [
 ]:
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = save_ppe_standards_db_override
-
 
 
 # -----------------------------------------------------------------
@@ -2746,14 +2798,13 @@ def save_ppe_standards_rawsql_override():
 
             result = db.session.execute(
                 text("""
-                    UPDATE areas
-                    SET
-                        enforce_helmet = :enforce_helmet,
-                        enforce_mask = :enforce_mask,
-                        enforce_glove_left = :enforce_glove_left,
-                        enforce_glove_right = :enforce_glove_right
-                    WHERE area_id = :area_id
-                """),
+                     UPDATE areas
+                     SET enforce_helmet      = :enforce_helmet,
+                         enforce_mask        = :enforce_mask,
+                         enforce_glove_left  = :enforce_glove_left,
+                         enforce_glove_right = :enforce_glove_right
+                     WHERE area_id = :area_id
+                     """),
                 {
                     "enforce_helmet": enforce_helmet,
                     "enforce_mask": enforce_mask,
@@ -2771,17 +2822,16 @@ def save_ppe_standards_rawsql_override():
         if updated:
             rows = db.session.execute(
                 text("""
-                    SELECT
-                        area_id,
-                        area_name,
-                        enforce_helmet,
-                        enforce_mask,
-                        enforce_glove_left,
-                        enforce_glove_right
-                    FROM areas
-                    WHERE area_id IN :ids
-                    ORDER BY area_id
-                """),
+                     SELECT area_id,
+                            area_name,
+                            enforce_helmet,
+                            enforce_mask,
+                            enforce_glove_left,
+                            enforce_glove_right
+                     FROM areas
+                     WHERE area_id IN :ids
+                     ORDER BY area_id
+                     """),
                 {"ids": tuple(updated)}
             ).mappings().all()
 
@@ -2810,6 +2860,7 @@ for _endpoint in [
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = save_ppe_standards_rawsql_override
 
+
 # 교내 내부망 5000 포트 차단으로 인한 포트 변경 (5000 -> 5002)
 
 # -----------------------------------------------------------------
@@ -2824,17 +2875,16 @@ def get_ppe_standards_runtime_override():
 
         rows = db.session.execute(
             text("""
-                SELECT
-                    area_id,
-                    area_name,
-                    enforce_helmet,
-                    enforce_mask,
-                    enforce_glove_left,
-                    enforce_glove_right
-                FROM areas
-                WHERE is_active = 1
-                ORDER BY area_id
-            """)
+                 SELECT area_id,
+                        area_name,
+                        enforce_helmet,
+                        enforce_mask,
+                        enforce_glove_left,
+                        enforce_glove_right
+                 FROM areas
+                 WHERE is_active = 1
+                 ORDER BY area_id
+                 """)
         ).mappings().all()
 
         result = []
@@ -2900,14 +2950,13 @@ def save_ppe_standards_runtime_override():
 
             result = db.session.execute(
                 text("""
-                    UPDATE areas
-                    SET
-                        enforce_helmet = :enforce_helmet,
-                        enforce_mask = :enforce_mask,
-                        enforce_glove_left = :enforce_glove_left,
-                        enforce_glove_right = :enforce_glove_right
-                    WHERE area_id = :area_id
-                """),
+                     UPDATE areas
+                     SET enforce_helmet      = :enforce_helmet,
+                         enforce_mask        = :enforce_mask,
+                         enforce_glove_left  = :enforce_glove_left,
+                         enforce_glove_right = :enforce_glove_right
+                     WHERE area_id = :area_id
+                     """),
                 {
                     "enforce_helmet": enforce_helmet,
                     "enforce_mask": enforce_mask,
@@ -2965,7 +3014,6 @@ for _endpoint in [
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = get_ppe_standards_runtime_override
 
-
 for _endpoint in [
     "save_ppe_standards",
     "save_ppe_standards_v2",
@@ -2973,7 +3021,6 @@ for _endpoint in [
 ]:
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = save_ppe_standards_runtime_override
-
 
 if __name__ == '__main__':
     socketio.run(
@@ -3044,7 +3091,7 @@ app.config['SECRET_KEY'] = 'capston'
 app.config['JSON_AS_ASCII'] = False
 
 # 깃허브 및 서버 업로드 시 주석 해제
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117/capstone_db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:capston@43.200.27.117:3308/capstone_db'
 
 # 로컬 환경에서 코드 수정 후 테스트 시 주석 해제 (교내 내부망 특정 포트 차단 issue)
@@ -3066,68 +3113,72 @@ db = SQLAlchemy(app)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+
 class Alarm(db.Model):
     __tablename__ = 'alarms'
-    id        = db.Column(db.String(100), primary_key=True)
-    type      = db.Column(db.String(100))
-    time      = db.Column(db.DateTime)
-    area_id   = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
-    status    = db.Column(db.String(20), default='미해결')
+    id = db.Column(db.String(100), primary_key=True)
+    type = db.Column(db.String(100))
+    time = db.Column(db.DateTime)
+    area_id = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
+    status = db.Column(db.String(20), default='미해결')
     image_url = db.Column(db.Text)
 
     area = db.relationship('Area', backref='alarms', lazy='joined')
 
     def to_dict(self):
         return {
-            'id':        self.id,
-            'type':      self.type,
-            'time':      self.time.strftime('%Y-%m-%d %H:%M:%S') if self.time else None,
-            'area_id':   self.area_id,
-            'area':      self.area.to_dict() if self.area else None,
-            'status':    self.status,
+            'id': self.id,
+            'type': self.type,
+            'time': self.time.strftime('%Y-%m-%d %H:%M:%S') if self.time else None,
+            'area_id': self.area_id,
+            'area': self.area.to_dict() if self.area else None,
+            'status': self.status,
             'image_url': self.image_url,
         }
 
+
 class Violation(db.Model):
     __tablename__ = 'violations'
-    id             = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     violation_type = db.Column(db.String(50), nullable=False)
-    detected_at    = db.Column(db.DateTime, default=db.func.current_timestamp())
-    area_id        = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
-    person_id      = db.Column(db.Integer, nullable=True)
-    image_data     = db.Column(MEDIUMBLOB)
-    image_mime     = db.Column(db.String(20), default='image/jpeg')
-    is_checked     = db.Column(db.Boolean, default=False)
+    detected_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    area_id = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)
+    person_id = db.Column(db.Integer, nullable=True)
+    image_data = db.Column(MEDIUMBLOB)
+    image_mime = db.Column(db.String(20), default='image/jpeg')
+    is_checked = db.Column(db.Boolean, default=False)
 
     area = db.relationship('Area', backref='violations', lazy='joined')
 
     def to_dict(self):
         return {
-            'id':             self.id,
+            'id': self.id,
             'violation_type': self.violation_type,
-            'detected_at':    self.detected_at.strftime('%Y-%m-%d %H:%M:%S') if self.detected_at else None,
-            'area_id':        self.area_id,
-            'area':           self.area.to_dict() if self.area else None,
-            'person_id':      self.person_id,
-            'image_url':      f'/api/violations/{self.id}/image' if self.image_data else None,
-            'image_mime':     self.image_mime,
-            'is_checked':     self.is_checked,
+            'detected_at': self.detected_at.strftime('%Y-%m-%d %H:%M:%S') if self.detected_at else None,
+            'area_id': self.area_id,
+            'area': self.area.to_dict() if self.area else None,
+            'person_id': self.person_id,
+            'image_url': f'/api/violations/{self.id}/image' if self.image_data else None,
+            'image_mime': self.image_mime,
+            'is_checked': self.is_checked,
         }
+
 
 user_areas = db.Table(
     'user_areas',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'),       primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
     db.Column('area_id', db.Integer, db.ForeignKey('areas.area_id', ondelete='CASCADE'), primary_key=True),
     db.Column('created_at', db.DateTime, default=db.func.current_timestamp()),
 )
 
+
 class User(db.Model):
     __tablename__ = 'users'
-    id       = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     login_id = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    name     = db.Column(db.String(100))
-    role     = db.Column(db.String(50))
+    name = db.Column(db.String(100))
+    role = db.Column(db.String(50))
     is_active = db.Column(db.Boolean, default=True)
 
     # 다중 구역 N:M
@@ -3144,38 +3195,40 @@ class User(db.Model):
 
     def to_dict(self):
         return {
-            'id':            self.id,
-            'login_id':      self.login_id,
-            'name':          self.name,
-            'role':          self.role,
-            'area_ids':      [a.area_id for a in self.areas],
-            'areas':         [a.to_dict() for a in self.areas],
+            'id': self.id,
+            'login_id': self.login_id,
+            'name': self.name,
+            'role': self.role,
+            'area_ids': [a.area_id for a in self.areas],
+            'areas': [a.to_dict() for a in self.areas],
             'global_access': self.has_global_access(),
         }
 
+
 class Area(db.Model):
     __tablename__ = 'areas'
-    area_id     = db.Column(db.Integer, primary_key=True)
-    area_name   = db.Column(db.String(50),  unique=True, nullable=False)
-    area_code   = db.Column(db.String(20),  unique=True)
-    camera_key  = db.Column(db.String(100), unique=True)   # NULL 허용
+    area_id = db.Column(db.Integer, primary_key=True)
+    area_name = db.Column(db.String(50), unique=True, nullable=False)
+    area_code = db.Column(db.String(20), unique=True)
+    camera_key = db.Column(db.String(100), unique=True)  # NULL 허용
     description = db.Column(db.String(255))
-    risk_level  = db.Column(db.String(20),  default='normal')
-    is_active   = db.Column(db.Boolean,     default=True)
-    created_at  = db.Column(db.DateTime,    default=db.func.current_timestamp())
-    updated_at  = db.Column(db.DateTime,    default=db.func.current_timestamp(),
-                            onupdate=db.func.current_timestamp())
+    risk_level = db.Column(db.String(20), default='normal')
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(),
+                           onupdate=db.func.current_timestamp())
 
     def to_dict(self):
         return {
-            'area_id':     self.area_id,
-            'area_name':   self.area_name,
-            'area_code':   self.area_code,
-            'camera_key':  self.camera_key,
+            'area_id': self.area_id,
+            'area_name': self.area_name,
+            'area_code': self.area_code,
+            'camera_key': self.camera_key,
             'description': self.description,
-            'risk_level':  self.risk_level,
-            'is_active':   self.is_active,
+            'risk_level': self.risk_level,
+            'is_active': self.is_active,
         }
+
 
 def token_required(f):
     @wraps(f)
@@ -3196,7 +3249,9 @@ def token_required(f):
             return jsonify({'message': f'유효하지 않습니다 ({str(e)})'}), 401
 
         return f(*args, **kwargs)
+
     return decorated
+
 
 def role_required(*allowed_roles):
     """
@@ -3204,6 +3259,7 @@ def role_required(*allowed_roles):
     반드시 @token_required 다음에 사용해야 한다.
     예시: @role_required('최고 관리자', '보안 팀장')
     """
+
     def decorator(f):
         @wraps(f)
         def decorated(*args, **kwargs):
@@ -3214,19 +3270,22 @@ def role_required(*allowed_roles):
                     'message': f'이 작업을 수행할 권한이 없습니다. (필요 권한: {", ".join(allowed_roles)} / 현재: {user_role})'
                 }), 403
             return f(*args, **kwargs)
+
         return decorated
+
     return decorator
+
 
 class Log(db.Model):
     __tablename__ = 'logs'
-    id          = db.Column(db.Integer, primary_key=True)
-    log_type    = db.Column(db.String(100)) # 로그 종류 (로그인, 알림 해결 등) 
-    timestamp   = db.Column(db.DateTime, default=db.func.current_timestamp()) # 발생 시간 
-    area_id     = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True) # 구역 
-    camera_key  = db.Column(db.String(100), nullable=True) # 카메라 
-    user_id     = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True) # 작업자 ID 
-    status      = db.Column(db.String(50), nullable=True) # 상태 (해결/미해결/null) [cite: 2, 3]
-    description = db.Column(db.Text) # 설명(detail) 
+    id = db.Column(db.Integer, primary_key=True)
+    log_type = db.Column(db.String(100))  # 로그 종류 (로그인, 알림 해결 등)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())  # 발생 시간
+    area_id = db.Column(db.Integer, db.ForeignKey('areas.area_id'), nullable=True)  # 구역
+    camera_key = db.Column(db.String(100), nullable=True)  # 카메라
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # 작업자 ID
+    status = db.Column(db.String(50), nullable=True)  # 상태 (해결/미해결/null) [cite: 2, 3]
+    description = db.Column(db.Text)  # 설명(detail)
 
     # 관계 설정: 로그 조회 시 이름 등을 바로 가져오기 위함
     user = db.relationship('User', backref='logs')
@@ -3243,6 +3302,7 @@ class Log(db.Model):
             'status': self.status,
             'detail': self.description
         }
+
 
 @app.route('/api/register', methods=['POST'])
 @token_required
@@ -3345,6 +3405,7 @@ def register():
             'message': f'등록 중 오류 발생: {str(e)}'
         }), 500
 
+
 @app.route('/api/login', methods=['POST'])
 def login():
     """
@@ -3412,11 +3473,12 @@ def login():
             description=f"사용자 {user.login_id}님이 시스템에 접속했습니다."
         )
         db.session.add(new_log)
-        db.session.commit() # 로그인 기록을 DB에 저장
-        
+        db.session.commit()  # 로그인 기록을 DB에 저장
+
         return jsonify({'status': 'success', 'token': token}), 200
-    
+
     return jsonify({'status': 'fail', 'message': '아이디 또는 비밀번호가 틀렸습니다.'}), 401
+
 
 @app.route('/api/logout', methods=['POST'])
 def logout():
@@ -3437,8 +3499,9 @@ def logout():
               type: string
               example: 로그아웃 되었습니다.
     """
-    
+
     return jsonify({'status': 'success', 'message': '로그아웃 되었습니다.'}), 200
+
 
 @app.route('/api/users/<int:user_id>', methods=['PUT'])
 @token_required
@@ -3553,6 +3616,7 @@ def update_user(user_id):
             'message': f'수정 중 오류 발생: {str(e)}'
         }), 500
 
+
 @app.route('/api/users/<int:user_id>', methods=['DELETE'])
 @token_required
 @role_required('최고 관리자', '보안 팀장')
@@ -3603,17 +3667,17 @@ def delete_user(user_id):
     }
 
     try:
-        user.is_active = False # 데이터 삭제 대신 비활성화
- 
+        user.is_active = False  # 데이터 삭제 대신 비활성화
+
         new_log = Log(
             log_type='작업자 상태 변경',
-            user_id=g.current_user.get('id'), # 현재 삭제를 수행한 관리자 ID
+            user_id=g.current_user.get('id'),  # 현재 삭제를 수행한 관리자 ID
             description=f"사용자 {user.login_id}(ID: {user_id}) 계정이 비활성화되었습니다."
         )
-        db.session.add(new_log) # 장부에 임시 기록
+        db.session.add(new_log)  # 장부에 임시 기록
 
-        db.session.commit() # 3. 비활성화와 로그를 한 번에 DB에 저장
-    
+        db.session.commit()  # 3. 비활성화와 로그를 한 번에 DB에 저장
+
         return jsonify({
             'status': 'success',
             'message': '사용자가 삭제(비활성화) 처리되었습니다.',
@@ -3660,6 +3724,7 @@ def get_violation_image(violation_id):
         },
     )
 
+
 @app.route('/api/alarms', methods=['GET'])
 @token_required
 def get_alarms():
@@ -3687,7 +3752,7 @@ def get_alarms():
 
     # 검색 필터 로직 (조건이 붙을 때 작동)
     status_filter = request.args.get('status')
-    area_filter = request.args.get('area') # 구역 선택
+    area_filter = request.args.get('area')  # 구역 선택
 
     if status_filter:
         q = q.filter(Alarm.status == status_filter)
@@ -3696,6 +3761,7 @@ def get_alarms():
 
     alarms = q.order_by(Alarm.time.desc()).all()
     return jsonify([a.to_dict() for a in alarms]), 200
+
 
 @app.route('/api/alarms/<string:alarm_id>', methods=['PATCH'])
 @token_required
@@ -3729,7 +3795,7 @@ def update_alarm_status(alarm_id):
         return jsonify({'status': 'fail', 'message': '해당 알림을 찾을 수 없습니다.'}), 404
 
     data = request.json or {}
-    
+
     # 상태 업데이트 (미해결 -> 해결)
     if 'status' in data:
         alarm.status = data['status']
@@ -3737,7 +3803,7 @@ def update_alarm_status(alarm_id):
     new_log = Log(
         log_type='알림 해결 처리',
         area_id=alarm.area_id,
-        user_id=g.current_user.get('id'), # 현재 로그인 중인 관리자 ID
+        user_id=g.current_user.get('id'),  # 현재 로그인 중인 관리자 ID
         status='해결',
         description=f"알림 ID {alarm_id}번이 조치 완료되었습니다."
     )
@@ -3753,6 +3819,7 @@ def update_alarm_status(alarm_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/api/proxy-stream/<path:cam_name>', methods=['GET'])
 def proxy_stream(cam_name):
@@ -3806,6 +3873,7 @@ def proxy_stream(cam_name):
         mimetype='multipart/x-mixed-replace; boundary=frame',
         direct_passthrough=True
     )
+
 
 @app.route('/api/stream-urls', methods=['GET'])
 @token_required
@@ -3983,6 +4051,7 @@ def create_area():
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f'등록 중 오류: {str(e)}'}), 500
 
+
 @app.route('/api/areas', methods=['GET'])
 @token_required
 def list_areas():
@@ -4011,6 +4080,7 @@ def list_areas():
         'count': len(areas),
         'areas': [a.to_dict() for a in areas]
     }), 200
+
 
 @app.route('/api/areas/<int:area_id>', methods=['PUT'])
 @token_required
@@ -4081,6 +4151,7 @@ def update_area(area_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f'수정 중 오류: {str(e)}'}), 500
 
+
 @app.route('/api/areas/<int:area_id>', methods=['DELETE'])
 @token_required
 @role_required('최고 관리자', '보안 팀장', '구역 매니저')
@@ -4128,6 +4199,7 @@ def delete_area(area_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f'삭제 중 오류: {str(e)}'}), 500
 
+
 @app.route('/api/stats', methods=['GET'])
 @token_required
 def get_starts():
@@ -4157,26 +4229,23 @@ def get_starts():
                   type: string
     """
     try:
-        
+
         from datetime import date
         today_date = date.today()
 
-        
         try:
             total_count = Violation.query.count()
         except:
             total_count = 0
 
-        
         try:
-            
+
             today_count = Violation.query.filter(
                 db.func.date(Violation.detected_at) == today_date
             ).count()
         except:
             today_count = 0
 
-        
         return jsonify({
             "status": "success",
             "data": {
@@ -4187,11 +4256,12 @@ def get_starts():
         }), 200
 
     except Exception as e:
-        
+
         return jsonify({
-            "status": "error", 
+            "status": "error",
             "message": f"DB 처리 중 에러 발생: {str(e)}"
         }), 500
+
 
 @app.route('/api/logs', methods=['GET'])
 @token_required
@@ -4208,11 +4278,12 @@ def get_logs():
     try:
         # 최신 로그가 위로 오도록 정렬해서 가져오기
         logs = Log.query.order_by(Log.timestamp.desc()).all()
-        
+
         # 리스트 형태로 변환해서 전달
         return jsonify([log.to_dict() for log in logs]), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/api/violations', methods=['GET'])
 @token_required
@@ -4228,7 +4299,7 @@ def get_violations():
     """
     try:
         status_filter = request.args.get('status')  # 필터 조건 ('미해결'/'해결')
-        area_filter = request.args.get('area')      # 필터 조건 (구역 ID)
+        area_filter = request.args.get('area')  # 필터 조건 (구역 ID)
 
         q = Violation.query
 
@@ -4285,17 +4356,17 @@ def get_violation_detail(violation_id):
             return jsonify({'status': 'error', 'message': '해당 위반을 찾을 수 없습니다.'}), 404
 
         result = {
-            "id":             v.id,
-            "detected_at":    v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
-            "area_id":        v.area_id,
-            "area_name":      v.area.area_name if v.area else None,
-            "camera_key":     v.area.camera_key if v.area else None,
-            "person_id":      v.person_id,
+            "id": v.id,
+            "detected_at": v.detected_at.strftime('%Y-%m-%d %H:%M:%S') if v.detected_at else None,
+            "area_id": v.area_id,
+            "area_name": v.area.area_name if v.area else None,
+            "camera_key": v.area.camera_key if v.area else None,
+            "person_id": v.person_id,
             "violation_type": v.violation_type,
-            "image_url":      f'/api/violations/{v.id}/image' if v.image_data else None,
-            "image_mime":     v.image_mime,
-            "status":         "해결" if v.is_checked else "미해결",
-            "is_checked":     bool(v.is_checked),
+            "image_url": f'/api/violations/{v.id}/image' if v.image_data else None,
+            "image_mime": v.image_mime,
+            "status": "해결" if v.is_checked else "미해결",
+            "is_checked": bool(v.is_checked),
         }
         return jsonify(result), 200
     except Exception as e:
@@ -4426,12 +4497,12 @@ def get_users_list():
             # 사용자가 속한 구역 이름들을 콤마(,)로 합쳐서 소속 표시
             dept = ", ".join([a.area_name for a in u.areas]) if u.areas else "전체 권한"
             result.append({
-                "userID":     u.id,
-                "name":       u.name,
-                "login_id":   u.login_id,
-                "role":       u.role,
+                "userID": u.id,
+                "name": u.name,
+                "login_id": u.login_id,
+                "role": u.role,
                 "department": dept,
-                "status":     "활성" if u.is_active else "비활성"
+                "status": "활성" if u.is_active else "비활성"
             })
         return jsonify(result), 200
     except Exception as e:
@@ -4451,13 +4522,14 @@ def get_ppe_standards():
             # [주의] 현재 Area 모델에 필수 PPE 컬럼이 따로 없으므로, 위험도(risk_level)에 따라 자동 매핑하여 에러 방지
             default_ppe = ["안전모", "마스크", "장갑"] if a.risk_level == "high" else ["안전모", "마스크"]
             result.append({
-                "zoneID":       a.area_id,
-                "zone_name":    a.area_name,
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
                 "required_ppe": default_ppe
             })
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"구역 설정 DB 조회 오류: {str(e)}"}), 500
+
 
 @app.route('/api/logs/<int:log_id>', methods=['GET'])
 @token_required
@@ -4474,13 +4546,13 @@ def get_log_detail(log_id):
     try:
         # 데이터베이스에서 주소창에 실어 보낸 log_id 번호와 일치하는 로그를 한 건 찾습니다.
         log = Log.query.get(log_id)
-        
+
         # 만약 없는 번호를 요청하면 안전하게 오류 메시지를 보냅니다.
         if not log:
             return jsonify({'status': 'fail', 'message': '해당 로그를 찾을 수 없습니다.'}), 404
-           
+
         return jsonify(log.to_dict()), 200
-        
+
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"로그 상세 조회 DB 오류: {str(e)}"}), 500
 
@@ -4489,19 +4561,24 @@ import json
 
 SETTINGS_FILE = os.path.join(os.getcwd(), 'alert_settings.json')
 
+
 def get_default_settings():
     """알림 설정 초기화 및 최초 생성용 기본값 설정 장부"""
     return [
-        {"alert_type": "안전모", "use_alert": True, "send_to_admin": True, "repeat_interval": 30, "min_risk_level": "보통", "stop_work_linkage": True},
-        {"alert_type": "장갑", "use_alert": True, "send_to_admin": True, "repeat_interval": None, "min_risk_level": "낮음", "stop_work_linkage": False},
-        {"alert_type": "마스크", "use_alert": True, "send_to_admin": True, "repeat_interval": 60, "min_risk_level": "보통", "stop_work_linkage": False}
+        {"alert_type": "안전모", "use_alert": True, "send_to_admin": True, "repeat_interval": 30, "min_risk_level": "보통",
+         "stop_work_linkage": True},
+        {"alert_type": "장갑", "use_alert": True, "send_to_admin": True, "repeat_interval": None, "min_risk_level": "낮음",
+         "stop_work_linkage": False},
+        {"alert_type": "마스크", "use_alert": True, "send_to_admin": True, "repeat_interval": 60, "min_risk_level": "보통",
+         "stop_work_linkage": False}
     ]
+
 
 @app.route('/api/alert-settings', methods=['GET'])
 @token_required
 def get_alert_settings():
     """
-    8. 설정 - 알림 설정 조회 
+    8. 설정 - 알림 설정 조회
     ---
     tags:
       - Settings
@@ -4511,8 +4588,8 @@ def get_alert_settings():
     """
     try:
         import os
-        
-        # 1. 장비별 독립 설정 기본 구조 정의 
+
+        # 1. 장비별 독립 설정 기본 구조 정의
         default_equipment_settings = {
             "안전모": {
                 "use_alert": True,
@@ -4533,21 +4610,22 @@ def get_alert_settings():
                 "repeat_interval": 10
             }
         }
-        
+
         # 2. 서버 내에 기존 장부 파일이 존재하면 읽기
         if os.path.exists('alert_settings.json'):
             with open('alert_settings.json', 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                
+
                 # 구조가 바뀌었거나 장비별 독립 설정이 없으면 강제 업데이트
-                if 'alert_type' not in data or not isinstance(data['alert_type'], dict) or "안전모" not in data['alert_type']:
+                if 'alert_type' not in data or not isinstance(data['alert_type'], dict) or "안전모" not in data[
+                    'alert_type']:
                     data['alert_type'] = default_equipment_settings
                 else:
                     # 기존 장비별 데이터 내부에 min_risk_level 누락 시 기본값 보정
                     for eq in ["안전모", "장갑", "마스크"]:
                         if eq in data['alert_type'] and 'min_risk_level' not in data['alert_type'][eq]:
                             data['alert_type'][eq]['min_risk_level'] = default_equipment_settings[eq]['min_risk_level']
-                
+
                 # 공통 글로벌 필드 안전장치
                 if 'send_to_admin' not in data:
                     data['send_to_admin'] = True
@@ -4555,10 +4633,10 @@ def get_alert_settings():
                     data['stop_work_linkage'] = False
                 if 'use_vibration' not in data:
                     data['use_vibration'] = True
-                    
+
                 return jsonify(data), 200
-        
-        # 3. 장부 파일이 아예 없을 때 데이터 세트 
+
+        # 3. 장부 파일이 아예 없을 때 데이터 세트
         final_blueprint = {
             "use_vibration": True,
             "send_to_admin": True,
@@ -4578,11 +4656,12 @@ def get_alert_settings():
             }
         }), 200
 
+
 @app.route('/api/alert-settings', methods=['POST'])
 @token_required
 def save_alert_settings():
     """
-    8. 설정 - 알림 설정 저장 
+    8. 설정 - 알림 설정 저장
     ---
     tags:
       - Settings
@@ -4616,17 +4695,18 @@ def save_alert_settings():
     """
     try:
         user_settings = request.json
-        
+
         # 빈 데이터 방어 코드
         if not user_settings:
             return jsonify({'status': 'error', 'message': '전송된 설정 데이터가 없습니다.'}), 400
-            
+
         with open('alert_settings.json', 'w', encoding='utf-8') as f:
             json.dump(user_settings, f, ensure_ascii=False, indent=4)
-            
+
         return jsonify({'status': 'success', 'message': '장비별 알림 설정이 서버에 안전하게 저장되었습니다.'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f'설정 저장 중 오류 발생: {str(e)}'}), 500
+
 
 @app.route('/api/alert-settings/reset', methods=['POST'])
 @token_required
@@ -4642,6 +4722,7 @@ def reset_alert_settings():
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"알림 설정 초기화 오류: {str(e)}"}), 500
 
+
 @app.route('/api/alarms/<string:alarm_id>', methods=['PATCH'])
 @token_required
 def update_alarm_status_v2(alarm_id):
@@ -4655,12 +4736,12 @@ def update_alarm_status_v2(alarm_id):
             return jsonify({'status': 'fail', 'message': '해당 알림을 찾을 수 없습니다.'}), 404
 
         data = request.json or {}
-        
+
         # 프론트엔드가 한글이나 영어 어떤 컬럼명으로 보내든 안전하게 인식하도록 처리합니다.
-        admin_id  = data.get('관리자ID') or data.get('admin_id') or g.current_user.get('user')
+        admin_id = data.get('관리자ID') or data.get('admin_id') or g.current_user.get('user')
         worker_id = data.get('작업자ID') or data.get('worker_id') or "미지정"
-        memo      = data.get('메모') or data.get('memo') or "내용 없음"
-        status    = data.get('상태') or data.get('status') or "해결"
+        memo = data.get('메모') or data.get('memo') or "내용 없음"
+        status = data.get('상태') or data.get('status') or "해결"
 
         # 1. 알림 테이블의 상태를 미해결 -> 해결로 변경
         alarm.status = status
@@ -4688,7 +4769,9 @@ def update_alarm_status_v2(alarm_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f"알림 해결 처리 중 오류 발생: {str(e)}"}), 500
 
+
 PPE_SETTINGS_FILE = os.path.join(os.getcwd(), 'ppe_standards.json')
+
 
 @app.route('/api/ppe-standards', methods=['GET'])
 @token_required
@@ -4701,20 +4784,21 @@ def get_ppe_standards_v2():
         if os.path.exists(PPE_SETTINGS_FILE):
             with open(PPE_SETTINGS_FILE, 'r', encoding='utf-8') as f:
                 return jsonify(json.load(f)), 200
-                
+
         # 파일이 없을 때만 실행되는 초기 기본값 생성 로직
         areas = Area.query.filter_by(is_active=True).all()
         result = []
         for a in areas:
             default_ppe = ["안전모", "마스크", "장갑"] if a.risk_level == "high" else ["안전모", "마스크"]
             result.append({
-                "zoneID":       a.area_id,
-                "zone_name":    a.area_name,
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
                 "required_ppe": default_ppe
             })
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 기준 조회 오류: {str(e)}"}), 500
+
 
 @app.route('/api/ppe-standards', methods=['POST'])
 @token_required
@@ -4727,12 +4811,13 @@ def save_ppe_standards():
         ppe_data = request.json
         if not ppe_data:
             return jsonify({'status': 'fail', 'message': '저장할 PPE 기준 데이터가 없습니다.'}), 400
-            
+
         with open(PPE_SETTINGS_FILE, 'w', encoding='utf-8') as f:
             json.dump(ppe_data, f, ensure_ascii=False, indent=4)
         return jsonify({'status': 'success', 'message': '구역별 PPE 필수 착용 기준이 성공적으로 저장되었습니다.'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 기준 저장 오류: {str(e)}"}), 500
+
 
 @app.route('/api/ppe-zones', methods=['GET'])
 @token_required
@@ -4748,11 +4833,12 @@ def get_ppe_zones_list():
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 구역 목록 조회 오류: {str(e)}"}), 500
 
+
 @app.route('/api/control/summary', methods=['GET'])
 @token_required
 def get_control_summary():
     """
-    5. 대응/제어 - 대응 현황 요약 조회 
+    5. 대응/제어 - 대응 현황 요약 조회
     ---
     tags:
       - Control
@@ -4777,15 +4863,16 @@ def get_control_summary():
 
         return jsonify({
             "PPE 미착용 인원수": ppe_unworn_count,
-            "경고 발생 수":      warning_count,
-            "센서 상태":         "정상"
+            "경고 발생 수": warning_count,
+            "센서 상태": "정상"
         }), 200
     except Exception as e:
         return jsonify({
             "PPE 미착용 인원수": 0,
-            "경고 발생 수":      0,
-            "센서 상태":         "정상 (데모)"
+            "경고 발생 수": 0,
+            "센서 상태": "정상 (데모)"
         }), 200
+
 
 @app.route('/api/control/workers', methods=['GET'])
 @token_required
@@ -4797,20 +4884,20 @@ def get_live_workers_list():
     try:
         # DB에서 현재 활성화된 '작업자' 역할의 사용자들을 전부 긁어옵니다.
         workers = User.query.filter_by(role='작업자', is_active=True).all()
-        
+
         result = []
         for w in workers:
             # 작업자가 배정된 첫 번째 구역 이름을 가져오고, 없으면 '미지정' 처리
             zone_name = w.areas[0].area_name if w.areas else "미지정"
-            
+
             # 실시간 센서 연동 전이므로 규격에 맞춰 안전한 기본값을 조합해 에러를 방어합니다.
             result.append({
-                "작업자ID":     w.id,
-                "이름":         w.name,
-                "구역":         zone_name,
+                "작업자ID": w.id,
+                "이름": w.name,
+                "구역": zone_name,
                 "PPE 착용 상태": "착용 완료",
-                "작업 상태":     "작업 중",  # 기본값: 작업 중 (작업 중 / 작업 중지)
-                "시간":         datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                "작업 상태": "작업 중",  # 기본값: 작업 중 (작업 중 / 작업 중지)
+                "시간": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
         return jsonify(result), 200
     except Exception as e:
@@ -4828,7 +4915,7 @@ def resume_workers_work_status():
         data = request.json or {}
         # 프론트엔드가 한글 배열이나 영어 배열 중 어떤 것으로 보내든 유연하게 인식합니다.
         worker_ids = data.get('작업자 ID 목록') or data.get('worker_ids') or []
-        status     = data.get('상태') or data.get('status') or "작업 중"
+        status = data.get('상태') or data.get('status') or "작업 중"
 
         if not worker_ids:
             return jsonify({'status': 'fail', 'message': '상태를 변경할 작업자 ID 목록이 제공되지 않았습니다.'}), 400
@@ -4837,7 +4924,7 @@ def resume_workers_work_status():
         for wid in worker_ids:
             target_worker = User.query.get(wid)
             worker_name = target_worker.name if target_worker else f"ID {wid}"
-            
+
             new_log = Log(
                 log_type='작업자 상태 변경',
                 user_id=g.current_user.get('id'),  # 명령을 내린 로그인 중인 관리자 ID
@@ -4848,13 +4935,14 @@ def resume_workers_work_status():
 
         db.session.commit()
         return jsonify({
-            'status': 'success', 
+            'status': 'success',
             'message': f'선택한 작업자 {len(worker_ids)}명의 작업 중지 상태가 해제되어 [{status}] 상태로 변경 및 관제 장부에 기록되었습니다.'
         }), 200
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'status': 'error', 'message': f"작업 중지 해제 처리 중 오류 발생: {str(e)}"}), 500
+
 
 @app.route('/api/monitoring/summary', methods=['GET'])
 @token_required
@@ -4870,11 +4958,11 @@ def get_monitoring_summary():
 
         # 시스템에 등록된 활성화된 구역들을 전부 가져옵니다.
         areas = Area.query.filter_by(is_active=True).all()
-        
+
         unworn_dict = {}
         worker_dict = {}
         compliance_dict = {}
-        
+
         total_cams = 0
         online_cams = 0
 
@@ -4889,10 +4977,10 @@ def get_monitoring_summary():
 
             # 2. 구역별 현재 작업자 수 (해당 구역 소속인 작업자 수 조회)
             worker_count = User.query.filter(
-                User.role == '작업자', 
+                User.role == '작업자',
                 User.is_active == True
             ).filter(User.areas.any(area_id=a.area_id)).count()
-            
+
             # 초기 개발 환경에서 작업자가 0명으로 뜨면 대시보드가 쓸쓸하므로 안전하게 데모용 보정값(3명) 세팅
             worker_dict[a.area_name] = worker_count if worker_count > 0 else 3
 
@@ -4912,11 +5000,12 @@ def get_monitoring_summary():
         return jsonify({
             "구역별 미착용 인원수": unworn_dict,
             "구역별 현재 작업자 수": worker_dict,
-            "구역별 PPE 준수율":    compliance_dict,
-            "전체 카메라 상태":     f"정상 가동 중 ({online_cams}/{total_cams})" if total_cams > 0 else "등록된 카메라 없음"
+            "구역별 PPE 준수율": compliance_dict,
+            "전체 카메라 상태": f"정상 가동 중 ({online_cams}/{total_cams})" if total_cams > 0 else "등록된 카메라 없음"
         }), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"실시간 모니터링 통계 조회 오류: {str(e)}"}), 500
+
 
 @app.route('/api/analysis/summary', methods=['GET'])
 @token_required
@@ -4937,10 +5026,10 @@ def get_analysis_summary():
         # 실제 데이터가 쌓이기 전이므로, 대시보드 그래프가 깨지지 않도록 누적 데이터 기반 자동 보정 연산을 적용합니다.
         total_violations = Violation.query.count()
         compliance_rate = max(100 - (total_violations * 2), 85)  # 위반당 2점 감점, 최소 85% 유지
-        
+
         return jsonify({
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율": f"{compliance_rate}%",
             "사고 발생 수": 0,  # 아카이빙용 기본값
             "경고 발생 수": total_alarms
         }), 200
@@ -4973,7 +5062,7 @@ def get_analysis_chart_data():
         import calendar
         from sqlalchemy import extract, and_
         from datetime import datetime, timedelta, time
-        
+
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
         today = datetime.now()
 
@@ -4983,12 +5072,12 @@ def get_analysis_chart_data():
 
         if date_range == "이번 주":
             timeline = [
-                "09:00~10:00", "10:00~11:00", "11:00~12:00", 
-                "12:00~13:00", "13:00~14:00", "14:00~15:00", 
+                "09:00~10:00", "10:00~11:00", "11:00~12:00",
+                "12:00~13:00", "13:00~14:00", "14:00~15:00",
                 "15:00~16:00", "16:00~17:00", "17:00~18:00"
             ]
             violation_counts = []
-            
+
             # 시간별 라이브 집계 + 이번 주 날짜 제한 필터 바인딩
             for t in range(9, 18):
                 real_count = Violation.query.filter(
@@ -4998,7 +5087,7 @@ def get_analysis_chart_data():
                     )
                 ).count()
                 violation_counts.append(real_count)
-                    
+
             compliance_trends = [f"{max(100 - (c * 5), 80)}%" for c in violation_counts]
 
             # 구역별 실시간 위반 현황 집계 (이번 주 필터 반영)
@@ -5012,15 +5101,15 @@ def get_analysis_chart_data():
                     )
                 ).count()
                 zone_violations[a.area_name] = v_count
-            
+
         else:
             # 이번 달: 주차별 실시간 분기 집계
             month_matrix = calendar.monthcalendar(today.year, today.month)
             violation_counts = []
             timeline = []
-            
+
             for idx, week in enumerate(month_matrix):
-                timeline.append(f"{idx+1}주차")
+                timeline.append(f"{idx + 1}주차")
                 valid_days = [d for d in week if d > 0]
                 if not valid_days:
                     violation_counts.append(0)
@@ -5049,14 +5138,15 @@ def get_analysis_chart_data():
         return jsonify({
             "선택된 범위": date_range,
             "차트 데이터": {
-                "시계열":          timeline,
+                "시계열": timeline,
                 "PPE 준수율 추이": compliance_trends,
-                "위반 건수 추이":   violation_counts,
+                "위반 건수 추이": violation_counts,
                 "구역별 위반 현황": zone_violations
             }
         }), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/api/alert-settings/reset', methods=['POST'])
 @token_required
@@ -5095,7 +5185,7 @@ def save_ppe_standards_v2():
         ppe_data = request.json
         if not ppe_data:
             return jsonify({'status': 'fail', 'message': '저장할 PPE 기준 데이터가 없습니다.'}), 400
-            
+
         with open(PPE_SETTINGS_FILE, 'w', encoding='utf-8') as f:
             json.dump(ppe_data, f, ensure_ascii=False, indent=4)
         return jsonify({'status': 'success', 'message': '구역별 PPE 필수 착용 기준이 성공적으로 저장되었습니다.'}), 200
@@ -5122,6 +5212,7 @@ def get_ppe_zones_list_v2():
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 구역 목록 조회 오류: {str(e)}"}), 500
 
+
 @app.route('/api/control/workers', methods=['GET'])
 @token_required
 def get_live_workers_list_v2():
@@ -5141,12 +5232,12 @@ def get_live_workers_list_v2():
         for w in workers:
             zone_name = w.areas[0].area_name if w.areas else "미지정"
             result.append({
-                "작업자ID":     w.id,
-                "이름":         w.name,
-                "구역":         zone_name,
+                "작업자ID": w.id,
+                "이름": w.name,
+                "구역": zone_name,
                 "PPE 착용 상태": "착용 완료",
-                "작업 상태":     "작업 중",
-                "시간":         datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                "작업 상태": "작업 중",
+                "시간": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
         return jsonify(result), 200
     except Exception as e:
@@ -5168,7 +5259,7 @@ def resume_workers_work_status_v2():
     try:
         data = request.json or {}
         worker_ids = data.get('작업자 ID 목록') or data.get('worker_ids') or []
-        status     = data.get('상태') or data.get('status') or "작업 중"
+        status = data.get('상태') or data.get('status') or "작업 중"
 
         if not worker_ids:
             return jsonify({'status': 'fail', 'message': '상태를 변경할 작업자 ID 목록이 제공되지 않았습니다.'}), 400
@@ -5208,10 +5299,10 @@ def get_analysis_summary_v2():
         total_alarms = Alarm.query.count()
         total_violations = Violation.query.count()
         compliance_rate = max(100 - (total_violations * 2), 85)
-        
+
         return jsonify({
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율": f"{compliance_rate}%",
             "사고 발생 수": 0,
             "경고 발생 수": total_alarms
         }), 200
@@ -5242,12 +5333,12 @@ def get_analysis_summary_v3():
         # 2. 차트 조회 API와 통일성을 주기 위해 범위별로 데이터를 분기 연산합니다.
         # 주간/월간 버튼을 클릭할 때 대시보드 숫자가 연동되어 바뀌는 효과
         if date_range == "이번 주":
-            warning_count = 14       # 이번 주 누적 알림 예시값
-            compliance_rate = 97     # 이번 주 안전 준수율
+            warning_count = 14  # 이번 주 누적 알림 예시값
+            compliance_rate = 97  # 이번 주 안전 준수율
             accident_count = 0
         elif date_range == "이번 달":
-            warning_count = 40       # 이번 달 누적 알림 예시값
-            compliance_rate = 93     # 이번 달 안전 준수율
+            warning_count = 40  # 이번 달 누적 알림 예시값
+            compliance_rate = 93  # 이번 달 안전 준수율
             accident_count = 0
         else:  # 전체 범위일 때
             # 데이터베이스에 쌓인 실제 총 누적 개수를 기반으로 실시간 연산
@@ -5258,9 +5349,9 @@ def get_analysis_summary_v3():
 
         # 요청한 "선택된 범위" Key를 포함하여 전송
         return jsonify({
-            "선택된 범위":  date_range,
+            "선택된 범위": date_range,
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율": f"{compliance_rate}%",
             "사고 발생 수": accident_count,
             "경고 발생 수": warning_count
         }), 200
@@ -5284,14 +5375,14 @@ def get_ppe_standards_v3():
         if os.path.exists(PPE_SETTINGS_FILE):
             with open(PPE_SETTINGS_FILE, 'r', encoding='utf-8') as f:
                 return jsonify(json.load(f)), 200
-                
+
         areas = Area.query.filter_by(is_active=True).all()
         result = []
         for a in areas:
             default_ppe = ["안전모", "마스크", "장갑"] if a.risk_level == "high" else ["안전모", "마스크"]
             result.append({
-                "zoneID":       a.area_id,
-                "zone_name":    a.area_name,
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
                 "required_ppe": default_ppe
             })
         return jsonify(result), 200
@@ -5346,13 +5437,14 @@ def get_analysis_summary_final():
             compliance_rate = max(100 - (violation_count * 0.1), 85)
 
         return jsonify({
-            "선택된 범위":  date_range,
+            "선택된 범위": date_range,
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{round(compliance_rate)}%",
+            "PPE 준수율": f"{round(compliance_rate)}%",
             "총 위반 건수": violation_count
         }), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 # =================================================================
 # Swagger 파라미터 규격 공식 매핑 및 라우팅 스위칭 세트
@@ -5383,7 +5475,7 @@ def get_analysis_summary_final():
     """
     try:
         from sqlalchemy import extract
-        
+
         date_range = request.args.get('range') or request.args.get('범위') or "이번 달"
         total_workers = User.query.filter_by(role='작업자', is_active=True).count()
         if total_workers == 0: total_workers = 12
@@ -5391,21 +5483,21 @@ def get_analysis_summary_final():
         if date_range == "이번 주":
             mock_counts = [3, 2, 4, 1, 2, 5, 3, 2, 1]
             total_violations_shown = 0
-            
+
             for i, t in enumerate(range(9, 18)):
                 real_count = Violation.query.filter(
                     extract('hour', Violation.detected_at) == t
                 ).count()
-                
+
                 if real_count > 0:
                     total_violations_shown += real_count
                 else:
                     total_violations_shown += mock_counts[i]
-            
+
             violation_count = total_violations_shown
             compliance_rate = max(100 - (violation_count * 0.6), 85)
             compliance_rate = round(compliance_rate)
-            
+
         elif date_range == "이번 달":
             violation_count = 40
             compliance_rate = 93
@@ -5415,13 +5507,14 @@ def get_analysis_summary_final():
             compliance_rate = max(100 - (total_violations * 2), 85)
 
         return jsonify({
-            "선택된 범위":  date_range,
+            "선택된 범위": date_range,
             "총 작업자 수": total_workers,
-            "PPE 준수율":   f"{compliance_rate}%",
+            "PPE 준수율": f"{compliance_rate}%",
             "총 위반 건수": violation_count
         }), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/api/ppe-standards', methods=['POST'])
 @token_required
@@ -5460,7 +5553,7 @@ def save_ppe_standards_final():
         ppe_data = request.json
         if not ppe_data:
             return jsonify({'status': 'fail', 'message': '저장할 PPE 기준 데이터가 없습니다.'}), 400
-            
+
         with open(PPE_SETTINGS_FILE, 'w', encoding='utf-8') as f:
             json.dump(ppe_data, f, ensure_ascii=False, indent=4)
         return jsonify({'status': 'success', 'message': '구역별 PPE 필수 착용 기준이 성공적으로 저장되었습니다.'}), 200
@@ -5484,28 +5577,32 @@ def get_ppe_standards_final():
         if os.path.exists(PPE_SETTINGS_FILE):
             with open(PPE_SETTINGS_FILE, 'r', encoding='utf-8') as f:
                 return jsonify(json.load(f)), 200
-                
+
         areas = Area.query.filter_by(is_active=True).all()
         result = []
         for a in areas:
             default_ppe = ["안전모", "마스크", "장갑"] if a.risk_level == "high" else ["안전모", "마스크"]
             result.append({
-                "zoneID":       a.area_id,
-                "zone_name":    a.area_name,
+                "zoneID": a.area_id,
+                "zone_name": a.area_name,
                 "required_ppe": default_ppe
             })
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': f"PPE 기준 조회 오류: {str(e)}"}), 500
 
+
 # -----------------------------------------------------------------
 #  Flask 매핑 테이블을 최신 마스터본(final) 함수로 강제 강탈/교체
 # 위에 쌓여있던 모든 중복 함수 무시 및 무조건 최신 코드 실행
 # -----------------------------------------------------------------
 app.view_functions['get_analysis_summary'] = get_analysis_summary_final
-if 'get_analysis_summary_v2' in app.view_functions: app.view_functions['get_analysis_summary_v2'] = get_analysis_summary_final
-if 'get_analysis_summary_v3' in app.view_functions: app.view_functions['get_analysis_summary_v3'] = get_analysis_summary_final
-if 'get_analysis_summary_v4' in app.view_functions: app.view_functions['get_analysis_summary_v4'] = get_analysis_summary_final
+if 'get_analysis_summary_v2' in app.view_functions: app.view_functions[
+    'get_analysis_summary_v2'] = get_analysis_summary_final
+if 'get_analysis_summary_v3' in app.view_functions: app.view_functions[
+    'get_analysis_summary_v3'] = get_analysis_summary_final
+if 'get_analysis_summary_v4' in app.view_functions: app.view_functions[
+    'get_analysis_summary_v4'] = get_analysis_summary_final
 
 app.view_functions['save_ppe_standards'] = save_ppe_standards_final
 if 'save_ppe_standards_v2' in app.view_functions: app.view_functions['save_ppe_standards_v2'] = save_ppe_standards_final
@@ -5513,6 +5610,7 @@ if 'save_ppe_standards_v2' in app.view_functions: app.view_functions['save_ppe_s
 app.view_functions['get_ppe_standards'] = get_ppe_standards_final
 if 'get_ppe_standards_v2' in app.view_functions: app.view_functions['get_ppe_standards_v2'] = get_ppe_standards_final
 if 'get_ppe_standards_v3' in app.view_functions: app.view_functions['get_ppe_standards_v3'] = get_ppe_standards_final
+
 
 @app.route('/api/control/workers/resume', methods=['PATCH'])
 @token_required
@@ -5545,7 +5643,7 @@ def resume_workers_work_status_final():
     try:
         data = request.json or {}
         worker_ids = data.get('작업자 ID 목록') or data.get('worker_ids') or []
-        status     = data.get('상태') or data.get('status') or "작업 중"
+        status = data.get('상태') or data.get('status') or "작업 중"
 
         if not worker_ids:
             return jsonify({'status': 'fail', 'message': '상태를 변경할 작업자 ID 목록이 제공되지 않았습니다.'}), 400
@@ -5553,7 +5651,7 @@ def resume_workers_work_status_final():
         for wid in worker_ids:
             target_worker = User.query.get(wid)
             worker_name = target_worker.name if target_worker else f"ID {wid}"
-            
+
             new_log = Log(
                 log_type='작업자 상태 변경',
                 user_id=g.current_user.get('id'),
@@ -5564,7 +5662,7 @@ def resume_workers_work_status_final():
 
         db.session.commit()
         return jsonify({
-            'status': 'success', 
+            'status': 'success',
             'message': f'선택한 작업자 {len(worker_ids)}명의 작업 중지 상태가 해제되어 [{status}] 상태로 변경되었습니다.'
         }), 200
     except Exception as e:
@@ -5576,14 +5674,14 @@ def resume_workers_work_status_final():
 # 강제 스위칭 테이블
 # -----------------------------------------------------------------
 app.view_functions['resume_workers_work_status'] = resume_workers_work_status_final
-if 'resume_workers_work_status_v2' in app.view_functions: app.view_functions['resume_workers_work_status_v2'] = resume_workers_work_status_final
+if 'resume_workers_work_status_v2' in app.view_functions: app.view_functions[
+    'resume_workers_work_status_v2'] = resume_workers_work_status_final
 
 # -----------------------------------------------------------------
-# alert_type 
+# alert_type
 # -----------------------------------------------------------------
 app.view_functions['get_alert_settings'] = get_alert_settings
 if 'get_api_alert_settings' in app.view_functions: app.view_functions['get_api_alert_settings'] = get_alert_settings
-
 
 
 # -----------------------------------------------------------------
@@ -5710,7 +5808,6 @@ for _endpoint in [
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = get_ppe_standards_db_override
 
-
 for _endpoint in [
     "save_ppe_standards",
     "save_ppe_standards_v2",
@@ -5718,7 +5815,6 @@ for _endpoint in [
 ]:
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = save_ppe_standards_db_override
-
 
 
 # -----------------------------------------------------------------
@@ -5758,14 +5854,13 @@ def save_ppe_standards_rawsql_override():
 
             result = db.session.execute(
                 text("""
-                    UPDATE areas
-                    SET
-                        enforce_helmet = :enforce_helmet,
-                        enforce_mask = :enforce_mask,
-                        enforce_glove_left = :enforce_glove_left,
-                        enforce_glove_right = :enforce_glove_right
-                    WHERE area_id = :area_id
-                """),
+                     UPDATE areas
+                     SET enforce_helmet      = :enforce_helmet,
+                         enforce_mask        = :enforce_mask,
+                         enforce_glove_left  = :enforce_glove_left,
+                         enforce_glove_right = :enforce_glove_right
+                     WHERE area_id = :area_id
+                     """),
                 {
                     "enforce_helmet": enforce_helmet,
                     "enforce_mask": enforce_mask,
@@ -5783,17 +5878,16 @@ def save_ppe_standards_rawsql_override():
         if updated:
             rows = db.session.execute(
                 text("""
-                    SELECT
-                        area_id,
-                        area_name,
-                        enforce_helmet,
-                        enforce_mask,
-                        enforce_glove_left,
-                        enforce_glove_right
-                    FROM areas
-                    WHERE area_id IN :ids
-                    ORDER BY area_id
-                """),
+                     SELECT area_id,
+                            area_name,
+                            enforce_helmet,
+                            enforce_mask,
+                            enforce_glove_left,
+                            enforce_glove_right
+                     FROM areas
+                     WHERE area_id IN :ids
+                     ORDER BY area_id
+                     """),
                 {"ids": tuple(updated)}
             ).mappings().all()
 
@@ -5822,6 +5916,7 @@ for _endpoint in [
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = save_ppe_standards_rawsql_override
 
+
 # 교내 내부망 5000 포트 차단으로 인한 포트 변경 (5000 -> 5002)
 
 # -----------------------------------------------------------------
@@ -5837,17 +5932,16 @@ def get_ppe_standards_rawsql_final_override():
 
         rows = db.session.execute(
             text("""
-                SELECT
-                    area_id,
-                    area_name,
-                    enforce_helmet,
-                    enforce_mask,
-                    enforce_glove_left,
-                    enforce_glove_right
-                FROM areas
-                WHERE is_active = 1
-                ORDER BY area_id
-            """)
+                 SELECT area_id,
+                        area_name,
+                        enforce_helmet,
+                        enforce_mask,
+                        enforce_glove_left,
+                        enforce_glove_right
+                 FROM areas
+                 WHERE is_active = 1
+                 ORDER BY area_id
+                 """)
         ).mappings().all()
 
         result = []
@@ -5894,7 +5988,6 @@ for _endpoint in [
 ]:
     if _endpoint in app.view_functions:
         app.view_functions[_endpoint] = get_ppe_standards_rawsql_final_override
-
 
 if __name__ == '__main__':
     socketio.run(
