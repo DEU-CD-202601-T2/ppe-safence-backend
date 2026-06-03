@@ -2,7 +2,7 @@
 
 > 산업 현장 PPE(개인 보호구) 미착용 감지 시스템의 백엔드 API 서버
 
-Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 클라이언트를 매개하는 Flask 기반 RESTful API. 카메라 ↔ 구역 매핑을 영구 식별자로 관리하고, 위반 알림과 사용자 권한을 정규화된 데이터 모델로 처리합니다.
+Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 C# WinForms 관제 프로그램을 매개하는 Flask 기반 RESTful API. 카메라 ↔ 구역 매핑을 영구 식별자로 관리하고, 위반 이력과 사용자 권한을 정규화된 데이터 모델로 처리합니다.
 
 ---
 
@@ -24,9 +24,10 @@ Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 �
 
 - **실시간 카메라 매핑** — 보드에서 발견된 카메라를 영구 식별자(`camera_key`)로 추적해 USB 포트 변경에도 구역 매핑이 깨지지 않음
 - **블루투스 페어링 패턴** — 같은 카메라를 다시 등록하면 기존 행 자동 재활성화 (404 → 부활)
-- **다중 구역 권한** — 사용자별 N:M 매핑으로 "전체 / 단일 / 다중 구역" 모드 모두 지원
+- **역할 기반 접근 제어** — `role`에 따라 접근 권한을 구분, `작업자` 계정은 로그인 차단
+- **위반 이미지 직접 저장** — 위반 캡처 이미지를 `MEDIUMBLOB`으로 DB에 저장, 별도 파일 서버 불필요
 - **자동 복구 통신** — 보드 ↔ AWS SSH 리버스 터널이 autossh + systemd로 영구 자동 복구
-- **JWT 기반 인증** — 토큰 페이로드에 권한 정보 포함, 매 요청마다 DB 조회 불필요
+- **JWT 기반 인증** — 토큰 페이로드에 `role` 포함, 매 요청마다 DB 조회 불필요
 - **Swagger UI 자동 문서화** — `/apidocs/`에서 모든 엔드포인트 즉시 테스트 가능
 
 ---
@@ -36,12 +37,13 @@ Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 �
 | 영역 | 사용 기술 |
 |---|---|
 | 언어/프레임워크 | Python 3.10, Flask, Flask-SocketIO |
-| ORM | SQLAlchemy (Flask-SQLAlchemy) |
-| 데이터베이스 | MariaDB 10.11 |
-| 인증 | JWT (PyJWT) + Werkzeug bcrypt |
+| ORM | SQLAlchemy (Flask-SQLAlchemy), pymysql |
+| 데이터베이스 | MariaDB (AWS EC2) |
+| 인증 | JWT (PyJWT) + Werkzeug 비밀번호 해시 |
 | API 문서 | Flasgger (Swagger 2.0) |
 | CORS / WebSocket | Flask-CORS, Flask-SocketIO |
 | 외부 통신 | requests (Jetson 보드 호출) |
+| 이미지 저장 | MySQL `MEDIUMBLOB` |
 | 인프라 | AWS EC2, Tailscale (백업 경로), autossh + systemd |
 
 ---
@@ -58,6 +60,8 @@ Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 �
 - **같은 LAN** — `http://192.168.45.86:5001`
   보드의 사설 IP (개발 환경)
 
+API 서버는 AWS EC2에서 포트 `5002`로 동작하며, MariaDB도 동일 EC2 환경에 둡니다.
+
 ---
 
 ## 데이터 모델
@@ -65,34 +69,34 @@ Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 �
 ### ERD
 
 ```
-┌──────────────┐      ┌─────────────┐      ┌────────────── ──┐
-│   users      │      │  user_areas │      │     areas       │
-├──────────────┤      ├─────────────┤      ├─────────────────┤
-│ id (PK)      │ ◄──┐ │ user_id (PK)│ ┌──► │ area_id (PK)    │
-│ login_id     │    │ │ area_id (PK)│ │    │ area_name (UQ)  │
-│ password     │    └─┤ created_at  ├─┘    │ area_code (UQ)  │
-│ name         │      └─────────────┘      │ camera_key (UQ) │
-│ role         │                           │ description     │
-└──────────────┘                           │ risk_level      │
-                                           │ is_active       │
-                                           │ created_at      │
-                                           │ updated_at      │
-                                           └────────────── ──┘
-                                                   ▲
-                                                   │ FK (area_id)
-                                                   │
-                                ┌──────────────────┼──────────────────┐
-                                │                                     │
-                       ┌────────────────┐                  ┌─────────────────┐
-                       │   violations   │                  │      alarms     │
-                       ├────────────────┤                  ├─────────────────┤
-                       │ id (PK)        │                  │ id (PK, str)    │
-                       │ violation_type │                  │ type            │
-                       │ detected_at    │                  │ time            │
-                       │ area_id (FK)   │                  │ area_id (FK)    │
-                       │ image_path     │                  │ status          │
-                       │ is_checked     │                  │ image_url       │
-                       └────────────────┘                  └─────────────────┘
+┌──────────────┐              ┌─────────────────┐
+│   users      │              │     areas       │
+├──────────────┤              ├─────────────────┤
+│ id (PK)      │◄──┐          │ area_id (PK)    │
+│ login_id (UQ)│   │          │ area_name (UQ)  │
+│ password     │   │          │ camera_key (UQ) │
+│ name         │   │          │ description     │
+│ role         │   │          │ risk_level      │
+│ is_active    │   │          │ is_active       │
+└──────────────┘   │          │ created_at      │
+                   │          │ updated_at      │
+        FK(user_id)│          └────────┬────────┘
+                   │                   │ FK(area_id)
+          ┌────────┴─────┐    ┌────────┴────────┐
+          │    logs      │    │  violations     │
+          ├──────────────┤    ├─────────────────┤
+          │ id (PK)      │    │ id (PK)         │
+          │ log_type     │    │ violation_type  │
+          │ timestamp    │    │ detected_at     │
+          │ user_id (FK) │    │ area_id (FK)    │
+          │ description  │    │ person_id       │
+          └──────────────┘    │ image_data      │
+                              │ image_mime      │
+                              │ enforced_ppe    │
+                              │ is_acknowledged │
+                              │ acknowledged_at │
+                              │ is_checked      │
+                              └─────────────────┘
 ```
 
 ### 테이블 설명
@@ -100,31 +104,31 @@ Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 �
 | 테이블 | 역할 |
 |---|---|
 | `areas` | 구역과 카메라 매핑. `camera_key`(영구 식별자, UNIQUE)로 USB 포트 변경에도 안정 |
-| `users` | 시스템 사용자. 단일 컬럼 zone 대신 `user_areas` 조인으로 다중 구역 매니저 표현 |
-| `user_areas` | User × Area N:M 매핑. 행이 없으면 "전체 권한"으로 해석 |
-| `violations` | PPE 미착용 등 위반 이력. 구역 정보는 `area_id` FK |
-| `alarms` | 사용자에게 보이는 위반 알림. 구역 정보는 `area_id` FK |
+| `users` | 시스템 사용자. `role`로 권한을 구분 |
+| `violations` | PPE 미착용 등 위반 이력. 위반 이미지를 `image_data`(MEDIUMBLOB)로 직접 저장, 구역 정보는 `area_id` FK |
+| `logs` | 로그인 등 시스템 동작 이력. 사용자 정보는 `user_id` FK |
+
+> `violations`는 위반 종류·감지 시각·작업자 추적 ID(`person_id`)·단속 항목(`enforced_ppe`)·대응 여부(`is_acknowledged`, `acknowledged_at`)·확인 여부(`is_checked`)를 함께 보관합니다.
 
 ---
 
 ## 권한 모델
 
-`role`과 `user_areas` 매핑 조합으로 4가지 접근 권한 모드가 발생합니다.
+`role` 값으로 접근 권한이 결정됩니다. 사용자–구역 N:M 매핑 없이, 역할 단위로 단순하게 제어합니다.
 
-| 모드 | 조건 | 알람·구역 조회 범위 |
-|---|---|---|
-| 슈퍼유저 | `role = '최고 관리자'` | 전체 (`user_areas`와 무관) |
-| 전체 매니저 | `role` 매니저급 + `user_areas` 비어있음 | 전체 |
-| 단일 구역 매니저 | `user_areas`에 1건 매핑 | 그 구역만 |
-| 다중 구역 매니저 | `user_areas`에 N건 매핑 | 매핑된 N개 구역 |
+| 역할 | 접근 범위 |
+|---|---|
+| 최고 관리자 | 전체 (`User.has_global_access()` → true) |
+| 보안 팀장 | 사용자·구역·위반 관리 |
+| 구역 매니저 | 구역·위반 관리 |
+| 작업자 | **로그인 불가** (감지 대상이지 운영 주체가 아님) |
 
-`User.has_global_access()` 메서드 또는 토큰의 `area_ids` 배열로 판단합니다. JWT 토큰 페이로드 예시:
+권한 검사는 `@token_required`(JWT 검증) → `@role_required(...)`(허용 역할 확인) 데코레이터 조합으로 수행합니다. JWT 토큰 페이로드 예시:
 
 ```json
 {
   "user": "a002",
   "role": "구역 매니저",
-  "area_ids": [1, 2],
   "iat": 1735000000,
   "exp": 1735086400
 }
@@ -136,16 +140,17 @@ Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 �
 
 전체 명세는 서버 실행 후 `http://<host>:5002/apidocs/`에서 확인 가능합니다.
 
-### Auth
+### Auth · Users
 
 | 메서드 | 경로 | 설명 | 권한 |
 |---|---|---|---|
-| `POST` | `/api/register` | 사용자 등록 (`area_ids` 배열) | - |
-| `POST` | `/api/login` | JWT 토큰 발급 | - |
-| `PUT` | `/api/users/<id>` | 사용자 정보 수정 (`area_ids` 포함) | 최고 관리자, 보안 팀장 |
+| `POST` | `/api/register` | 사용자 등록 | - |
+| `POST` | `/api/login` | JWT 토큰 발급 (비활성·작업자 계정 차단, 접속 로그 기록) | - |
+| `GET` | `/api/users` | 사용자 목록 | 인증된 사용자 |
+| `PUT` | `/api/users/<id>` | 사용자 정보 수정 | 최고 관리자, 보안 팀장 |
 | `DELETE` | `/api/users/<id>` | 사용자 삭제 | 최고 관리자, 보안 팀장 |
 
-### Area
+### Area · PPE 기준
 
 | 메서드 | 경로 | 설명 | 권한 |
 |---|---|---|---|
@@ -153,24 +158,42 @@ Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 �
 | `GET` | `/api/areas` | 구역 목록 (`?include_inactive=true` 옵션) | 인증된 사용자 |
 | `PUT` | `/api/areas/<id>` | 구역 정보 수정 | 최고 관리자, 보안 팀장, 구역 매니저 |
 | `DELETE` | `/api/areas/<id>` | 구역 비활성화 (`?hard=true` 시 영구 삭제) | 최고 관리자, 보안 팀장, 구역 매니저 |
+| `GET` | `/api/ppe-standards` | 구역별 PPE 단속 기준 조회 | 인증된 사용자 |
+| `POST` | `/api/ppe-standards` | 구역별 PPE 단속 기준 저장 | 인증된 사용자 |
+| `GET` | `/api/ppe-zones` | PPE 단속 구역 목록 | 인증된 사용자 |
 
-### Camera / Stream
+### Violations
+
+| 메서드 | 경로 | 설명 | 권한 |
+|---|---|---|---|
+| `GET` | `/api/violations` | 위반 목록 조회 | 인증된 사용자 |
+| `PATCH` | `/api/violations/<id>` | 위반 정보 수정 | 인증된 사용자 |
+| `PATCH` | `/api/violations/<id>/acknowledge` | 위반 대응(확인) 처리 | 인증된 사용자 |
+| `DELETE` | `/api/violations/<id>` | 위반 삭제 | 인증된 사용자 |
+| `GET` | `/api/violations/<id>/image` | 위반 이미지(BLOB) 조회 | 인증된 사용자 |
+| `GET` | `/api/violations/unack-count` | 미해결 위반 수 | 인증된 사용자 |
+
+### Stats
+
+| 메서드 | 경로 | 설명 | 권한 |
+|---|---|---|---|
+| `GET` | `/api/analysis/summary` | 총 작업자 수·PPE 준수율·위반 건수 요약 | 인증된 사용자 |
+| `GET` | `/api/analysis/chart` | 차트용 통계 데이터 | 인증된 사용자 |
+
+> `analysis/summary`의 PPE 준수율은 위반 1건당 2점 감점, 최소 85%로 산출됩니다.
+
+### Camera / Stream · Logs
 
 | 메서드 | 경로 | 설명 | 권한 |
 |---|---|---|---|
 | `GET` | `/api/stream-urls` | 활성 카메라 + 구역 매핑 + 오프라인 구역 | 인증된 사용자 |
+| `GET` | `/api/proxy-stream/<cam_name>` | Jetson MJPEG 스트림 프록시 | 인증된 사용자 |
+| `GET` | `/api/logs` | 시스템 로그(접속 이력) 조회 | 인증된 사용자 |
 
-응답 구조:
+`stream-urls` 응답 구조:
 - `cameras[]` — 보드에서 잡힌 카메라 (`area`가 객체면 매핑 완료, `null`이면 미등록)
 - `offline_areas[]` — DB에 등록은 됐지만 카메라가 안 잡힌 구역
 - `online_count` / `offline_count` — UI 카운터용
-
-### Alarms / Stats
-
-| 메서드 | 경로 | 설명 | 권한 |
-|---|---|---|---|
-| `GET` | `/api/alarms` | 위반 알림 목록 (토큰 `area_ids` 기반 필터) | 인증된 사용자 |
-| `GET` | `/api/stats` | 위반 통계 (오늘 / 전체) | 인증된 사용자 |
 
 ---
 
@@ -179,7 +202,7 @@ Jetson Orin Nano 기반의 온디바이스 PPE 감지 단말과 WPF 관리자 �
 ### 사전 요구사항
 
 - Python 3.10+
-- MariaDB 10.11+ (로컬 또는 AWS)
+- MariaDB (로컬 또는 AWS EC2)
 - Jetson 보드 (또는 호환 PPE Detection 서버)
 
 ### 1. 의존성 설치
@@ -194,11 +217,10 @@ MariaDB에 `capstone_db` 생성 후, 다음 4개 테이블을 만듭니다 (전�
 
 - `areas`
 - `users`
-- `user_areas` (조인 테이블)
 - `violations`
-- `alarms`
+- `logs`
 
-각 테이블은 [데이터 모델](#데이터-모델) 섹션 참조.
+각 테이블은 [데이터 모델](#데이터-모델) 섹션 참조. 초기 운영을 위해 최고 관리자 계정 1개를 `/api/register`로 등록합니다 (비밀번호는 해시로 저장).
 
 ### 3. 환경 변수 설정
 
@@ -260,7 +282,7 @@ GET /stream/<cam_name>
 → multipart MJPEG 스트림
 ```
 
-`key`는 카메라의 영구 식별자입니다. USB 카메라는 `vid:pid:serial` 또는 `vid:pid:port_path`, RealSense는 시리얼 넘버, CSI는 sensor-id 기반.
+`key`는 카메라의 영구 식별자입니다. USB 카메라는 `vid:pid:serial` 또는 `vid:pid:port_path` 기반.
 
 ### SSH 리버스 터널 자동 복구
 
@@ -301,8 +323,10 @@ AWS 측에서는 `/etc/ssh/sshd_config`에 `GatewayPorts yes`를 활성화하고
 
 - **포트 5002 사용 이유**: 교내 내부망에서 5000 포트가 차단되어 있어 우회
 - **`role='작업자'` 로그인 차단**: 작업자 계정은 시스템에 등록은 되지만 직접 로그인은 불가 (감지 대상이지 운영 주체가 아님)
-- **Soft delete 우선**: `is_active=false`로 비활성화하는 것이 기본, 위반/알림 이력 보존
+- **Soft delete 우선**: `is_active=false`로 비활성화하는 것이 기본, 위반·로그 이력 보존
 - **블루투스 페어링 패턴**: `POST /api/areas`는 동일한 `camera_key`가 있으면 자동으로 기존 행 갱신·재활성화
+- **위반 이미지 BLOB 저장**: 위반 캡처를 `image_data`(MEDIUMBLOB)로 DB에 직접 저장하고, `/api/violations/<id>/image`로 제공
+- **보안 주의**: 현재 JWT 시크릿이 코드에 하드코딩되어 있습니다. 공개 배포 시 환경 변수로 분리하고 값을 교체하는 것을 권장합니다.
 
 ---
 
